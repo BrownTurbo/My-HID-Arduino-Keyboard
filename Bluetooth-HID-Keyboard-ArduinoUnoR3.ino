@@ -67,8 +67,13 @@ void loop()
             i += 2;
             continue;
           }
+
+          char upperType = macroType;
+          if (upperType >= 'a' && upperType <= 'z') {
+            upperType = upperType - 32; // Quick ASCII shift to uppercase
+          }
           
-          if (macroType == 'F') {
+          if (upperType == 'F') {
             // Parse a multi-character function key macro like \F10
             String fNumStr = "";
             unsigned int j = i + 2;
@@ -88,7 +93,7 @@ void loop()
               }
             }
           }
-          else if (macroType == 'X') {
+          else if (upperType == 'X') {
             unsigned int j = i + 2;
             uint8_t comboMods = activeGlobalModifiers; // Start with any currently held global modifiers
             uint8_t comboKey = KEY_NONE;
@@ -152,7 +157,7 @@ void loop()
               continue;
             }
           }
-          bool validMacro = handleSingleMacro(macroType);
+          bool validMacro = handleSingleMacro(upperType);
           if (validMacro) {
             i += 2; 
             continue; 
@@ -245,12 +250,7 @@ bool handleSingleMacro(char type) {
   uint8_t targetKey = KEY_NONE;
   uint8_t instantMod = activeGlobalModifiers;
 
-  char upperType = type;
-  if (upperType >= 'a' && upperType <= 'z') {
-    upperType = upperType - 32; // Quick ASCII shift to uppercase
-  }
-
-  switch (upperType) {
+  switch (type) {
     case 'U': targetKey = KEY_UP;    break; 
     case 'D': targetKey = KEY_DOWN;  break; 
     case 'L': targetKey = KEY_LEFT;  break; 
