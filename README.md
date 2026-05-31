@@ -41,12 +41,10 @@ All command and macro strings begin with the escape character backslash (`\`). T
 
 These commands modify the persistent state variable `activeGlobalModifiers`. Once executed, these modifiers remain held down continuously across all subsequent text strings and keystrokes until explicitly cleared.
 
-* 
-**Syntax:** `\+[modifier_char]` 
+* **Syntax:** `\+[modifier_char]` 
 
 
-* 
-**Reset Syntax:** `\-` (Instantly releases all active modifiers) 
+* **Reset Syntax:** `\-` (Instantly releases all active modifiers) 
 
 
 
@@ -162,8 +160,7 @@ Sending these tokens triggers an instantaneous key-down and key-up sequence for 
 
 If you need a modifier held **only** for a single companion keystroke, use a lowercase modifier token inside a standalone statement.
 
-* 
-*Example:* Sending `\c` acts as a momentary hold on Left Control during the next evaluated frame.
+* *Example:* Sending `\c` acts as a momentary hold on Left Control during the next evaluated frame.
 
 
 
@@ -171,8 +168,7 @@ If you need a modifier held **only** for a single companion keystroke, use a low
 
 The firmware parses extended multi-character function operations dynamically up to F24, exceeding standard commercial keyboard limits.
 
-* 
-**Syntax:** `\F1` through `\F24` 
+* **Syntax:** `\F1` through `\F24` 
 
 
 
@@ -180,8 +176,7 @@ The firmware parses extended multi-character function operations dynamically up 
 
 For hotkeys that require absolute simultaneous structural delivery in a single data report packet, use the **eXecute Combo** sequence.
 
-* 
-**Syntax:** `\X[modifiers][primary_key]` 
+* **Syntax:** `\X[modifiers][primary_key]` 
 
 
 
@@ -216,8 +211,7 @@ echo "HID Automation Completed Safely"\E
 
 ```
 
-* 
-**Dissection:** The embedded alphanumeric parser automatically matches internal newlines (`\n` or `\r`) to physical Enter executions, allowing a single copy-paste procedure to run sequential bash pipeline tasks sequentially down the line.
+* **Dissection:** The embedded alphanumeric parser automatically matches internal newlines (`\n` or `\r`) to physical Enter executions, allowing a single copy-paste procedure to run sequential bash pipeline tasks sequentially down the line.
 
 
 
@@ -237,8 +231,7 @@ When auditing code paths inside tools like VS Code or Visual Studio, multi-tier 
 
 ```
 
-* 
-**Dissection:** Locks Left Control using the global tracking system, cycles up and down across visual paragraph fragments using sequential navigation arrow bursts, releases the persistent modifier tree, and drops the highlighting line payload using a clean forward delete command.
+* **Dissection:** Locks Left Control using the global tracking system, cycles up and down across visual paragraph fragments using sequential navigation arrow bursts, releases the persistent modifier tree, and drops the highlighting line payload using a clean forward delete command.
 
 
 
