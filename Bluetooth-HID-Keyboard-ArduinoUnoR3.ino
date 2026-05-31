@@ -87,7 +87,71 @@ void loop()
                 continue;
               }
             }
-          } 
+          }
+          else if (macroType == 'X') {
+            unsigned int j = i + 2;
+            uint8_t comboMods = activeGlobalModifiers; // Start with any currently held global modifiers
+            uint8_t comboKey = KEY_NONE;
+            bool executionTriggered = false;
+
+            // Parse characters until we find a target primary key or run out of string
+            while (j < inputString.length()) {
+              char target = inputString.charAt(j);
+            
+              // Check if the current character is a modifier flag
+              if (target == 'l')      { comboMods |= KEY_LSHIFT; j++; }
+              else if (target == 'r') { comboMods |= KEY_RSHIFT; j++; }
+              else if (target == 'c') { comboMods |= KEY_LCTRL;  j++; }
+              else if (target == 'q') { comboMods |= KEY_RCTRL;  j++; }
+              else if (target == 'a') { comboMods |= KEY_LALT;   j++; }
+              else if (target == 'm') { comboMods |= KEY_RALT;   j++; }
+              else {
+                // Not a modifier! Treat this character as the core keycap target
+                // First, check if it's an escaped navigation shortcut (like U, D, L, R, E, S, K, B, T)
+                char upperTarget = target;
+                if (upperTarget >= 'a' && upperTarget <= 'z') upperTarget -= 32;
+
+                switch (upperTarget) {
+                  case 'U': comboKey = KEY_UP;          break;
+                  case 'D': comboKey = KEY_DOWN;        break;
+                  case 'L': comboKey = KEY_LEFT;        break;
+                  case 'R': comboKey = KEY_RIGHT;       break;
+                  case 'E': comboKey = KEY_ENTER;       break;
+                  case 'S': comboKey = KEY_ESC;         break;
+                  case 'C': comboKey = KEY_CAPS_LOCK;   break;
+                  case 'N': comboKey = KEY_NUM_LOCK;    break;
+                  case 'O': comboKey = KEY_SCROLL_LOCK; break;
+                  case 'K': comboKey = KEY_DELETE;      break;
+                  case 'T': comboKey = 0x2B;            break; // Tab
+                  case 'B': comboKey = KEY_BACKSPACE;   break;
+                  default:
+                    // If it's a standard letter/number, let's look up its scan code dynamically
+                    // Temporary registers to avoid disturbing global typing logic
+                    uint8_t tempMod = KEY_NONE; 
+                    uint8_t tempScan = KEY_NONE;
+                  
+                    // Run a quick trace through your alpha-numeric lookup function map
+                    // We bypass executeReport by shifting its logic out if necessary, or running it directly:
+                    if (target >= 'A' && target <= 'Z') { comboMods |= KEY_LSHIFT; comboKey = 0x04 + (target - 'A'); }
+                    else if (target >= 'a' && target <= 'z') { comboKey = 0x04 + (target - 'a'); }
+                    else if (target >= '1' && target <= '9') { comboKey = 0x1E + (target - '1'); }
+                    else if (target == '0') { comboKey = 0x27; }
+                    else if (target == ' ') { comboKey = KEY_SPACE; }
+                    break;
+                }
+              
+                // Fire the combination down the wire immediately
+                executeReport(comboMods, comboKey);
+                executionTriggered = true;
+                j++;
+                break; // Combo fully compiled and spent! Exit loop.
+              }
+            }
+            if (executionTriggered) {
+              i = j;
+              continue;
+            }
+          }
           bool validMacro = handleSingleMacro(macroType);
           if (validMacro) {
             i += 2; 
