@@ -142,6 +142,11 @@ Sending these tokens triggers an instantaneous key-down and key-up sequence for 
  | `0x4C` |
 | <br>`\C` 
 
+ | Space
+
+ | `0x2C` |
+| <br>`\P` 
+
  | Caps Lock Toggle 
 
  | `0x39` |
@@ -181,6 +186,16 @@ For hotkeys that require absolute simultaneous structural delivery in a single d
 
 
 The combination parser scans all incoming bytes immediately following `\X`. It treats all listed modifier tokens (`l`, `r`, `c`, `q`, `a`, `m`) as additive bitmasks, applying them simultaneously until it hits a non-modifier target keycap. Once the target keycap is found, it packages them all into a single unified buffer report, shoots it down the wire, and exits cleanly.
+
+### 6. Multimedia & Consumer System Keys (Usage Page 0x0C)
+These macros transmit specialized, native 2-byte reports to manipulate audio output parameters and system media players. 
+
+| Token (Case-Insensitive) | System Action Triggered | Consumer Usage ID (Hex) |
+| :---: | :--- | :---: |
+| `\V` | Volume Increment (Up) | `0x00E9` |
+| `\I` | Volume Decrement (Down) | `0x00EA` |
+| `\M` | Audio Output Mute (Toggle) | `0x00E2` |
+| `\Y` | Play / Pause / Continue Media | `0x00CD` |
 
 ---
 

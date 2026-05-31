@@ -27,6 +27,11 @@ SoftwareSerial BTSerial(10, 11); // RX, TX
 #define KEY_NUM_LOCK    0x53
 #define KEY_BACKSPACE   0x2A
 
+#define KEY_PLAY_PAUSE 0xCD
+#define KEY_MUTE       0xE2
+#define KEY_VOL_UP     0xE9
+#define KEY_VOL_DOWN   0xEA
+
 uint8_t buf[8] = { 0 };
 uint8_t activeGlobalModifiers = KEY_NONE;
 
@@ -129,6 +134,7 @@ void loop()
                   case 'K': comboKey = KEY_DELETE;      break;
                   case 'T': comboKey = 0x2B;            break; // Tab
                   case 'B': comboKey = KEY_BACKSPACE;   break;
+                  case 'P': comboKey = KEY_SPACE;       break;
                   default:
                     // If it's a standard letter/number, let's look up its scan code dynamically
                     // Temporary registers to avoid disturbing global typing logic
@@ -287,6 +293,12 @@ bool handleSingleMacro(char type) {
     case 'K': targetKey = KEY_DELETE;      break;
     case 'T': targetKey = 0x2B;            break;
     case 'B': targetKey = KEY_BACKSPACE;   break;
+    case 'P': targetKey = KEY_SPACE;       break;
+
+    case 'V': sendMediaKey(KEY_VOL_UP);     return true; // \V drops Volume Up frame
+    case 'I': sendMediaKey(KEY_VOL_DOWN);   return true; // \I drops Volume Down frame
+    case 'M': sendMediaKey(KEY_MUTE);       return true; // \M toggles absolute Mute
+    case 'Y': sendMediaKey(KEY_PLAY_PAUSE); return true; // \Y Pause&Play&Continue
 
     default:
       switch (type) {
@@ -329,6 +341,21 @@ void enableStickyModifier(char m) {
     case 'a': activeGlobalModifiers |= KEY_LALT;   break;
     case 'm': activeGlobalModifiers |= KEY_RALT;   break;
   }
+}
+
+void sendMediaKey(uint8_t mediaKey) {
+  uint8_t mediaBuf[2] = { 0 };
+  
+  // Package the specific Usage Page 0x0C media command
+  mediaBuf[0] = mediaKey;
+  mediaBuf[1] = 0x00;
+  
+  Serial.write(mediaBuf, 2); // Send the specialized compact media frame
+  delay(15);                 // Hold state parameters momentarily
+  
+  mediaBuf[0] = 0x00;        // Clear report frame to signify release state
+  Serial.write(mediaBuf, 2);
+  delay(35);
 }
 
 void executeReport(uint8_t mod, uint8_t key) {
