@@ -157,6 +157,30 @@ void loop()
               continue;
             }
           }
+          else if (upperType == 'D' && i + 6 < inputString.length()) {
+            String checkDelay = inputString.substring(i + 1, i + 7); // Captures indices i+1 to i+6 ("delay=")
+            checkDelay.toLowerCase(); 
+            
+            if (checkDelay == "delay=") {
+              String msStr = "";
+              unsigned int j = i + 7; // Advance processing cursor past the '=' character
+              
+              // Extract all digits defining milliseconds duration parameters
+              while (j < inputString.length() && isDigit(inputString.charAt(j))) {
+                msStr += inputString.charAt(j);
+                j++;
+              }
+              
+              if (msStr.length() > 0) {
+                long duration = msStr.toInt();
+                if (duration > 0) {
+                  delay(duration); // Enforce the raw wait loop execution on ATmega328P
+                }
+                i = j; // Shift processing index forward over the parsed expression
+                continue;
+              }
+            }
+          }
           bool validMacro = handleSingleMacro(upperType);
           if (validMacro) {
             i += 2; 
