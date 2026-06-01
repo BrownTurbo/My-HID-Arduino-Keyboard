@@ -35,7 +35,6 @@ SoftwareSerial BTSerial(10, 11); // RX, TX
 #define KEY_PREV_TRACK  0xB6
 #define KEY_STOP        0xB7
 
-uint8_t buf[8] = { 0 };
 uint8_t activeGlobalModifiers = KEY_NONE;
 
 void setup() 
@@ -67,6 +66,8 @@ void loop()
             char modChar = inputString.charAt(i + 2);
             enableStickyModifier(modChar);
             i += 3;
+
+            delay(50);
             continue;
           }
           
@@ -74,6 +75,8 @@ void loop()
           if (macroType == '-') {
             activeGlobalModifiers = KEY_NONE;
             i += 2;
+
+            delay(50);
             continue;
           }
 
@@ -351,46 +354,48 @@ void enableStickyModifier(char m) {
 }
 
 void sendMediaKey(uint16_t consumerUsageKey) {
-  uint8_t mediaBuf[8] = {0};
+  uint8_t mediaBuf[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
   
   // Convert custom codes to true USB HID Consumer usage codes
   uint16_t trueHIDCode = 0;
   switch(consumerUsageKey) {
-    case 0xCD: trueHIDCode = 0x00CD; break; // Play/Pause
-    case 0xE2: trueHIDCode = 0x00E2; break; // Mute
-    case 0xE9: trueHIDCode = 0x00E9; break; // Volume Up
-    case 0xEA: trueHIDCode = 0x00EA; break; // Volume Down
-    case 0xB5: trueHIDCode = 0x00B5; break; // Next Track
-    case 0xB6: trueHIDCode = 0x00B6; break; // Previous Track
-    case 0xB7: trueHIDCode = 0x00B7; break; // Stop
+    case KEY_PLAY_PAUSE: trueHIDCode = 0x00CD; break; // Play/Pause
+    case KEY_MUTE: trueHIDCode = 0x00E2; break; // Mute
+    case KEY_VOL_UP: trueHIDCode = 0x00E9; break; // Volume Up
+    case KEY_VOL_DOWN: trueHIDCode = 0x00EA; break; // Volume Down
+    case KEY_NEXT_TRACK: trueHIDCode = 0x00B5; break; // Next Track
+    case KEY_PREV_TRACK: trueHIDCode = 0x00B6; break; // Previous Track
+    case KEY_STOP: trueHIDCode = 0x00B7; break; // Stop
     default:   trueHIDCode = consumerUsageKey; break;
   }
 
-  mediaBuf[0] = trueHIDCode & 0xFF;        // Low byte
-  mediaBuf[1] = (trueHIDCode >> 8) & 0xFF; // High byte
+  mediaBuf[0] = 0x02;
+  mediaBuf[1] = trueHIDCode & 0xFF;        // Low byte
+  mediaBuf[2] = (trueHIDCode >> 8) & 0xFF; // High byte
 
   // Press Key Event
-  Serial.write(0x02); // Routing Identifier: Consumer Media Control
-  Serial.write(mediaBuf, 8);
+  Serial.write(mediaBuf, 9);
   delay(30); // Hold delay time
   
   // Release Key Event to prevent stuck keys
   mediaBuf[0] = 0x00;
   mediaBuf[1] = 0x00;
-  Serial.write(0x02); 
-  Serial.write(mediaBuf, 8);
+  Serial.write(mediaBuf, 9);
 }
 
 void executeReport(uint8_t mod, uint8_t key) {
-  buf[0] = mod;
-  buf[2] = key;
-  Serial.write(buf, 8);
+  uint8_t KeyboardBuf[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+  KeyboardBuf[0] = 0x01;
+  KeyboardBuf[1] = mod;
+  KeyboardBuf[2] = 0x00;
+  KeyboardBuf[3] = key;
+  Serial.write(KeyboardBuf, 9);
   
   delay(15); // Keydown duration hold
+
+  KeyboardBuf[1] = activeGlobalModifiers;
+  KeyboardBuf[3] = KEY_NONE;
+  Serial.write(KeyboardBuf, 9); // Send clear key release report
   
-  buf[0] = mod; 
-  buf[2] = KEY_NONE;
-  Serial.write(buf, 8); // Send clear key release report
-  
-  delay(35); // Settling delay to let BIOS register execution state safely
+  delay(45);   // Settling delay to let BIOS register execution state safely
 }
