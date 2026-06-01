@@ -27,10 +27,13 @@ SoftwareSerial BTSerial(10, 11); // RX, TX
 #define KEY_NUM_LOCK    0x53
 #define KEY_BACKSPACE   0x2A
 
-#define KEY_PLAY_PAUSE 0xCD
-#define KEY_MUTE       0xE2
-#define KEY_VOL_UP     0xE9
-#define KEY_VOL_DOWN   0xEA
+#define KEY_PLAY_PAUSE  0xCD
+#define KEY_MUTE        0xE2
+#define KEY_VOL_UP      0xE9
+#define KEY_VOL_DOWN    0xEA
+#define KEY_NEXT_TRACK  0xB5
+#define KEY_PREV_TRACK  0xB6
+#define KEY_STOP        0xB7
 
 uint8_t buf[8] = { 0 };
 uint8_t activeGlobalModifiers = KEY_NONE;
@@ -38,6 +41,7 @@ uint8_t activeGlobalModifiers = KEY_NONE;
 void setup() 
 {
   Serial.begin(9600);
+  UCSR0B &= ~(1 << RXCIE0);
   BTSerial.begin(9600); 
 }
 
@@ -295,10 +299,13 @@ bool handleSingleMacro(char type) {
     case 'B': targetKey = KEY_BACKSPACE;   break;
     case 'P': targetKey = KEY_SPACE;       break;
 
-    case 'V': sendMediaKey(KEY_VOL_UP);     return true; // \V drops Volume Up frame
-    case 'I': sendMediaKey(KEY_VOL_DOWN);   return true; // \I drops Volume Down frame
-    case 'M': sendMediaKey(KEY_MUTE);       return true; // \M toggles absolute Mute
-    case 'Y': sendMediaKey(KEY_PLAY_PAUSE); return true; // \Y Pause&Play&Continue
+    case 'V': sendMediaKey(KEY_VOL_UP);     targetKey = KEY_NONE; break; // \V drops Volume Up frame
+    case 'I': sendMediaKey(KEY_VOL_DOWN);   targetKey = KEY_NONE; break; // \I drops Volume Down frame
+    case 'M': sendMediaKey(KEY_MUTE);       targetKey = KEY_NONE; break; // \M toggles absolute Mute
+    case 'Y': sendMediaKey(KEY_PLAY_PAUSE); targetKey = KEY_NONE; break; // \Y Pause&Play&Continue
+    case 'Z': sendMediaKey(KEY_STOP);       targetKey = KEY_NONE; break; // \Z Stop
+    case 'J': sendMediaKey(KEY_NEXT_TRACK); targetKey = KEY_NONE; break; // \J Next Track
+    case 'W': sendMediaKey(KEY_PREV_TRACK); targetKey = KEY_NONE; break; // \W Previous Track
 
     default:
       switch (type) {
@@ -343,19 +350,35 @@ void enableStickyModifier(char m) {
   }
 }
 
-void sendMediaKey(uint8_t mediaKey) {
-  uint8_t mediaBuf[2] = { 0 };
+void sendMediaKey(uint16_t consumerUsageKey) {
+  uint8_t mediaBuf[8] = {0};
   
-  // Package the specific Usage Page 0x0C media command
-  mediaBuf[0] = mediaKey;
+  // Convert custom codes to true USB HID Consumer usage codes
+  uint16_t trueHIDCode = 0;
+  switch(consumerUsageKey) {
+    case 0xCD: trueHIDCode = 0x00CD; break; // Play/Pause
+    case 0xE2: trueHIDCode = 0x00E2; break; // Mute
+    case 0xE9: trueHIDCode = 0x00E9; break; // Volume Up
+    case 0xEA: trueHIDCode = 0x00EA; break; // Volume Down
+    case 0xB5: trueHIDCode = 0x00B5; break; // Next Track
+    case 0xB6: trueHIDCode = 0x00B6; break; // Previous Track
+    case 0xB7: trueHIDCode = 0x00B7; break; // Stop
+    default:   trueHIDCode = consumerUsageKey; break;
+  }
+
+  mediaBuf[0] = trueHIDCode & 0xFF;        // Low byte
+  mediaBuf[1] = (trueHIDCode >> 8) & 0xFF; // High byte
+
+  // Press Key Event
+  Serial.write(0x02); // Routing Identifier: Consumer Media Control
+  Serial.write(mediaBuf, 8);
+  delay(30); // Hold delay time
+  
+  // Release Key Event to prevent stuck keys
+  mediaBuf[0] = 0x00;
   mediaBuf[1] = 0x00;
-  
-  Serial.write(mediaBuf, 2); // Send the specialized compact media frame
-  delay(15);                 // Hold state parameters momentarily
-  
-  mediaBuf[0] = 0x00;        // Clear report frame to signify release state
-  Serial.write(mediaBuf, 2);
-  delay(35);
+  Serial.write(0x02); 
+  Serial.write(mediaBuf, 8);
 }
 
 void executeReport(uint8_t mod, uint8_t key) {
