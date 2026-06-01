@@ -48,61 +48,50 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM KeyboardReport[] =
     0x05, 0x01,          /* Usage Page (Generic Desktop)                    */
     0x09, 0x06,          /* Usage (Keyboard)                                */
     0xa1, 0x01,          /* Collection (Application)                        */
-    
-    0x85, 0x01,          /* REPORT_ID (1) <-- CRITICAL: Defines the Keyboard Interface ID */
-    
-    0x75, 0x01,          /* Report Size (1)                               */
-    0x95, 0x08,          /* Report Count (8)                              */
-    0x05, 0x07,          /* Usage Page (Key Codes)                        */
-    0x19, 0xe0,          /* Usage Minimum (Keyboard LeftControl)          */
-    0x29, 0xe7,          /* Usage Maximum (Keyboard Right GUI)            */
-    0x15, 0x00,          /* Logical Minimum (0)                           */
-    0x25, 0x01,          /* Logical Maximum (1)                           */
-    0x81, 0x02,          /* Input (Data, Variable, Absolute)              */
-    
-    0x95, 0x01,          /* Report Count (1)                              */
-    0x75, 0x08,          /* Report Size (8)                               */
-    0x81, 0x03,          /* Input (Const, Variable, Absolute)             */
-    
-    0x95, 0x05,          /* Report Count (5)                              */
-    0x75, 0x01,          /* Report Size (1)                               */
-    0x05, 0x08,          /* Usage Page (LEDs)                             */
-    0x19, 0x01,          /* Usage Minimum (Num Lock)                      */
-    0x29, 0x05,          /* Usage Maximum (Kana)                          */
-    0x91, 0x02,          /* Output (Data, Variable, Absolute)             */
-    
-    0x95, 0x01,          /* Report Count (1)                              */
-    0x75, 0x03,          /* Report Size (3)                               */
-    0x91, 0x03,          /* Output (Const, Variable, Absolute)            */
-    
-    0x95, 0x06,          /* Report Count (6)                              */
-    0x75, 0x08,          /* Report Size (8)                               */
-    0x15, 0x00,          /* Logical Minimum (0)                           */
-    0x26, 231, 0,        /* Logical Maximum (231)                         */
-    0x05, 0x07,          /* Usage Page (Keyboard)                         */
-    0x19, 0x00,          /* Usage Minimum (Reserved (no event indicated)) */
-    0x29, 231,           /* Usage Maximum (Keyboard Application)          */
-    0x81, 0x00,          /* Input (Data, Array, Absolute)                 */
-    0xc0,                /* End Collection (Keyboard Application)            */
+    0x75, 0x01,          /*   Report Size (1)                               */
+    0x95, 0x08,          /*   Report Count (8)                              */
+    0x05, 0x07,          /*   Usage Page (Key Codes)                        */
+    0x19, 0xe0,          /*   Usage Minimum (Keyboard LeftControl)          */
+    0x29, 0xe7,          /*   Usage Maximum (Keyboard Right GUI)            */
+    0x15, 0x00,          /*   Logical Minimum (0)                           */
+    0x25, 0x01,          /*   Logical Maximum (1)                           */
+    0x81, 0x02,          /*   Input (Data, Variable, Absolute)              */
+    0x95, 0x01,          /*   Report Count (1)                              */
+    0x75, 0x08,          /*   Report Size (8)                               */
+    0x81, 0x03,          /*   Input (Const, Variable, Absolute)             */
+    0x95, 0x05,          /*   Report Count (5)                              */
+    0x75, 0x01,          /*   Report Size (1)                               */
+    0x05, 0x08,          /*   Usage Page (LEDs)                             */
+    0x19, 0x01,          /*   Usage Minimum (Num Lock)                      */
+    0x29, 0x05,          /*   Usage Maximum (Kana)                          */
+    0x91, 0x02,          /*   Output (Data, Variable, Absolute)             */
+    0x95, 0x01,          /*   Report Count (1)                              */
+    0x75, 0x03,          /*   Report Size (3)                               */
+    0x91, 0x03,          /*   Output (Const, Variable, Absolute)            */
+    0x95, 0x06,          /*   Report Count (6)                              */
+    0x75, 0x08,          /*   Report Size (8)                               */
+    0x15, 0x00,          /*   Logical Minimum (0)                           */
+    0x26, 231, 0,        /*   Logical Maximum (231)                         */
+    0x05, 0x07,          /*   Usage Page (Keyboard)                         */
+    0x19, 0x00,          /*   Usage Minimum (Reserved (no event indicated)) */
+    0x29, 231,           /*   Usage Maximum (Keyboard Application)          */
+    0x81, 0x00,          /*   Input (Data, Array, Absolute)                 */
+    0xc0                 /* End Collection                                  */
 };
 
 const USB_Descriptor_HIDReport_Datatype_t PROGMEM MediaReport[] =
 {
-	0x05, 0x0C,          // USAGE_PAGE (Consumer Devices)
-	0x09, 0x01,          // USAGE (Consumer Control)
-	0xA1, 0x01,          // COLLECTION (Application)
-	0x09, 0xE9,          //   USAGE (Volume Up)
-	0x09, 0xEA,          //   USAGE (Volume Down)
-	0x09, 0xE2,          //   USAGE (Mute)
-	0x09, 0xCD,          //   USAGE (Play/Pause)
-	0x15, 0x00,          //   LOGICAL_MINIMUM (0)
-	0x25, 0x01,          //   LOGICAL_MAXIMUM (1)
-	0x75, 0x01,          //   REPORT_SIZE (1 bit per key)
-	0x95, 0x04,          //   REPORT_COUNT (4 media actions)
-	0x81, 0x02,          //   INPUT (Data, Var, Abs)
-	0x95, 0x04,          //   REPORT_COUNT (4 padding bits)
-	0x81, 0x03,          //   INPUT (Const, Var, Abs)
-	0xC0                 // END_COLLECTION
+    0x05, 0x0C,        /* Usage Page (Consumer)                    */
+    0x09, 0x01,        /* Usage (Consumer Control)                 */
+    0xA1, 0x01,        /* Collection (Application)                 */
+    0x15, 0x00,        /* Logical Minimum (0)                      */
+    0x26, 0xFF, 0x03,  /* Logical Maximum (0x03FF)                 */
+    0x19, 0x00,        /* Usage Minimum (0)                        */
+    0x2A, 0xFF, 0x03,  /* Usage Maximum (0x03FF)                   */
+    0x75, 0x10,        /* Report Size (16 bits)                    */
+    0x95, 0x01,        /* Report Count (1)                         */
+    0x81, 0x02,        /* Input (Data, Array, Absolute)            */
+    0xC0               /* End Collection                           */
 };
 
 /** Device descriptor structure. This descriptor, located in FLASH memory, describes the overall
@@ -115,14 +104,14 @@ const USB_Descriptor_Device_t PROGMEM DeviceDescriptor =
 	.Header                 = {.Size = sizeof(USB_Descriptor_Device_t), .Type = DTYPE_Device},
 		
 	.USBSpecification       = VERSION_BCD(01.10),
-	.Class                  = 0x00,
-	.SubClass               = 0x00,
-	.Protocol               = 0x00,
+    .Class                  = 0xEF, 
+    .SubClass               = 0x02,
+    .Protocol               = 0x01,
 				
 	.Endpoint0Size          = FIXED_CONTROL_ENDPOINT_SIZE,
-		
+			
 	.VendorID               = 0x03EB,
-	.ProductID              = 0x2043,
+	.ProductID              = 0x2042,
 	.ReleaseNumber          = 0x0001,
 		
 	.ManufacturerStrIndex   = 0x01,
@@ -153,7 +142,17 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 			
 			.MaxPowerConsumption    = USB_CONFIG_POWER_MA(100)
 		},
-		
+
+    .IAD = {
+        .Header                 = {.Size = sizeof(USB_Descriptor_Interface_Association_t), .Type = DTYPE_InterfaceAssociation},
+        .FirstInterfaceIndex    = 0,
+        .TotalInterfaces        = 2,
+        .Class                  = 0x03, 
+        .SubClass               = 0x00,
+        .Protocol               = 0x00,
+        .IADStrIndex            = NO_DESCRIPTOR
+    },
+
 	.HID_KeyboardInterface = 
 		{
 			.Header                 = {.Size = sizeof(USB_Descriptor_Interface_t), .Type = DTYPE_Interface},
@@ -188,7 +187,7 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 			.EndpointAddress        = (ENDPOINT_DESCRIPTOR_DIR_IN | KEYBOARD_EPNUM),
 			.Attributes             = (EP_TYPE_INTERRUPT | ENDPOINT_ATTR_NO_SYNC | ENDPOINT_USAGE_DATA),
 			.EndpointSize           = KEYBOARD_EPSIZE,
-			.PollingIntervalMS      = 0x0A
+			.PollingIntervalMS      = 0x01
 		},
 		
 	.HID_MediaInterface =
@@ -217,7 +216,7 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 			.EndpointAddress        = (ENDPOINT_DESCRIPTOR_DIR_IN | MEDIA_EPNUM),
 			.Attributes             = (EP_TYPE_INTERRUPT | ENDPOINT_ATTR_NO_SYNC | ENDPOINT_USAGE_DATA),
 			.EndpointSize           = MEDIA_EPSIZE,
-			.PollingIntervalMS               = 0x0A
+			.PollingIntervalMS               = 0x04
 		}
 };
 

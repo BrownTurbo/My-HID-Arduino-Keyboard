@@ -2434,14 +2434,14 @@
  832               		.file 11 "<built-in>"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 HID.c
-/tmp/user/1000/ccYqEc5O.s:2      *ABS*:000000000000003e __SP_H__
-/tmp/user/1000/ccYqEc5O.s:3      *ABS*:000000000000003d __SP_L__
-/tmp/user/1000/ccYqEc5O.s:4      *ABS*:000000000000003f __SREG__
-/tmp/user/1000/ccYqEc5O.s:5      *ABS*:0000000000000000 __tmp_reg__
-/tmp/user/1000/ccYqEc5O.s:6      *ABS*:0000000000000001 __zero_reg__
-/tmp/user/1000/ccYqEc5O.s:13     .text.HID_Device_ProcessControlRequest:0000000000000000 HID_Device_ProcessControlRequest
-/tmp/user/1000/ccYqEc5O.s:442    .text.HID_Device_ConfigureEndpoints:0000000000000000 HID_Device_ConfigureEndpoints
-/tmp/user/1000/ccYqEc5O.s:521    .text.HID_Device_USBTask:0000000000000000 HID_Device_USBTask
+/tmp/user/1000/cc9bEEU4.s:2      *ABS*:000000000000003e __SP_H__
+/tmp/user/1000/cc9bEEU4.s:3      *ABS*:000000000000003d __SP_L__
+/tmp/user/1000/cc9bEEU4.s:4      *ABS*:000000000000003f __SREG__
+/tmp/user/1000/cc9bEEU4.s:5      *ABS*:0000000000000000 __tmp_reg__
+/tmp/user/1000/cc9bEEU4.s:6      *ABS*:0000000000000001 __zero_reg__
+/tmp/user/1000/cc9bEEU4.s:13     .text.HID_Device_ProcessControlRequest:0000000000000000 HID_Device_ProcessControlRequest
+/tmp/user/1000/cc9bEEU4.s:442    .text.HID_Device_ConfigureEndpoints:0000000000000000 HID_Device_ConfigureEndpoints
+/tmp/user/1000/cc9bEEU4.s:521    .text.HID_Device_USBTask:0000000000000000 HID_Device_USBTask
 
 UNDEFINED SYMBOLS
 USB_ControlRequest

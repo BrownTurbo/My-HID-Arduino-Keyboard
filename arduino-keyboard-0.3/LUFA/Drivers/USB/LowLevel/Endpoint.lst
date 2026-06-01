@@ -5893,37 +5893,37 @@
  3787               		.file 12 "/usr/lib/avr/include/avr/eeprom.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 Endpoint.c
-/tmp/user/1000/cc8h2yps.s:2      *ABS*:000000000000003e __SP_H__
-/tmp/user/1000/cc8h2yps.s:3      *ABS*:000000000000003d __SP_L__
-/tmp/user/1000/cc8h2yps.s:4      *ABS*:000000000000003f __SREG__
-/tmp/user/1000/cc8h2yps.s:5      *ABS*:0000000000000000 __tmp_reg__
-/tmp/user/1000/cc8h2yps.s:6      *ABS*:0000000000000001 __zero_reg__
-/tmp/user/1000/cc8h2yps.s:13     .text.Endpoint_BytesToEPSizeMaskDynamic:0000000000000000 Endpoint_BytesToEPSizeMaskDynamic
-/tmp/user/1000/cc8h2yps.s:67     .text.Endpoint_ConfigureEndpoint_Prv:0000000000000000 Endpoint_ConfigureEndpoint_Prv
-/tmp/user/1000/cc8h2yps.s:121    .text.Endpoint_ClearEndpoints:0000000000000000 Endpoint_ClearEndpoints
-/tmp/user/1000/cc8h2yps.s:173    .text.Endpoint_ClearStatusStage:0000000000000000 Endpoint_ClearStatusStage
-/tmp/user/1000/cc8h2yps.s:248    .text.Endpoint_WaitUntilReady:0000000000000000 Endpoint_WaitUntilReady
-/tmp/user/1000/cc8h2yps.s:356    .text.Endpoint_Discard_Stream:0000000000000000 Endpoint_Discard_Stream
-/tmp/user/1000/cc8h2yps.s:469    .text.Endpoint_Write_Stream_LE:0000000000000000 Endpoint_Write_Stream_LE
-/tmp/user/1000/cc8h2yps.s:608    .text.Endpoint_Write_PStream_LE:0000000000000000 Endpoint_Write_PStream_LE
-/tmp/user/1000/cc8h2yps.s:755    .text.Endpoint_Write_EStream_LE:0000000000000000 Endpoint_Write_EStream_LE
-/tmp/user/1000/cc8h2yps.s:904    .text.Endpoint_Write_Stream_BE:0000000000000000 Endpoint_Write_Stream_BE
-/tmp/user/1000/cc8h2yps.s:1048   .text.Endpoint_Write_EStream_BE:0000000000000000 Endpoint_Write_EStream_BE
-/tmp/user/1000/cc8h2yps.s:1206   .text.Endpoint_Write_PStream_BE:0000000000000000 Endpoint_Write_PStream_BE
-/tmp/user/1000/cc8h2yps.s:1362   .text.Endpoint_Read_Stream_LE:0000000000000000 Endpoint_Read_Stream_LE
-/tmp/user/1000/cc8h2yps.s:1498   .text.Endpoint_Read_EStream_LE:0000000000000000 Endpoint_Read_EStream_LE
-/tmp/user/1000/cc8h2yps.s:1646   .text.Endpoint_Read_Stream_BE:0000000000000000 Endpoint_Read_Stream_BE
-/tmp/user/1000/cc8h2yps.s:1788   .text.Endpoint_Read_EStream_BE:0000000000000000 Endpoint_Read_EStream_BE
-/tmp/user/1000/cc8h2yps.s:1945   .text.Endpoint_Write_Control_Stream_LE:0000000000000000 Endpoint_Write_Control_Stream_LE
-/tmp/user/1000/cc8h2yps.s:2133   .text.Endpoint_Write_Control_PStream_LE:0000000000000000 Endpoint_Write_Control_PStream_LE
-/tmp/user/1000/cc8h2yps.s:2329   .text.Endpoint_Write_Control_EStream_LE:0000000000000000 Endpoint_Write_Control_EStream_LE
-/tmp/user/1000/cc8h2yps.s:2544   .text.Endpoint_Write_Control_Stream_BE:0000000000000000 Endpoint_Write_Control_Stream_BE
-/tmp/user/1000/cc8h2yps.s:2736   .text.Endpoint_Write_Control_PStream_BE:0000000000000000 Endpoint_Write_Control_PStream_BE
-/tmp/user/1000/cc8h2yps.s:2939   .text.Endpoint_Write_Control_EStream_BE:0000000000000000 Endpoint_Write_Control_EStream_BE
-/tmp/user/1000/cc8h2yps.s:3165   .text.Endpoint_Read_Control_Stream_LE:0000000000000000 Endpoint_Read_Control_Stream_LE
-/tmp/user/1000/cc8h2yps.s:3301   .text.Endpoint_Read_Control_EStream_LE:0000000000000000 Endpoint_Read_Control_EStream_LE
-/tmp/user/1000/cc8h2yps.s:3470   .text.Endpoint_Read_Control_Stream_BE:0000000000000000 Endpoint_Read_Control_Stream_BE
-/tmp/user/1000/cc8h2yps.s:3607   .text.Endpoint_Read_Control_EStream_BE:0000000000000000 Endpoint_Read_Control_EStream_BE
+/tmp/user/1000/cciXK8pq.s:2      *ABS*:000000000000003e __SP_H__
+/tmp/user/1000/cciXK8pq.s:3      *ABS*:000000000000003d __SP_L__
+/tmp/user/1000/cciXK8pq.s:4      *ABS*:000000000000003f __SREG__
+/tmp/user/1000/cciXK8pq.s:5      *ABS*:0000000000000000 __tmp_reg__
+/tmp/user/1000/cciXK8pq.s:6      *ABS*:0000000000000001 __zero_reg__
+/tmp/user/1000/cciXK8pq.s:13     .text.Endpoint_BytesToEPSizeMaskDynamic:0000000000000000 Endpoint_BytesToEPSizeMaskDynamic
+/tmp/user/1000/cciXK8pq.s:67     .text.Endpoint_ConfigureEndpoint_Prv:0000000000000000 Endpoint_ConfigureEndpoint_Prv
+/tmp/user/1000/cciXK8pq.s:121    .text.Endpoint_ClearEndpoints:0000000000000000 Endpoint_ClearEndpoints
+/tmp/user/1000/cciXK8pq.s:173    .text.Endpoint_ClearStatusStage:0000000000000000 Endpoint_ClearStatusStage
+/tmp/user/1000/cciXK8pq.s:248    .text.Endpoint_WaitUntilReady:0000000000000000 Endpoint_WaitUntilReady
+/tmp/user/1000/cciXK8pq.s:356    .text.Endpoint_Discard_Stream:0000000000000000 Endpoint_Discard_Stream
+/tmp/user/1000/cciXK8pq.s:469    .text.Endpoint_Write_Stream_LE:0000000000000000 Endpoint_Write_Stream_LE
+/tmp/user/1000/cciXK8pq.s:608    .text.Endpoint_Write_PStream_LE:0000000000000000 Endpoint_Write_PStream_LE
+/tmp/user/1000/cciXK8pq.s:755    .text.Endpoint_Write_EStream_LE:0000000000000000 Endpoint_Write_EStream_LE
+/tmp/user/1000/cciXK8pq.s:904    .text.Endpoint_Write_Stream_BE:0000000000000000 Endpoint_Write_Stream_BE
+/tmp/user/1000/cciXK8pq.s:1048   .text.Endpoint_Write_EStream_BE:0000000000000000 Endpoint_Write_EStream_BE
+/tmp/user/1000/cciXK8pq.s:1206   .text.Endpoint_Write_PStream_BE:0000000000000000 Endpoint_Write_PStream_BE
+/tmp/user/1000/cciXK8pq.s:1362   .text.Endpoint_Read_Stream_LE:0000000000000000 Endpoint_Read_Stream_LE
+/tmp/user/1000/cciXK8pq.s:1498   .text.Endpoint_Read_EStream_LE:0000000000000000 Endpoint_Read_EStream_LE
+/tmp/user/1000/cciXK8pq.s:1646   .text.Endpoint_Read_Stream_BE:0000000000000000 Endpoint_Read_Stream_BE
+/tmp/user/1000/cciXK8pq.s:1788   .text.Endpoint_Read_EStream_BE:0000000000000000 Endpoint_Read_EStream_BE
+/tmp/user/1000/cciXK8pq.s:1945   .text.Endpoint_Write_Control_Stream_LE:0000000000000000 Endpoint_Write_Control_Stream_LE
+/tmp/user/1000/cciXK8pq.s:2133   .text.Endpoint_Write_Control_PStream_LE:0000000000000000 Endpoint_Write_Control_PStream_LE
+/tmp/user/1000/cciXK8pq.s:2329   .text.Endpoint_Write_Control_EStream_LE:0000000000000000 Endpoint_Write_Control_EStream_LE
+/tmp/user/1000/cciXK8pq.s:2544   .text.Endpoint_Write_Control_Stream_BE:0000000000000000 Endpoint_Write_Control_Stream_BE
+/tmp/user/1000/cciXK8pq.s:2736   .text.Endpoint_Write_Control_PStream_BE:0000000000000000 Endpoint_Write_Control_PStream_BE
+/tmp/user/1000/cciXK8pq.s:2939   .text.Endpoint_Write_Control_EStream_BE:0000000000000000 Endpoint_Write_Control_EStream_BE
+/tmp/user/1000/cciXK8pq.s:3165   .text.Endpoint_Read_Control_Stream_LE:0000000000000000 Endpoint_Read_Control_Stream_LE
+/tmp/user/1000/cciXK8pq.s:3301   .text.Endpoint_Read_Control_EStream_LE:0000000000000000 Endpoint_Read_Control_EStream_LE
+/tmp/user/1000/cciXK8pq.s:3470   .text.Endpoint_Read_Control_Stream_BE:0000000000000000 Endpoint_Read_Control_Stream_BE
+/tmp/user/1000/cciXK8pq.s:3607   .text.Endpoint_Read_Control_EStream_BE:0000000000000000 Endpoint_Read_Control_EStream_BE
 
 UNDEFINED SYMBOLS
 USB_ControlRequest

@@ -536,11 +536,11 @@
   67               		.file 6 "LUFA/Drivers/USB/LowLevel/../HighLevel/USBTask.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 Device.c
-/tmp/user/1000/ccPmP7zV.s:2      *ABS*:000000000000003e __SP_H__
-/tmp/user/1000/ccPmP7zV.s:3      *ABS*:000000000000003d __SP_L__
-/tmp/user/1000/ccPmP7zV.s:4      *ABS*:000000000000003f __SREG__
-/tmp/user/1000/ccPmP7zV.s:5      *ABS*:0000000000000000 __tmp_reg__
-/tmp/user/1000/ccPmP7zV.s:6      *ABS*:0000000000000001 __zero_reg__
-/tmp/user/1000/ccPmP7zV.s:13     .text.USB_Device_SendRemoteWakeup:0000000000000000 USB_Device_SendRemoteWakeup
+/tmp/user/1000/ccWCEzVr.s:2      *ABS*:000000000000003e __SP_H__
+/tmp/user/1000/ccWCEzVr.s:3      *ABS*:000000000000003d __SP_L__
+/tmp/user/1000/ccWCEzVr.s:4      *ABS*:000000000000003f __SREG__
+/tmp/user/1000/ccWCEzVr.s:5      *ABS*:0000000000000000 __tmp_reg__
+/tmp/user/1000/ccWCEzVr.s:6      *ABS*:0000000000000001 __zero_reg__
+/tmp/user/1000/ccWCEzVr.s:13     .text.USB_Device_SendRemoteWakeup:0000000000000000 USB_Device_SendRemoteWakeup
 
 NO UNDEFINED SYMBOLS

@@ -1851,15 +1851,15 @@
  367               		.file 9 "LUFA/Drivers/USB/Class/Device/MIDI.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 MIDI.c
-/tmp/user/1000/cckZPSkJ.s:2      *ABS*:000000000000003e __SP_H__
-/tmp/user/1000/cckZPSkJ.s:3      *ABS*:000000000000003d __SP_L__
-/tmp/user/1000/cckZPSkJ.s:4      *ABS*:000000000000003f __SREG__
-/tmp/user/1000/cckZPSkJ.s:5      *ABS*:0000000000000000 __tmp_reg__
-/tmp/user/1000/cckZPSkJ.s:6      *ABS*:0000000000000001 __zero_reg__
-/tmp/user/1000/cckZPSkJ.s:13     .text.MIDI_Device_ConfigureEndpoints:0000000000000000 MIDI_Device_ConfigureEndpoints
-/tmp/user/1000/cckZPSkJ.s:136    .text.MIDI_Device_SendEventPacket:0000000000000000 MIDI_Device_SendEventPacket
-/tmp/user/1000/cckZPSkJ.s:222    .text.MIDI_Device_Flush:0000000000000000 MIDI_Device_Flush
-/tmp/user/1000/cckZPSkJ.s:284    .text.MIDI_Device_ReceiveEventPacket:0000000000000000 MIDI_Device_ReceiveEventPacket
+/tmp/user/1000/cc1lDkVO.s:2      *ABS*:000000000000003e __SP_H__
+/tmp/user/1000/cc1lDkVO.s:3      *ABS*:000000000000003d __SP_L__
+/tmp/user/1000/cc1lDkVO.s:4      *ABS*:000000000000003f __SREG__
+/tmp/user/1000/cc1lDkVO.s:5      *ABS*:0000000000000000 __tmp_reg__
+/tmp/user/1000/cc1lDkVO.s:6      *ABS*:0000000000000001 __zero_reg__
+/tmp/user/1000/cc1lDkVO.s:13     .text.MIDI_Device_ConfigureEndpoints:0000000000000000 MIDI_Device_ConfigureEndpoints
+/tmp/user/1000/cc1lDkVO.s:136    .text.MIDI_Device_SendEventPacket:0000000000000000 MIDI_Device_SendEventPacket
+/tmp/user/1000/cc1lDkVO.s:222    .text.MIDI_Device_Flush:0000000000000000 MIDI_Device_Flush
+/tmp/user/1000/cc1lDkVO.s:284    .text.MIDI_Device_ReceiveEventPacket:0000000000000000 MIDI_Device_ReceiveEventPacket
 
 UNDEFINED SYMBOLS
 Endpoint_BytesToEPSizeMaskDynamic

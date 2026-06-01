@@ -47,9 +47,15 @@
  *  application code, as the configuration descriptor contains several sub-descriptors which
  *  vary between devices, and which describe the device's usage to the host.
  */
-typedef struct
+typedef struct ATTR_PACKED
+{
+    uint16_t Usage;
+} USB_MediaReport_Data_t;
+
+typedef struct  __attribute__((packed))
 {
     USB_Descriptor_Configuration_Header_t Config;
+    USB_Descriptor_Interface_Association_t   IAD; 
 
 	// Interface 0: Standard Keyboard
 	USB_Descriptor_Interface_t            HID_KeyboardInterface;

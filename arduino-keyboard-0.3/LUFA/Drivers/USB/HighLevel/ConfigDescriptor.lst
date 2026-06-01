@@ -799,14 +799,14 @@
  380               		.file 7 "LUFA/Drivers/USB/HighLevel/../LowLevel/../HighLevel/USBTask.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 ConfigDescriptor.c
-/tmp/user/1000/cc4jaCds.s:2      *ABS*:000000000000003e __SP_H__
-/tmp/user/1000/cc4jaCds.s:3      *ABS*:000000000000003d __SP_L__
-/tmp/user/1000/cc4jaCds.s:4      *ABS*:000000000000003f __SREG__
-/tmp/user/1000/cc4jaCds.s:5      *ABS*:0000000000000000 __tmp_reg__
-/tmp/user/1000/cc4jaCds.s:6      *ABS*:0000000000000001 __zero_reg__
-/tmp/user/1000/cc4jaCds.s:13     .text.USB_GetNextDescriptorOfType:0000000000000000 USB_GetNextDescriptorOfType
-/tmp/user/1000/cc4jaCds.s:86     .text.USB_GetNextDescriptorOfTypeBefore:0000000000000000 USB_GetNextDescriptorOfTypeBefore
-/tmp/user/1000/cc4jaCds.s:162    .text.USB_GetNextDescriptorOfTypeAfter:0000000000000000 USB_GetNextDescriptorOfTypeAfter
-/tmp/user/1000/cc4jaCds.s:239    .text.USB_GetNextDescriptorComp:0000000000000000 USB_GetNextDescriptorComp
+/tmp/user/1000/ccl9TtWA.s:2      *ABS*:000000000000003e __SP_H__
+/tmp/user/1000/ccl9TtWA.s:3      *ABS*:000000000000003d __SP_L__
+/tmp/user/1000/ccl9TtWA.s:4      *ABS*:000000000000003f __SREG__
+/tmp/user/1000/ccl9TtWA.s:5      *ABS*:0000000000000000 __tmp_reg__
+/tmp/user/1000/ccl9TtWA.s:6      *ABS*:0000000000000001 __zero_reg__
+/tmp/user/1000/ccl9TtWA.s:13     .text.USB_GetNextDescriptorOfType:0000000000000000 USB_GetNextDescriptorOfType
+/tmp/user/1000/ccl9TtWA.s:86     .text.USB_GetNextDescriptorOfTypeBefore:0000000000000000 USB_GetNextDescriptorOfTypeBefore
+/tmp/user/1000/ccl9TtWA.s:162    .text.USB_GetNextDescriptorOfTypeAfter:0000000000000000 USB_GetNextDescriptorOfTypeAfter
+/tmp/user/1000/ccl9TtWA.s:239    .text.USB_GetNextDescriptorComp:0000000000000000 USB_GetNextDescriptorComp
 
 NO UNDEFINED SYMBOLS
