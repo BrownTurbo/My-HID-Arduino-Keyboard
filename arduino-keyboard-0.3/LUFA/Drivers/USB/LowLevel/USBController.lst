@@ -928,14 +928,14 @@
  204               		.file 8 "LUFA/Drivers/USB/LowLevel/../HighLevel/../LowLevel/Device.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 USBController.c
-/tmp/user/1000/ccbsMLAR.s:2      *ABS*:000000000000003e __SP_H__
-/tmp/user/1000/ccbsMLAR.s:3      *ABS*:000000000000003d __SP_L__
-/tmp/user/1000/ccbsMLAR.s:4      *ABS*:000000000000003f __SREG__
-/tmp/user/1000/ccbsMLAR.s:5      *ABS*:0000000000000000 __tmp_reg__
-/tmp/user/1000/ccbsMLAR.s:6      *ABS*:0000000000000001 __zero_reg__
-/tmp/user/1000/ccbsMLAR.s:13     .text.USB_ResetInterface:0000000000000000 USB_ResetInterface
-/tmp/user/1000/ccbsMLAR.s:113    .text.USB_Init:0000000000000000 USB_Init
-/tmp/user/1000/ccbsMLAR.s:136    .text.USB_ShutDown:0000000000000000 USB_ShutDown
+/tmp/user/1000/ccfiAoAS.s:2      *ABS*:000000000000003e __SP_H__
+/tmp/user/1000/ccfiAoAS.s:3      *ABS*:000000000000003d __SP_L__
+/tmp/user/1000/ccfiAoAS.s:4      *ABS*:000000000000003f __SREG__
+/tmp/user/1000/ccfiAoAS.s:5      *ABS*:0000000000000000 __tmp_reg__
+/tmp/user/1000/ccfiAoAS.s:6      *ABS*:0000000000000001 __zero_reg__
+/tmp/user/1000/ccfiAoAS.s:13     .text.USB_ResetInterface:0000000000000000 USB_ResetInterface
+/tmp/user/1000/ccfiAoAS.s:113    .text.USB_Init:0000000000000000 USB_Init
+/tmp/user/1000/ccfiAoAS.s:136    .text.USB_ShutDown:0000000000000000 USB_ShutDown
 
 UNDEFINED SYMBOLS
 USB_INT_DisableAllInterrupts

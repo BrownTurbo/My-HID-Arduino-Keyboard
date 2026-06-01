@@ -1,374 +1,390 @@
-/*
+ /*
+
              LUFA Library
+
      Copyright (C) Dean Camera, 2010.
+
               
+
   dean [at] fourwalledcubicle [dot] com
+
       www.fourwalledcubicle.com
+
 */
 
+
 /*
+
   Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
+
   Permission to use, copy, modify, distribute, and sell this 
+
   software and its documentation for any purpose is hereby granted
+
   without fee, provided that the above copyright notice appear in 
+
   all copies and that both that the copyright notice and this
+
   permission notice and warranty disclaimer appear in supporting 
+
   documentation, and that the name of the author not be used in 
+
   advertising or publicity pertaining to distribution of the 
+
   software without specific, written prior permission.
 
+
   The author disclaim all warranties with regard to this
+
   software, including all implied warranties of merchantability
+
   and fitness.  In no event shall the author be liable for any
+
   special, indirect or consequential damages or any damages
+
   whatsoever resulting from loss of use, data or profits, whether
+
   in an action of contract, negligence or other tortious action,
+
   arising out of or in connection with the use or performance of
+
   this software.
+
 */
 
+
 /*-
+
  * Copyright (c) 2011 Darran Hunt (darran [at] hunt dot net dot nz)
+
  * All rights reserved.
+
  *
+
  * Redistribution and use in source and binary forms, with or without
+
  * modification, are permitted provided that the following conditions
+
  * are met:
+
  * 1. Redistributions of source code must retain the above copyright
+
  *    notice, this list of conditions and the following disclaimer.
+
  * 2. Redistributions in binary form must reproduce the above copyright
+
  *    notice, this list of conditions and the following disclaimer in the
+
  *    documentation and/or other materials provided with the distribution.
+
  *
+
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+
  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+
  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL
+
  * THE CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+
  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
  */
+
 
 /*
+
  * Date         Rev  Description
+
  * 21-Mar-2011  0.1  Initial version.
+
  * 23-Mar-2011  0.2  Improved handling of serial reports to ensure that all reports
+
  *                   will be sent.
+
  * 13-Apr-2011  0.3  Extended range of keys from 101 to 231.
+
  */
 
+
 /** \file
+
  *
+
  *  Main source file for the Arduino-keyboard project. This file contains the main tasks of
+
  *  the project and is responsible for the initial application hardware configuration.
- */
+
+ */ 
 
 #include "Arduino-keyboard.h"
 #include <string.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <util/atomic.h>
 
-/** Buffer to hold the previously generated HID report, for comparison purposes inside the HID class driver. */
+/** Buffers to hold previously generated HID reports for OS comparison */
 uint8_t PrevKeyboardHIDReportBuffer[sizeof(USB_KeyboardReport_Data_t)];
 uint8_t PrevMediaHIDReportBuffer[sizeof(USB_MediaReport_Data_t)];
 
-/** LUFA HID Class driver interface configuration and state information. This structure is
- *  passed to all HID Class driver functions, so that multiple instances of the same class
- *  within a device can be differentiated from one another.
- */
-USB_ClassInfo_HID_Device_t HID_KeyboardInterface =
-{
-    .Config =
-    {
+/** Endpoint mapping configurations */
+USB_ClassInfo_HID_Device_t HID_KeyboardInterface = {
+    .Config = {
         .InterfaceNumber            = 0,
-
         .ReportINEndpointNumber     = KEYBOARD_EPNUM,
         .ReportINEndpointSize       = KEYBOARD_EPSIZE,
         .ReportINEndpointDoubleBank = false,
-
         .PrevReportINBuffer         = PrevKeyboardHIDReportBuffer,
         .PrevReportINBufferSize     = sizeof(PrevKeyboardHIDReportBuffer),
     },
 };
 
-USB_ClassInfo_HID_Device_t HID_MediaInterface =
-{
-    .Config =
-    {
+USB_ClassInfo_HID_Device_t HID_MediaInterface = {
+    .Config = {
         .InterfaceNumber            = 1,
-
         .ReportINEndpointNumber     = MEDIA_EPNUM,
         .ReportINEndpointSize       = MEDIA_EPSIZE,
         .ReportINEndpointDoubleBank = false,
-
         .PrevReportINBuffer         = PrevMediaHIDReportBuffer,
         .PrevReportINBufferSize     = sizeof(PrevMediaHIDReportBuffer),
     },
 };
 
-/** Main program entry point. This routine contains the overall program flow, including initial
- *  setup of all components and the main program loop.
- */
-
-/** Circular buffer to hold data from the serial port before it is sent to the host. */
-RingBuff_t USARTtoUSB_Buffer;
-
-static uint8_t keyboardData[8] = { 0 };
-static uint16_t mediaData = 0;
-
-
-// ...
+/* ---------------------------------------------------------
+ * Asynchronous Circular Queues (Type-Safe)
+ * --------------------------------------------------------- */
 #define KEYBOARD_QUEUE_SIZE 8
-static uint16_t KeyboardQueue[KEYBOARD_QUEUE_SIZE];
-static uint8_t KeyboardHead = 0;
-static uint8_t KeyboardTail = 0;
-
-static USB_KeyboardReport_Data_t CurrentKeyboardState = { .Modifier = 0, .Reserved = 0, .KeyCode = {0} };
+static USB_KeyboardReport_Data_t KeyboardQueue[KEYBOARD_QUEUE_SIZE];
+static volatile uint8_t KeyboardHead = 0;
+static volatile uint8_t KeyboardTail = 0;
 
 #define MEDIA_QUEUE_SIZE 16
-
 static uint16_t MediaQueue[MEDIA_QUEUE_SIZE];
-static uint8_t MediaHead;
-static uint8_t MediaTail;
+static volatile uint8_t MediaHead = 0;
+static volatile uint8_t MediaTail = 0;
 
-typedef enum
-{
+// Internal media transmission state management
+typedef enum {
     MEDIA_IDLE = 0,
     MEDIA_SEND_RELEASE
 } media_state_t;
 
 static media_state_t MediaState = MEDIA_IDLE;
+static uint16_t currentMediaUsage = 0;
+uint8_t ledReport = 0;
 
+/* --- FSM Parser Global Context Variables --- */
+#define SERIAL_PARSER_BUFFER_SIZE 64
+static volatile uint8_t parserBuffer[SERIAL_PARSER_BUFFER_SIZE];
+static volatile uint8_t parserHead  = 0;
+static volatile uint8_t parserTail  = 0;
+static volatile uint8_t parserCount = 0;
+
+typedef enum {
+    STATE_PARSE_HEADER = 0,
+    STATE_PARSE_PAYLOAD
+} parser_state_t;
+
+static parser_state_t CurrentParserState = STATE_PARSE_HEADER;
+static uint8_t        ActivePacketType   = 0x00;
+static uint8_t        PayloadByteIndex   = 0;
+
+// Shared extraction layout matching the 8-byte core payload width
+static union {
+    USB_KeyboardReport_Data_t Keyboard;
+    uint8_t                   RawBytes[sizeof(USB_KeyboardReport_Data_t)];
+} CurrentFrameContext;
+
+
+/* ---------------------------------------------------------
+ * Utility Mapping & Queue APIs
+ * --------------------------------------------------------- */
 static inline bool IsMediaUsage(uint8_t usage)
 {
-    return (usage == 0xE9) || /* Volume Up */
-           (usage == 0xEA) || /* Volume Down */
-           (usage == 0xE2) || /* Mute */
-           (usage == 0xCD) || /* Play/Pause */
-           (usage == 0xB5) || /* Next Track */
-           (usage == 0xB6) || /* Prev Track */
-           (usage == 0xB7);   /* Stop */
+     return (usage == 0xE9) || /* Volume Up */
+            (usage == 0xEA) || /* Volume Down */
+            (usage == 0xE2) || /* Mute */
+            (usage == 0xCD) || /* Play/Pause */
+            (usage == 0xB5) || /* Next Track */
+            (usage == 0xB6) || /* Prev Track */
+            (usage == 0xB7);    /* Stop */
 }
 
 static inline uint16_t MapMediaUsage(uint8_t usage)
 {
-    switch (usage)
-    {
-        case 0xE9: return 0x00E9;
-        case 0xEA: return 0x00EA;
-        case 0xE2: return 0x00E2;
-        case 0xCD: return 0x00CD;
-        case 0xB5: return 0x00B5;
-        case 0xB6: return 0x00B6;
-        case 0xB7: return 0x00B7;
-        default:    return 0x0000;
-    }
+     switch (usage)
+     {
+         case 0xE9: return 0x00E9;
+         case 0xEA: return 0x00EA;
+         case 0xE2: return 0x00E2;
+         case 0xCD: return 0x00CD;
+         case 0xB5: return 0x00B5;
+         case 0xB6: return 0x00B6;
+         case 0xB7: return 0x00B7;
+         default:     return 0x0000;
+     }
 }
 
-static bool KeyboardQueue_IsEmpty(void)
-{
-    return KeyboardHead == KeyboardTail;
-}
-
-static bool KeyboardQueue_IsFull(void)
-{
-    return ((KeyboardTail + 1) % KEYBOARD_QUEUE_SIZE) == KeyboardHead;
-}
-
-static bool KeyboardQueue_Push(uint16_t Usage)
-{
-    if (KeyboardQueue_IsFull())
-        return false;
-
-    KeyboardQueue[KeyboardTail] = Usage;
-    KeyboardTail = (KeyboardTail + 1) % KEYBOARD_QUEUE_SIZE;
-
+static bool KeyboardQueue_Push(const USB_KeyboardReport_Data_t* Report) {
+    uint8_t nextTail = (KeyboardTail + 1) % KEYBOARD_QUEUE_SIZE;
+    if (nextTail == KeyboardHead) return false;
+    KeyboardQueue[KeyboardTail] = *Report;
+    KeyboardTail = nextTail;
     return true;
 }
 
-static bool KeyboardQueue_Pop(uint16_t* Usage)
-{
-    if (KeyboardQueue_IsEmpty())
-        return false;
-
-    *Usage = KeyboardQueue[KeyboardHead];
-
+static bool KeyboardQueue_Pop(USB_KeyboardReport_Data_t* Report) {
+    if (KeyboardHead == KeyboardTail) return false;
+    *Report = KeyboardQueue[KeyboardHead];
     KeyboardHead = (KeyboardHead + 1) % KEYBOARD_QUEUE_SIZE;
-
     return true;
 }
 
-static bool MediaQueue_IsEmpty(void)
-{
-    return MediaHead == MediaTail;
-}
-
-static bool MediaQueue_IsFull(void)
-{
-    return ((MediaTail + 1) % MEDIA_QUEUE_SIZE) == MediaHead;
-}
-
-static bool MediaQueue_Push(uint16_t Usage)
-{
-    if (MediaQueue_IsFull())
-        return false;
-
+static bool MediaQueue_Push(uint16_t Usage) {
+    uint8_t nextTail = (MediaTail + 1) % MEDIA_QUEUE_SIZE;
+    if (nextTail == MediaHead) return false;
     MediaQueue[MediaTail] = Usage;
-    MediaTail = (MediaTail + 1) % MEDIA_QUEUE_SIZE;
-
+    MediaTail = nextTail;
     return true;
 }
 
-static bool MediaQueue_Pop(uint16_t* Usage)
-{
-    if (MediaQueue_IsEmpty())
-        return false;
-
+static bool MediaQueue_Pop(uint16_t* Usage) {
+    if (MediaHead == MediaTail) return false;
     *Usage = MediaQueue[MediaHead];
-
     MediaHead = (MediaHead + 1) % MEDIA_QUEUE_SIZE;
-
     return true;
 }
 
-static void LoadNextSerialFrameIfAvailable()
-{
-    static uint8_t partial_wait = 0;
-    
-    if (RingBuffer_GetCount(&USARTtoUSB_Buffer) < 8) {
-        partial_wait++;
-        if (partial_wait > 200) {  // ~200 loop iterations with no progress
-            // Flush the buffer to recover
-            while (RingBuffer_GetCount(&USARTtoUSB_Buffer))
-                (void)RingBuffer_Remove(&USARTtoUSB_Buffer);
-            partial_wait = 0;
-        }
-        return;
+// Atomic helper to calculate available raw streaming bytes
+static inline uint8_t SafeGetParserCount(void) {
+    uint8_t count;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        count = parserCount;
     }
-    partial_wait = 0;
+    return count;
+}
 
-    for (uint8_t i = 0; i < 8; i++)
-        keyboardData[i] = RingBuffer_Remove(&USARTtoUSB_Buffer);
 
-    /* If the incoming “keyboard” frame is actually one of your media pseudo-keys,
-       convert it into a Consumer Control action and neutralize the keyboard report. */
-    if (IsMediaUsage(keyboardData[2]))
-    {
-        if (MediaQueue_IsFull())
-        {
-            uint16_t Dummy;
-            MediaQueue_Pop(&Dummy);
+/* ---------------------------------------------------------
+ * FSM Asynchronous Streaming Engine
+ * --------------------------------------------------------- */
+void ProcessIncomingSerialData(void) {
+    // Suspend packet digestion if USB is suspended/disconnected
+    if (USB_DeviceState != DEVICE_STATE_Configured) return;
+
+    while (SafeGetParserCount() > 0) {
+        uint8_t IncomingByte;
+        
+        // Safely extract one byte from the ring buffer
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+            IncomingByte = parserBuffer[parserTail];
+            parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
+            parserCount--;
         }
-        MediaQueue_Push(MapMediaUsage(keyboardData[2]));
 
-        memset(keyboardData, 0, sizeof(keyboardData));
+        switch (CurrentParserState) {
+            case STATE_PARSE_HEADER:
+                if (IncomingByte == 0x01 || IncomingByte == 0x02) {
+                    ActivePacketType   = IncomingByte;
+                    PayloadByteIndex   = 0;
+                    CurrentParserState = STATE_PARSE_PAYLOAD;
+                }
+                // If invalid header, implicitly fall through and discard byte (auto-realigns)
+                break;
+
+            case STATE_PARSE_PAYLOAD:
+                CurrentFrameContext.RawBytes[PayloadByteIndex++] = IncomingByte;
+
+                if (PayloadByteIndex >= sizeof(USB_KeyboardReport_Data_t)) {
+                    if (ActivePacketType == 0x01) {
+                        KeyboardQueue_Push(&CurrentFrameContext.Keyboard);
+                    }
+                    else if (ActivePacketType == 0x02) {
+                        // Extract Media Code mapping
+                        uint8_t mediaRaw = CurrentFrameContext.RawBytes[0];
+                        if (IsMediaUsage(mediaRaw)) {
+                            MediaQueue_Push(MapMediaUsage(mediaRaw));
+                        } else if (mediaRaw == 0x00) { // Catch empty release frames
+                             MediaQueue_Push(0x0000); 
+                        }
+                    }
+                    // Terminate layout parsing, prepare for next dynamic packet
+                    CurrentParserState = STATE_PARSE_HEADER;
+                    ActivePacketType   = 0x00;
+                    PayloadByteIndex   = 0;
+                }
+                break;
+                
+            default:
+                CurrentParserState = STATE_PARSE_HEADER;
+                break;
+        }
     }
 }
 
-/** Main program entry point. This routine contains the overall program flow, including initial
- *  setup of all components and the main program loop.
- */
-int main(void)
-{
-	SetupHardware();
+/* ---------------------------------------------------------
+ * Hardware Polling Loops & LUFA Integration
+ * --------------------------------------------------------- */
+int main(void) {
+    SetupHardware();
+    sei();
 
-	RingBuffer_InitBuffer(&USARTtoUSB_Buffer);
+    for (;;) {
+        // Execute background serial pipeline parsing continuously
+        ProcessIncomingSerialData();
 
-	sei();
-
-    for (;;)
-    {
-        /* Make sure we always have the newest serial frame before generating reports */
-        LoadNextSerialFrameIfAvailable();
-
+        // Service USB Endpoint transactions synchronously
         HID_Device_USBTask(&HID_KeyboardInterface);
         HID_Device_USBTask(&HID_MediaInterface);
-
         USB_USBTask();
     }
 }
 
-/** Configures the board hardware and chip peripherals for the demo's functionality. */
 void SetupHardware(void)
 {
-	/* Disable watchdog if enabled by bootloader/fuses */
-	MCUSR &= ~(1 << WDRF);
-	wdt_disable();
+     /* Disable watchdog if enabled by bootloader/fuses */
+     MCUSR &= ~(1 << WDRF);
+     wdt_disable();
 
-	/* Hardware Initialization */
-	Serial_Init(9600, false);
-	USB_Init();
+     /* Hardware Initialization */
+     Serial_Init(9600, false);
+     USB_Init();
 
-	/* Start the flush timer so that overflows occur rapidly to push received bytes to the USB interface */
-	TCCR0B = (1 << CS02);
-	
-	/* Pull target /RESET line high */
-	AVR_RESET_LINE_PORT |= AVR_RESET_LINE_MASK;
-	AVR_RESET_LINE_DDR  |= AVR_RESET_LINE_MASK;
+     /* Start the flush timer so that overflows occur rapidly to push received bytes to the USB interface */
+     TCCR0B = (1 << CS02);
+    
+     /* Pull target /RESET line high */
+     AVR_RESET_LINE_PORT |= AVR_RESET_LINE_MASK;
+     AVR_RESET_LINE_DDR  |= AVR_RESET_LINE_MASK;
 
-	/* Must turn off USART before reconfiguring it, otherwise incorrect operation may occur */
-	UCSR1B = 0;
-	UCSR1A = 0;
-	UCSR1C = 0;
+     /* Must turn off USART before reconfiguring it, otherwise incorrect operation may occur */
+     UCSR1B = 0;
+     UCSR1A = 0;
+     UCSR1C = 0;
 
-	/* Special case 57600 baud for compatibility with the ATmega328 bootloader. */	
-	UBRR1  = SERIAL_2X_UBBRVAL(9600);
+     /* Special case 57600 baud for compatibility with the ATmega328 bootloader. */    
+     UBRR1  = SERIAL_2X_UBBRVAL(9600);
 
-	UCSR1C = ((1 << UCSZ11) | (1 << UCSZ10));
-	UCSR1A = (1 << U2X1);
-	UCSR1B = ((1 << RXCIE1) | (1 << TXEN1) | (1 << RXEN1));
-}
-
-/** Event handler for the library USB Connection event. */
-void EVENT_USB_Device_Connect(void)
-{
-	//LEDs_SetAllLEDs(LEDMASK_USB_ENUMERATING);
-}
-
-/** Event handler for the library USB Disconnection event. */
-void EVENT_USB_Device_Disconnect(void)
-{
-	//LEDs_SetAllLEDs(LEDMASK_USB_NOTREADY);
-}
-
-/** Event handler for the library USB Configuration Changed event. */
-void EVENT_USB_Device_ConfigurationChanged(void)
-{
-    HID_Device_ConfigureEndpoints(&HID_KeyboardInterface);
-    HID_Device_ConfigureEndpoints(&HID_MediaInterface);
-
-    USB_Device_EnableSOFEvents();
-}
-
-/** Event handler for the library USB Unhandled Control Request event. */
-void EVENT_USB_Device_UnhandledControlRequest(void)
-{
-    HID_Device_ProcessControlRequest(&HID_KeyboardInterface);
-    HID_Device_ProcessControlRequest(&HID_MediaInterface);
-}
-
-/** Event handler for the USB device Start Of Frame event. */
-void EVENT_USB_Device_StartOfFrame(void)
-{
-    HID_Device_MillisecondElapsed(&HID_KeyboardInterface);
-    HID_Device_MillisecondElapsed(&HID_MediaInterface);
+     UCSR1C = ((1 << UCSZ11) | (1 << UCSZ10));
+     UCSR1A = (1 << U2X1);
+     UCSR1B = ((1 << RXCIE1) | (1 << TXEN1) | (1 << RXEN1));
 }
 
 
-/** HID class driver callback function for the creation of HID reports to the host.
- *
- *  \param[in]     HIDInterfaceInfo  Pointer to the HID class interface configuration structure being referenced
- *  \param[in,out] ReportID    Report ID requested by the host if non-zero, otherwise callback should set to the generated report ID
- *  \param[in]     ReportType  Type of the report to create, either REPORT_ITEM_TYPE_In or REPORT_ITEM_TYPE_Feature
- *  \param[out]    ReportData  Pointer to a buffer where the created report should be stored
- *  \param[out]    ReportSize  Number of bytes written in the report (or zero if no report is to be sent
- *
- *  \return Boolean true to force the sending of the report, false to let the library determine if it needs to be sent
- */
+/* ---------------------------------------------------------
+ * USB Endpoint Transmission Architecture callbacks
+ * --------------------------------------------------------- */
 bool CALLBACK_HID_Device_CreateHIDReport(
     USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
     uint8_t* const ReportID,
@@ -376,48 +392,42 @@ bool CALLBACK_HID_Device_CreateHIDReport(
     void* ReportData,
     uint16_t* const ReportSize)
 {
-    uint16_t currentMediaUsage = 0;
     (void)ReportID;
     (void)ReportType;
 
-    /* ---------------- Keyboard interface ---------------- */
-    if (HIDInterfaceInfo == &HID_KeyboardInterface)
-    {
+    // Output mapped matrix layout into Endpoint 1
+    if (HIDInterfaceInfo == &HID_KeyboardInterface) {
         USB_KeyboardReport_Data_t activeBufferFrame;
 
-        if (KeyboardQueue_Pop(&activeBufferFrame))
-        {
+        if (KeyboardQueue_Pop(&activeBufferFrame)) {
             memcpy(ReportData, &activeBufferFrame, sizeof(USB_KeyboardReport_Data_t));
             *ReportSize = sizeof(USB_KeyboardReport_Data_t);
+            return true;
         }
-        else
-        {
-            *ReportSize = 0;
-        }
-
+        *ReportSize = 0;
         return false;
     }
 
-    /* ---------------- Media interface ---------------- */
-    if (HIDInterfaceInfo == &HID_MediaInterface)
-    {
+    // Output consumer command usages into Endpoint 2
+    if (HIDInterfaceInfo == &HID_MediaInterface) {
         USB_MediaReport_Data_t* MediaReport = (USB_MediaReport_Data_t*)ReportData;
-        MediaReport->Usage = 0;
 
-        if (MediaState == MEDIA_IDLE)
-        {
-            if (MediaQueue_Pop(&currentMediaUsage))
-            {
+        if (MediaState == MEDIA_IDLE) {
+            if (MediaQueue_Pop(&currentMediaUsage)) {
                 MediaReport->Usage = currentMediaUsage;
                 MediaState = MEDIA_SEND_RELEASE;
+                *ReportSize = sizeof(USB_MediaReport_Data_t);
+                return true;
             }
         }
-        else if (MediaState == MEDIA_SEND_RELEASE)
-        {
-            MediaReport->Usage = 0;
+        else if (MediaState == MEDIA_SEND_RELEASE) {
+            MediaReport->Usage = 0x0000;
             MediaState = MEDIA_IDLE;
+            *ReportSize = sizeof(USB_MediaReport_Data_t);
+            return true;
         }
 
+        MediaReport->Usage = 0;
         *ReportSize = sizeof(USB_MediaReport_Data_t);
         return false;
     }
@@ -426,15 +436,6 @@ bool CALLBACK_HID_Device_CreateHIDReport(
     return false;
 }
 
-
-/** HID class driver callback function for the processing of HID reports from the host.
- *
- *  \param[in] HIDInterfaceInfo  Pointer to the HID class interface configuration structure being referenced
- *  \param[in] ReportID    Report ID of the received report from the host
- *  \param[in] ReportType  The type of report that the host has sent, either REPORT_ITEM_TYPE_Out or REPORT_ITEM_TYPE_Feature
- *  \param[in] ReportData  Pointer to a buffer where the created report has been stored
- *  \param[in] ReportSize  Size in bytes of the received HID report
- */
 void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
                                           const uint8_t ReportID,
                                           const uint8_t ReportType,
@@ -442,93 +443,38 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
                                           const uint16_t ReportSize)
 { }
 
-/* Explicit internal circular byte array implementation to handle packet framing */
-#define SERIAL_PARSER_BUFFER_SIZE 32
-static uint8_t  parserBuffer[SERIAL_PARSER_BUFFER_SIZE];
-static uint8_t  parserHead = 0;
-static uint8_t  parserTail = 0;
-static uint8_t  parserCount = 0;
+void EVENT_USB_Device_ConfigurationChanged(void) {
+    HID_Device_ConfigureEndpoints(&HID_KeyboardInterface);
+    HID_Device_ConfigureEndpoints(&HID_MediaInterface);
+    USB_Device_EnableSOFEvents();
+}
 
-/** ISR to manage the reception of data from the serial port, placing received bytes into a circular buffer
- *  for later transmission to the host.
- */
+void EVENT_USB_Device_UnhandledControlRequest(void) {
+    HID_Device_ProcessControlRequest(&HID_KeyboardInterface);
+    HID_Device_ProcessControlRequest(&HID_MediaInterface);
+}
+
+void EVENT_USB_Device_StartOfFrame(void) {
+    HID_Device_MillisecondElapsed(&HID_KeyboardInterface);
+    HID_Device_MillisecondElapsed(&HID_MediaInterface);
+}
+
+void EVENT_USB_Device_Connect(void) { }
+void EVENT_USB_Device_Disconnect(void) { }
+
+/* ---------------------------------------------------------
+ * Hardware Interrupt Sequence Vector
+ * --------------------------------------------------------- */
 ISR(USART1_RX_vect, ISR_BLOCK)
 {
-    uint8_t ReceivedByte = UDR1;
+     // ALWAYS read first to clear the flag and prevent hardware lockups
+     uint8_t ReceivedByte = UDR1;
 
-    if (USB_DeviceState != DEVICE_STATE_Configured)
-        return;
-
-    // Append standard byte array values into the local circular parser ring allocation structure
-    if (parserCount < SERIAL_PARSER_BUFFER_SIZE)
-    {
-        parserBuffer[parserHead] = ReceivedByte;
-        parserHead = (parserHead + 1) % SERIAL_PARSER_BUFFER_SIZE;
-        parserCount++;
-    }
-
-    // Process all full 9-byte frames available inside the serial stream ring buffer
-    while (parserCount >= 9)
-    {
-        uint8_t reportType = parserBuffer[parserTail];
-
-        if (reportType == 0x01) // Keyboard Frame Allocation Mapping Process
-        {
-            USB_KeyboardReport_Data_t rawKeyboardFrame;
-            
-            // Step tail past packet type ID byte
-            parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
-            parserCount--;
-
-            rawKeyboardFrame.Modifier = parserBuffer[parserTail];
-            parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
-            parserCount--;
-
-            rawKeyboardFrame.Reserved = parserBuffer[parserTail];
-            parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
-            parserCount--;
-
-            for (int ind = 0; ind < 6; ind++)
-            {
-                rawKeyboardFrame.KeyCode[ind] = parserBuffer[parserTail];
-                parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
-                parserCount--;
-            }
-
-            // Route standard keyboard data frame safely into the type-correct queue
-            KeyboardQueue_Push(&rawKeyboardFrame);
-        }
-        else if (reportType == 0x02) // Consumer Media Control Payload Structure
-        {
-            // Step tail past packet type ID byte
-            parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
-            parserCount--;
-
-            uint8_t mLow = parserBuffer[parserTail];
-            parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
-            parserCount--;
-
-            uint8_t mHigh = parserBuffer[parserTail];
-            parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
-            parserCount--;
-
-            uint16_t mediaUsage = ((uint16_t)mHigh << 8) | mLow;
-
-            // Strip out remaining 6 padding framing layout layout bytes
-            for (int ind = 0; ind < 6; ind++)
-            {
-                parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
-                parserCount--;
-            }
-
-            // Route decoded media usage code safely into its queue
-            MediaQueue_Push(mediaUsage);
-        }
-        else
-        {
-            // Parser Re-alignment Engine: step along unaligned bytes to re-acquire sync boundaries
-            parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
-            parserCount--;
-        }
-    }
+     // Append standard byte array values into the local circular parser ring allocation structure
+     if (parserCount < SERIAL_PARSER_BUFFER_SIZE)
+     {
+         parserBuffer[parserHead] = ReceivedByte;
+         parserHead = (parserHead + 1) % SERIAL_PARSER_BUFFER_SIZE;
+         parserCount++;
+     }
 }

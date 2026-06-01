@@ -9,568 +9,447 @@
    9               		.cfi_sections	.debug_frame
   10               		.section	.text.MediaQueue_Push,"ax",@progbits
   12               	MediaQueue_Push:
-  13               	.LFB98:
+  13               	.LFB94:
   14               		.file 1 "Arduino-keyboard.c"
-   1:Arduino-keyboard.c **** /*
-   2:Arduino-keyboard.c ****              LUFA Library
-   3:Arduino-keyboard.c ****      Copyright (C) Dean Camera, 2010.
-   4:Arduino-keyboard.c ****               
-   5:Arduino-keyboard.c ****   dean [at] fourwalledcubicle [dot] com
-   6:Arduino-keyboard.c ****       www.fourwalledcubicle.com
-   7:Arduino-keyboard.c **** */
+   1:Arduino-keyboard.c ****  /*
+   2:Arduino-keyboard.c **** 
+   3:Arduino-keyboard.c ****              LUFA Library
+   4:Arduino-keyboard.c **** 
+   5:Arduino-keyboard.c ****      Copyright (C) Dean Camera, 2010.
+   6:Arduino-keyboard.c **** 
+   7:Arduino-keyboard.c ****               
    8:Arduino-keyboard.c **** 
-   9:Arduino-keyboard.c **** /*
-  10:Arduino-keyboard.c ****   Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
-  11:Arduino-keyboard.c **** 
-  12:Arduino-keyboard.c ****   Permission to use, copy, modify, distribute, and sell this 
-  13:Arduino-keyboard.c ****   software and its documentation for any purpose is hereby granted
-  14:Arduino-keyboard.c ****   without fee, provided that the above copyright notice appear in 
-  15:Arduino-keyboard.c ****   all copies and that both that the copyright notice and this
-  16:Arduino-keyboard.c ****   permission notice and warranty disclaimer appear in supporting 
-  17:Arduino-keyboard.c ****   documentation, and that the name of the author not be used in 
-  18:Arduino-keyboard.c ****   advertising or publicity pertaining to distribution of the 
-  19:Arduino-keyboard.c ****   software without specific, written prior permission.
+   9:Arduino-keyboard.c ****   dean [at] fourwalledcubicle [dot] com
+  10:Arduino-keyboard.c **** 
+  11:Arduino-keyboard.c ****       www.fourwalledcubicle.com
+  12:Arduino-keyboard.c **** 
+  13:Arduino-keyboard.c **** */
+  14:Arduino-keyboard.c **** 
+  15:Arduino-keyboard.c **** 
+  16:Arduino-keyboard.c **** /*
+  17:Arduino-keyboard.c **** 
+  18:Arduino-keyboard.c ****   Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  19:Arduino-keyboard.c **** 
   20:Arduino-keyboard.c **** 
-  21:Arduino-keyboard.c ****   The author disclaim all warranties with regard to this
-  22:Arduino-keyboard.c ****   software, including all implied warranties of merchantability
-  23:Arduino-keyboard.c ****   and fitness.  In no event shall the author be liable for any
-  24:Arduino-keyboard.c ****   special, indirect or consequential damages or any damages
-  25:Arduino-keyboard.c ****   whatsoever resulting from loss of use, data or profits, whether
-  26:Arduino-keyboard.c ****   in an action of contract, negligence or other tortious action,
-  27:Arduino-keyboard.c ****   arising out of or in connection with the use or performance of
-  28:Arduino-keyboard.c ****   this software.
-  29:Arduino-keyboard.c **** */
+  21:Arduino-keyboard.c ****   Permission to use, copy, modify, distribute, and sell this 
+  22:Arduino-keyboard.c **** 
+  23:Arduino-keyboard.c ****   software and its documentation for any purpose is hereby granted
+  24:Arduino-keyboard.c **** 
+  25:Arduino-keyboard.c ****   without fee, provided that the above copyright notice appear in 
+  26:Arduino-keyboard.c **** 
+  27:Arduino-keyboard.c ****   all copies and that both that the copyright notice and this
+  28:Arduino-keyboard.c **** 
+  29:Arduino-keyboard.c ****   permission notice and warranty disclaimer appear in supporting 
   30:Arduino-keyboard.c **** 
-  31:Arduino-keyboard.c **** /*-
-  32:Arduino-keyboard.c ****  * Copyright (c) 2011 Darran Hunt (darran [at] hunt dot net dot nz)
-  33:Arduino-keyboard.c ****  * All rights reserved.
-  34:Arduino-keyboard.c ****  *
-  35:Arduino-keyboard.c ****  * Redistribution and use in source and binary forms, with or without
-  36:Arduino-keyboard.c ****  * modification, are permitted provided that the following conditions
-  37:Arduino-keyboard.c ****  * are met:
-  38:Arduino-keyboard.c ****  * 1. Redistributions of source code must retain the above copyright
-  39:Arduino-keyboard.c ****  *    notice, this list of conditions and the following disclaimer.
-  40:Arduino-keyboard.c ****  * 2. Redistributions in binary form must reproduce the above copyright
-  41:Arduino-keyboard.c ****  *    notice, this list of conditions and the following disclaimer in the
-  42:Arduino-keyboard.c ****  *    documentation and/or other materials provided with the distribution.
-  43:Arduino-keyboard.c ****  *
-  44:Arduino-keyboard.c ****  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
-  45:Arduino-keyboard.c ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
-  46:Arduino-keyboard.c ****  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL
-  47:Arduino-keyboard.c ****  * THE CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-  48:Arduino-keyboard.c ****  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-  49:Arduino-keyboard.c ****  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-  50:Arduino-keyboard.c ****  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-  51:Arduino-keyboard.c ****  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-  52:Arduino-keyboard.c ****  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-  53:Arduino-keyboard.c ****  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  54:Arduino-keyboard.c ****  */
+  31:Arduino-keyboard.c ****   documentation, and that the name of the author not be used in 
+  32:Arduino-keyboard.c **** 
+  33:Arduino-keyboard.c ****   advertising or publicity pertaining to distribution of the 
+  34:Arduino-keyboard.c **** 
+  35:Arduino-keyboard.c ****   software without specific, written prior permission.
+  36:Arduino-keyboard.c **** 
+  37:Arduino-keyboard.c **** 
+  38:Arduino-keyboard.c ****   The author disclaim all warranties with regard to this
+  39:Arduino-keyboard.c **** 
+  40:Arduino-keyboard.c ****   software, including all implied warranties of merchantability
+  41:Arduino-keyboard.c **** 
+  42:Arduino-keyboard.c ****   and fitness.  In no event shall the author be liable for any
+  43:Arduino-keyboard.c **** 
+  44:Arduino-keyboard.c ****   special, indirect or consequential damages or any damages
+  45:Arduino-keyboard.c **** 
+  46:Arduino-keyboard.c ****   whatsoever resulting from loss of use, data or profits, whether
+  47:Arduino-keyboard.c **** 
+  48:Arduino-keyboard.c ****   in an action of contract, negligence or other tortious action,
+  49:Arduino-keyboard.c **** 
+  50:Arduino-keyboard.c ****   arising out of or in connection with the use or performance of
+  51:Arduino-keyboard.c **** 
+  52:Arduino-keyboard.c ****   this software.
+  53:Arduino-keyboard.c **** 
+  54:Arduino-keyboard.c **** */
   55:Arduino-keyboard.c **** 
-  56:Arduino-keyboard.c **** /*
-  57:Arduino-keyboard.c ****  * Date         Rev  Description
-  58:Arduino-keyboard.c ****  * 21-Mar-2011  0.1  Initial version.
-  59:Arduino-keyboard.c ****  * 23-Mar-2011  0.2  Improved handling of serial reports to ensure that all reports
-  60:Arduino-keyboard.c ****  *                   will be sent.
-  61:Arduino-keyboard.c ****  * 13-Apr-2011  0.3  Extended range of keys from 101 to 231.
-  62:Arduino-keyboard.c ****  */
-  63:Arduino-keyboard.c **** 
-  64:Arduino-keyboard.c **** /** \file
-  65:Arduino-keyboard.c ****  *
-  66:Arduino-keyboard.c ****  *  Main source file for the Arduino-keyboard project. This file contains the main tasks of
-  67:Arduino-keyboard.c ****  *  the project and is responsible for the initial application hardware configuration.
-  68:Arduino-keyboard.c ****  */
-  69:Arduino-keyboard.c **** 
-  70:Arduino-keyboard.c **** #include "Arduino-keyboard.h"
-  71:Arduino-keyboard.c **** #include <string.h>
-  72:Arduino-keyboard.c **** #include <stdbool.h>
-  73:Arduino-keyboard.c **** #include <stdint.h>
+  56:Arduino-keyboard.c **** 
+  57:Arduino-keyboard.c **** /*-
+  58:Arduino-keyboard.c **** 
+  59:Arduino-keyboard.c ****  * Copyright (c) 2011 Darran Hunt (darran [at] hunt dot net dot nz)
+  60:Arduino-keyboard.c **** 
+  61:Arduino-keyboard.c ****  * All rights reserved.
+  62:Arduino-keyboard.c **** 
+  63:Arduino-keyboard.c ****  *
+  64:Arduino-keyboard.c **** 
+  65:Arduino-keyboard.c ****  * Redistribution and use in source and binary forms, with or without
+  66:Arduino-keyboard.c **** 
+  67:Arduino-keyboard.c ****  * modification, are permitted provided that the following conditions
+  68:Arduino-keyboard.c **** 
+  69:Arduino-keyboard.c ****  * are met:
+  70:Arduino-keyboard.c **** 
+  71:Arduino-keyboard.c ****  * 1. Redistributions of source code must retain the above copyright
+  72:Arduino-keyboard.c **** 
+  73:Arduino-keyboard.c ****  *    notice, this list of conditions and the following disclaimer.
   74:Arduino-keyboard.c **** 
-  75:Arduino-keyboard.c **** /** Buffer to hold the previously generated HID report, for comparison purposes inside the HID clas
-  76:Arduino-keyboard.c **** uint8_t PrevKeyboardHIDReportBuffer[sizeof(USB_KeyboardReport_Data_t)];
-  77:Arduino-keyboard.c **** uint8_t PrevMediaHIDReportBuffer[sizeof(USB_MediaReport_Data_t)];
+  75:Arduino-keyboard.c ****  * 2. Redistributions in binary form must reproduce the above copyright
+  76:Arduino-keyboard.c **** 
+  77:Arduino-keyboard.c ****  *    notice, this list of conditions and the following disclaimer in the
   78:Arduino-keyboard.c **** 
-  79:Arduino-keyboard.c **** /** LUFA HID Class driver interface configuration and state information. This structure is
-  80:Arduino-keyboard.c ****  *  passed to all HID Class driver functions, so that multiple instances of the same class
-  81:Arduino-keyboard.c ****  *  within a device can be differentiated from one another.
-  82:Arduino-keyboard.c ****  */
-  83:Arduino-keyboard.c **** USB_ClassInfo_HID_Device_t HID_KeyboardInterface =
-  84:Arduino-keyboard.c **** {
-  85:Arduino-keyboard.c ****     .Config =
-  86:Arduino-keyboard.c ****     {
-  87:Arduino-keyboard.c ****         .InterfaceNumber            = 0,
+  79:Arduino-keyboard.c ****  *    documentation and/or other materials provided with the distribution.
+  80:Arduino-keyboard.c **** 
+  81:Arduino-keyboard.c ****  *
+  82:Arduino-keyboard.c **** 
+  83:Arduino-keyboard.c ****  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+  84:Arduino-keyboard.c **** 
+  85:Arduino-keyboard.c ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+  86:Arduino-keyboard.c **** 
+  87:Arduino-keyboard.c ****  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL
   88:Arduino-keyboard.c **** 
-  89:Arduino-keyboard.c ****         .ReportINEndpointNumber     = KEYBOARD_EPNUM,
-  90:Arduino-keyboard.c ****         .ReportINEndpointSize       = KEYBOARD_EPSIZE,
-  91:Arduino-keyboard.c ****         .ReportINEndpointDoubleBank = false,
+  89:Arduino-keyboard.c ****  * THE CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+  90:Arduino-keyboard.c **** 
+  91:Arduino-keyboard.c ****  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
   92:Arduino-keyboard.c **** 
-  93:Arduino-keyboard.c ****         .PrevReportINBuffer         = PrevKeyboardHIDReportBuffer,
-  94:Arduino-keyboard.c ****         .PrevReportINBufferSize     = sizeof(PrevKeyboardHIDReportBuffer),
-  95:Arduino-keyboard.c ****     },
-  96:Arduino-keyboard.c **** };
-  97:Arduino-keyboard.c **** 
-  98:Arduino-keyboard.c **** USB_ClassInfo_HID_Device_t HID_MediaInterface =
-  99:Arduino-keyboard.c **** {
- 100:Arduino-keyboard.c ****     .Config =
- 101:Arduino-keyboard.c ****     {
- 102:Arduino-keyboard.c ****         .InterfaceNumber            = 1,
- 103:Arduino-keyboard.c **** 
- 104:Arduino-keyboard.c ****         .ReportINEndpointNumber     = MEDIA_EPNUM,
- 105:Arduino-keyboard.c ****         .ReportINEndpointSize       = MEDIA_EPSIZE,
- 106:Arduino-keyboard.c ****         .ReportINEndpointDoubleBank = false,
+  93:Arduino-keyboard.c ****  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+  94:Arduino-keyboard.c **** 
+  95:Arduino-keyboard.c ****  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  96:Arduino-keyboard.c **** 
+  97:Arduino-keyboard.c ****  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+  98:Arduino-keyboard.c **** 
+  99:Arduino-keyboard.c ****  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ 100:Arduino-keyboard.c **** 
+ 101:Arduino-keyboard.c ****  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 102:Arduino-keyboard.c **** 
+ 103:Arduino-keyboard.c ****  */
+ 104:Arduino-keyboard.c **** 
+ 105:Arduino-keyboard.c **** 
+ 106:Arduino-keyboard.c **** /*
  107:Arduino-keyboard.c **** 
- 108:Arduino-keyboard.c ****         .PrevReportINBuffer         = PrevMediaHIDReportBuffer,
- 109:Arduino-keyboard.c ****         .PrevReportINBufferSize     = sizeof(PrevMediaHIDReportBuffer),
- 110:Arduino-keyboard.c ****     },
- 111:Arduino-keyboard.c **** };
- 112:Arduino-keyboard.c **** 
- 113:Arduino-keyboard.c **** /** Main program entry point. This routine contains the overall program flow, including initial
- 114:Arduino-keyboard.c ****  *  setup of all components and the main program loop.
- 115:Arduino-keyboard.c ****  */
- 116:Arduino-keyboard.c **** 
- 117:Arduino-keyboard.c **** /** Circular buffer to hold data from the serial port before it is sent to the host. */
- 118:Arduino-keyboard.c **** RingBuff_t USARTtoUSB_Buffer;
+ 108:Arduino-keyboard.c ****  * Date         Rev  Description
+ 109:Arduino-keyboard.c **** 
+ 110:Arduino-keyboard.c ****  * 21-Mar-2011  0.1  Initial version.
+ 111:Arduino-keyboard.c **** 
+ 112:Arduino-keyboard.c ****  * 23-Mar-2011  0.2  Improved handling of serial reports to ensure that all reports
+ 113:Arduino-keyboard.c **** 
+ 114:Arduino-keyboard.c ****  *                   will be sent.
+ 115:Arduino-keyboard.c **** 
+ 116:Arduino-keyboard.c ****  * 13-Apr-2011  0.3  Extended range of keys from 101 to 231.
+ 117:Arduino-keyboard.c **** 
+ 118:Arduino-keyboard.c ****  */
  119:Arduino-keyboard.c **** 
- 120:Arduino-keyboard.c **** static uint8_t keyboardData[8] = { 0 };
- 121:Arduino-keyboard.c **** static uint16_t mediaData = 0;
+ 120:Arduino-keyboard.c **** 
+ 121:Arduino-keyboard.c **** /** \file
  122:Arduino-keyboard.c **** 
- 123:Arduino-keyboard.c **** 
- 124:Arduino-keyboard.c **** // ...
- 125:Arduino-keyboard.c **** #define KEYBOARD_QUEUE_SIZE 8
- 126:Arduino-keyboard.c **** static uint16_t KeyboardQueue[KEYBOARD_QUEUE_SIZE];
- 127:Arduino-keyboard.c **** static uint8_t KeyboardHead = 0;
- 128:Arduino-keyboard.c **** static uint8_t KeyboardTail = 0;
- 129:Arduino-keyboard.c **** 
- 130:Arduino-keyboard.c **** static USB_KeyboardReport_Data_t CurrentKeyboardState = { .Modifier = 0, .Reserved = 0, .KeyCode = 
- 131:Arduino-keyboard.c **** 
- 132:Arduino-keyboard.c **** #define MEDIA_QUEUE_SIZE 16
- 133:Arduino-keyboard.c **** 
- 134:Arduino-keyboard.c **** static uint16_t MediaQueue[MEDIA_QUEUE_SIZE];
- 135:Arduino-keyboard.c **** static uint8_t MediaHead;
- 136:Arduino-keyboard.c **** static uint8_t MediaTail;
- 137:Arduino-keyboard.c **** 
- 138:Arduino-keyboard.c **** typedef enum
- 139:Arduino-keyboard.c **** {
- 140:Arduino-keyboard.c ****     MEDIA_IDLE = 0,
- 141:Arduino-keyboard.c ****     MEDIA_SEND_RELEASE
- 142:Arduino-keyboard.c **** } media_state_t;
- 143:Arduino-keyboard.c **** 
- 144:Arduino-keyboard.c **** static media_state_t MediaState = MEDIA_IDLE;
- 145:Arduino-keyboard.c **** 
- 146:Arduino-keyboard.c **** static inline bool IsMediaUsage(uint8_t usage)
- 147:Arduino-keyboard.c **** {
- 148:Arduino-keyboard.c ****     return (usage == 0xE9) || /* Volume Up */
- 149:Arduino-keyboard.c ****            (usage == 0xEA) || /* Volume Down */
- 150:Arduino-keyboard.c ****            (usage == 0xE2) || /* Mute */
- 151:Arduino-keyboard.c ****            (usage == 0xCD) || /* Play/Pause */
- 152:Arduino-keyboard.c ****            (usage == 0xB5) || /* Next Track */
- 153:Arduino-keyboard.c ****            (usage == 0xB6) || /* Prev Track */
- 154:Arduino-keyboard.c ****            (usage == 0xB7);   /* Stop */
- 155:Arduino-keyboard.c **** }
- 156:Arduino-keyboard.c **** 
- 157:Arduino-keyboard.c **** static inline uint16_t MapMediaUsage(uint8_t usage)
- 158:Arduino-keyboard.c **** {
- 159:Arduino-keyboard.c ****     switch (usage)
- 160:Arduino-keyboard.c ****     {
- 161:Arduino-keyboard.c ****         case 0xE9: return 0x00E9;
- 162:Arduino-keyboard.c ****         case 0xEA: return 0x00EA;
- 163:Arduino-keyboard.c ****         case 0xE2: return 0x00E2;
- 164:Arduino-keyboard.c ****         case 0xCD: return 0x00CD;
- 165:Arduino-keyboard.c ****         case 0xB5: return 0x00B5;
- 166:Arduino-keyboard.c ****         case 0xB6: return 0x00B6;
- 167:Arduino-keyboard.c ****         case 0xB7: return 0x00B7;
- 168:Arduino-keyboard.c ****         default:    return 0x0000;
- 169:Arduino-keyboard.c ****     }
- 170:Arduino-keyboard.c **** }
+ 123:Arduino-keyboard.c ****  *
+ 124:Arduino-keyboard.c **** 
+ 125:Arduino-keyboard.c ****  *  Main source file for the Arduino-keyboard project. This file contains the main tasks of
+ 126:Arduino-keyboard.c **** 
+ 127:Arduino-keyboard.c ****  *  the project and is responsible for the initial application hardware configuration.
+ 128:Arduino-keyboard.c **** 
+ 129:Arduino-keyboard.c ****  */ 
+ 130:Arduino-keyboard.c **** 
+ 131:Arduino-keyboard.c **** #include "Arduino-keyboard.h"
+ 132:Arduino-keyboard.c **** #include <string.h>
+ 133:Arduino-keyboard.c **** #include <stdbool.h>
+ 134:Arduino-keyboard.c **** #include <stdint.h>
+ 135:Arduino-keyboard.c **** #include <util/atomic.h>
+ 136:Arduino-keyboard.c **** 
+ 137:Arduino-keyboard.c **** /** Buffers to hold previously generated HID reports for OS comparison */
+ 138:Arduino-keyboard.c **** uint8_t PrevKeyboardHIDReportBuffer[sizeof(USB_KeyboardReport_Data_t)];
+ 139:Arduino-keyboard.c **** uint8_t PrevMediaHIDReportBuffer[sizeof(USB_MediaReport_Data_t)];
+ 140:Arduino-keyboard.c **** 
+ 141:Arduino-keyboard.c **** /** Endpoint mapping configurations */
+ 142:Arduino-keyboard.c **** USB_ClassInfo_HID_Device_t HID_KeyboardInterface = {
+ 143:Arduino-keyboard.c ****     .Config = {
+ 144:Arduino-keyboard.c ****         .InterfaceNumber            = 0,
+ 145:Arduino-keyboard.c ****         .ReportINEndpointNumber     = KEYBOARD_EPNUM,
+ 146:Arduino-keyboard.c ****         .ReportINEndpointSize       = KEYBOARD_EPSIZE,
+ 147:Arduino-keyboard.c ****         .ReportINEndpointDoubleBank = false,
+ 148:Arduino-keyboard.c ****         .PrevReportINBuffer         = PrevKeyboardHIDReportBuffer,
+ 149:Arduino-keyboard.c ****         .PrevReportINBufferSize     = sizeof(PrevKeyboardHIDReportBuffer),
+ 150:Arduino-keyboard.c ****     },
+ 151:Arduino-keyboard.c **** };
+ 152:Arduino-keyboard.c **** 
+ 153:Arduino-keyboard.c **** USB_ClassInfo_HID_Device_t HID_MediaInterface = {
+ 154:Arduino-keyboard.c ****     .Config = {
+ 155:Arduino-keyboard.c ****         .InterfaceNumber            = 1,
+ 156:Arduino-keyboard.c ****         .ReportINEndpointNumber     = MEDIA_EPNUM,
+ 157:Arduino-keyboard.c ****         .ReportINEndpointSize       = MEDIA_EPSIZE,
+ 158:Arduino-keyboard.c ****         .ReportINEndpointDoubleBank = false,
+ 159:Arduino-keyboard.c ****         .PrevReportINBuffer         = PrevMediaHIDReportBuffer,
+ 160:Arduino-keyboard.c ****         .PrevReportINBufferSize     = sizeof(PrevMediaHIDReportBuffer),
+ 161:Arduino-keyboard.c ****     },
+ 162:Arduino-keyboard.c **** };
+ 163:Arduino-keyboard.c **** 
+ 164:Arduino-keyboard.c **** /* ---------------------------------------------------------
+ 165:Arduino-keyboard.c ****  * Asynchronous Circular Queues (Type-Safe)
+ 166:Arduino-keyboard.c ****  * --------------------------------------------------------- */
+ 167:Arduino-keyboard.c **** #define KEYBOARD_QUEUE_SIZE 8
+ 168:Arduino-keyboard.c **** static USB_KeyboardReport_Data_t KeyboardQueue[KEYBOARD_QUEUE_SIZE];
+ 169:Arduino-keyboard.c **** static volatile uint8_t KeyboardHead = 0;
+ 170:Arduino-keyboard.c **** static volatile uint8_t KeyboardTail = 0;
  171:Arduino-keyboard.c **** 
- 172:Arduino-keyboard.c **** static bool KeyboardQueue_IsEmpty(void)
- 173:Arduino-keyboard.c **** {
- 174:Arduino-keyboard.c ****     return KeyboardHead == KeyboardTail;
- 175:Arduino-keyboard.c **** }
+ 172:Arduino-keyboard.c **** #define MEDIA_QUEUE_SIZE 16
+ 173:Arduino-keyboard.c **** static uint16_t MediaQueue[MEDIA_QUEUE_SIZE];
+ 174:Arduino-keyboard.c **** static volatile uint8_t MediaHead = 0;
+ 175:Arduino-keyboard.c **** static volatile uint8_t MediaTail = 0;
  176:Arduino-keyboard.c **** 
- 177:Arduino-keyboard.c **** static bool KeyboardQueue_IsFull(void)
- 178:Arduino-keyboard.c **** {
- 179:Arduino-keyboard.c ****     return ((KeyboardTail + 1) % KEYBOARD_QUEUE_SIZE) == KeyboardHead;
- 180:Arduino-keyboard.c **** }
- 181:Arduino-keyboard.c **** 
- 182:Arduino-keyboard.c **** static bool KeyboardQueue_Push(uint16_t Usage)
- 183:Arduino-keyboard.c **** {
- 184:Arduino-keyboard.c ****     if (KeyboardQueue_IsFull())
- 185:Arduino-keyboard.c ****         return false;
+ 177:Arduino-keyboard.c **** // Internal media transmission state management
+ 178:Arduino-keyboard.c **** typedef enum {
+ 179:Arduino-keyboard.c ****     MEDIA_IDLE = 0,
+ 180:Arduino-keyboard.c ****     MEDIA_SEND_RELEASE
+ 181:Arduino-keyboard.c **** } media_state_t;
+ 182:Arduino-keyboard.c **** 
+ 183:Arduino-keyboard.c **** static media_state_t MediaState = MEDIA_IDLE;
+ 184:Arduino-keyboard.c **** static uint16_t currentMediaUsage = 0;
+ 185:Arduino-keyboard.c **** uint8_t ledReport = 0;
  186:Arduino-keyboard.c **** 
- 187:Arduino-keyboard.c ****     KeyboardQueue[KeyboardTail] = Usage;
- 188:Arduino-keyboard.c ****     KeyboardTail = (KeyboardTail + 1) % KEYBOARD_QUEUE_SIZE;
- 189:Arduino-keyboard.c **** 
- 190:Arduino-keyboard.c ****     return true;
- 191:Arduino-keyboard.c **** }
- 192:Arduino-keyboard.c **** 
- 193:Arduino-keyboard.c **** static bool KeyboardQueue_Pop(uint16_t* Usage)
- 194:Arduino-keyboard.c **** {
- 195:Arduino-keyboard.c ****     if (KeyboardQueue_IsEmpty())
- 196:Arduino-keyboard.c ****         return false;
- 197:Arduino-keyboard.c **** 
- 198:Arduino-keyboard.c ****     *Usage = KeyboardQueue[KeyboardHead];
- 199:Arduino-keyboard.c **** 
- 200:Arduino-keyboard.c ****     KeyboardHead = (KeyboardHead + 1) % KEYBOARD_QUEUE_SIZE;
- 201:Arduino-keyboard.c **** 
- 202:Arduino-keyboard.c ****     return true;
- 203:Arduino-keyboard.c **** }
- 204:Arduino-keyboard.c **** 
- 205:Arduino-keyboard.c **** static bool MediaQueue_IsEmpty(void)
- 206:Arduino-keyboard.c **** {
- 207:Arduino-keyboard.c ****     return MediaHead == MediaTail;
- 208:Arduino-keyboard.c **** }
+ 187:Arduino-keyboard.c **** /* --- FSM Parser Global Context Variables --- */
+ 188:Arduino-keyboard.c **** #define SERIAL_PARSER_BUFFER_SIZE 64
+ 189:Arduino-keyboard.c **** static volatile uint8_t parserBuffer[SERIAL_PARSER_BUFFER_SIZE];
+ 190:Arduino-keyboard.c **** static volatile uint8_t parserHead  = 0;
+ 191:Arduino-keyboard.c **** static volatile uint8_t parserTail  = 0;
+ 192:Arduino-keyboard.c **** static volatile uint8_t parserCount = 0;
+ 193:Arduino-keyboard.c **** 
+ 194:Arduino-keyboard.c **** typedef enum {
+ 195:Arduino-keyboard.c ****     STATE_PARSE_HEADER = 0,
+ 196:Arduino-keyboard.c ****     STATE_PARSE_PAYLOAD
+ 197:Arduino-keyboard.c **** } parser_state_t;
+ 198:Arduino-keyboard.c **** 
+ 199:Arduino-keyboard.c **** static parser_state_t CurrentParserState = STATE_PARSE_HEADER;
+ 200:Arduino-keyboard.c **** static uint8_t        ActivePacketType   = 0x00;
+ 201:Arduino-keyboard.c **** static uint8_t        PayloadByteIndex   = 0;
+ 202:Arduino-keyboard.c **** 
+ 203:Arduino-keyboard.c **** // Shared extraction layout matching the 8-byte core payload width
+ 204:Arduino-keyboard.c **** static union {
+ 205:Arduino-keyboard.c ****     USB_KeyboardReport_Data_t Keyboard;
+ 206:Arduino-keyboard.c ****     uint8_t                   RawBytes[sizeof(USB_KeyboardReport_Data_t)];
+ 207:Arduino-keyboard.c **** } CurrentFrameContext;
+ 208:Arduino-keyboard.c **** 
  209:Arduino-keyboard.c **** 
- 210:Arduino-keyboard.c **** static bool MediaQueue_IsFull(void)
- 211:Arduino-keyboard.c **** {
- 212:Arduino-keyboard.c ****     return ((MediaTail + 1) % MEDIA_QUEUE_SIZE) == MediaHead;
- 213:Arduino-keyboard.c **** }
- 214:Arduino-keyboard.c **** 
- 215:Arduino-keyboard.c **** static bool MediaQueue_Push(uint16_t Usage)
- 216:Arduino-keyboard.c **** {
-  15               		.loc 1 216 0
+ 210:Arduino-keyboard.c **** /* ---------------------------------------------------------
+ 211:Arduino-keyboard.c ****  * Utility Mapping & Queue APIs
+ 212:Arduino-keyboard.c ****  * --------------------------------------------------------- */
+ 213:Arduino-keyboard.c **** static inline bool IsMediaUsage(uint8_t usage)
+ 214:Arduino-keyboard.c **** {
+ 215:Arduino-keyboard.c ****      return (usage == 0xE9) || /* Volume Up */
+ 216:Arduino-keyboard.c ****             (usage == 0xEA) || /* Volume Down */
+ 217:Arduino-keyboard.c ****             (usage == 0xE2) || /* Mute */
+ 218:Arduino-keyboard.c ****             (usage == 0xCD) || /* Play/Pause */
+ 219:Arduino-keyboard.c ****             (usage == 0xB5) || /* Next Track */
+ 220:Arduino-keyboard.c ****             (usage == 0xB6) || /* Prev Track */
+ 221:Arduino-keyboard.c ****             (usage == 0xB7);    /* Stop */
+ 222:Arduino-keyboard.c **** }
+ 223:Arduino-keyboard.c **** 
+ 224:Arduino-keyboard.c **** static inline uint16_t MapMediaUsage(uint8_t usage)
+ 225:Arduino-keyboard.c **** {
+ 226:Arduino-keyboard.c ****      switch (usage)
+ 227:Arduino-keyboard.c ****      {
+ 228:Arduino-keyboard.c ****          case 0xE9: return 0x00E9;
+ 229:Arduino-keyboard.c ****          case 0xEA: return 0x00EA;
+ 230:Arduino-keyboard.c ****          case 0xE2: return 0x00E2;
+ 231:Arduino-keyboard.c ****          case 0xCD: return 0x00CD;
+ 232:Arduino-keyboard.c ****          case 0xB5: return 0x00B5;
+ 233:Arduino-keyboard.c ****          case 0xB6: return 0x00B6;
+ 234:Arduino-keyboard.c ****          case 0xB7: return 0x00B7;
+ 235:Arduino-keyboard.c ****          default:     return 0x0000;
+ 236:Arduino-keyboard.c ****      }
+ 237:Arduino-keyboard.c **** }
+ 238:Arduino-keyboard.c **** 
+ 239:Arduino-keyboard.c **** static bool KeyboardQueue_Push(const USB_KeyboardReport_Data_t* Report) {
+ 240:Arduino-keyboard.c ****     uint8_t nextTail = (KeyboardTail + 1) % KEYBOARD_QUEUE_SIZE;
+ 241:Arduino-keyboard.c ****     if (nextTail == KeyboardHead) return false;
+ 242:Arduino-keyboard.c ****     KeyboardQueue[KeyboardTail] = *Report;
+ 243:Arduino-keyboard.c ****     KeyboardTail = nextTail;
+ 244:Arduino-keyboard.c ****     return true;
+ 245:Arduino-keyboard.c **** }
+ 246:Arduino-keyboard.c **** 
+ 247:Arduino-keyboard.c **** static bool KeyboardQueue_Pop(USB_KeyboardReport_Data_t* Report) {
+ 248:Arduino-keyboard.c ****     if (KeyboardHead == KeyboardTail) return false;
+ 249:Arduino-keyboard.c ****     *Report = KeyboardQueue[KeyboardHead];
+ 250:Arduino-keyboard.c ****     KeyboardHead = (KeyboardHead + 1) % KEYBOARD_QUEUE_SIZE;
+ 251:Arduino-keyboard.c ****     return true;
+ 252:Arduino-keyboard.c **** }
+ 253:Arduino-keyboard.c **** 
+ 254:Arduino-keyboard.c **** static bool MediaQueue_Push(uint16_t Usage) {
+  15               		.loc 1 254 0
   16               		.cfi_startproc
   17               	.LVL0:
   18               	/* prologue: function */
   19               	/* frame size = 0 */
   20               	/* stack size = 0 */
   21               	.L__stack_usage = 0
-  22               	.LBB48:
-  23               	.LBB49:
- 212:Arduino-keyboard.c **** }
-  24               		.loc 1 212 0
-  25 0000 2091 0000 		lds r18,MediaTail
-  26 0004 30E0      		ldi r19,0
-  27 0006 A901      		movw r20,r18
-  28 0008 4F5F      		subi r20,-1
-  29 000a 5F4F      		sbci r21,-1
-  30 000c 4F70      		andi r20,15
-  31 000e 5527      		clr r21
-  32 0010 6091 0000 		lds r22,MediaHead
-  33               	.LBE49:
-  34               	.LBE48:
- 217:Arduino-keyboard.c ****     if (MediaQueue_IsFull())
-  35               		.loc 1 217 0
-  36 0014 6417      		cp r22,r20
-  37 0016 1506      		cpc __zero_reg__,r21
-  38 0018 01F0      		breq .L3
- 218:Arduino-keyboard.c ****         return false;
- 219:Arduino-keyboard.c **** 
- 220:Arduino-keyboard.c ****     MediaQueue[MediaTail] = Usage;
-  39               		.loc 1 220 0
-  40 001a 220F      		lsl r18
-  41 001c 331F      		rol r19
-  42 001e F901      		movw r30,r18
-  43 0020 E050      		subi r30,lo8(-(MediaQueue))
-  44 0022 F040      		sbci r31,hi8(-(MediaQueue))
-  45 0024 9183      		std Z+1,r25
-  46 0026 8083      		st Z,r24
- 221:Arduino-keyboard.c ****     MediaTail = (MediaTail + 1) % MEDIA_QUEUE_SIZE;
-  47               		.loc 1 221 0
-  48 0028 4093 0000 		sts MediaTail,r20
- 222:Arduino-keyboard.c **** 
- 223:Arduino-keyboard.c ****     return true;
-  49               		.loc 1 223 0
-  50 002c 81E0      		ldi r24,lo8(1)
-  51               	.LVL1:
-  52 002e 0895      		ret
-  53               	.LVL2:
-  54               	.L3:
- 218:Arduino-keyboard.c **** 
-  55               		.loc 1 218 0
-  56 0030 80E0      		ldi r24,0
-  57               	.LVL3:
-  58               	/* epilogue start */
- 224:Arduino-keyboard.c **** }
-  59               		.loc 1 224 0
-  60 0032 0895      		ret
-  61               		.cfi_endproc
-  62               	.LFE98:
-  64               		.section	.text.MediaQueue_Pop,"ax",@progbits
-  66               	MediaQueue_Pop:
-  67               	.LFB99:
- 225:Arduino-keyboard.c **** 
- 226:Arduino-keyboard.c **** static bool MediaQueue_Pop(uint16_t* Usage)
- 227:Arduino-keyboard.c **** {
-  68               		.loc 1 227 0
-  69               		.cfi_startproc
-  70               	.LVL4:
+ 255:Arduino-keyboard.c ****     uint8_t nextTail = (MediaTail + 1) % MEDIA_QUEUE_SIZE;
+  22               		.loc 1 255 0
+  23 0000 2091 0000 		lds r18,MediaTail
+  24 0004 30E0      		ldi r19,0
+  25 0006 2F5F      		subi r18,-1
+  26 0008 3F4F      		sbci r19,-1
+  27 000a 2F70      		andi r18,15
+  28 000c 3327      		clr r19
+  29               	.LVL1:
+ 256:Arduino-keyboard.c ****     if (nextTail == MediaHead) return false;
+  30               		.loc 1 256 0
+  31 000e 4091 0000 		lds r20,MediaHead
+  32 0012 4217      		cp r20,r18
+  33 0014 01F0      		breq .L3
+ 257:Arduino-keyboard.c ****     MediaQueue[MediaTail] = Usage;
+  34               		.loc 1 257 0
+  35 0016 E091 0000 		lds r30,MediaTail
+  36 001a F0E0      		ldi r31,0
+  37 001c EE0F      		lsl r30
+  38 001e FF1F      		rol r31
+  39 0020 E050      		subi r30,lo8(-(MediaQueue))
+  40 0022 F040      		sbci r31,hi8(-(MediaQueue))
+  41 0024 9183      		std Z+1,r25
+  42 0026 8083      		st Z,r24
+ 258:Arduino-keyboard.c ****     MediaTail = nextTail;
+  43               		.loc 1 258 0
+  44 0028 2093 0000 		sts MediaTail,r18
+ 259:Arduino-keyboard.c ****     return true;
+  45               		.loc 1 259 0
+  46 002c 81E0      		ldi r24,lo8(1)
+  47               	.LVL2:
+  48 002e 0895      		ret
+  49               	.LVL3:
+  50               	.L3:
+ 256:Arduino-keyboard.c ****     MediaQueue[MediaTail] = Usage;
+  51               		.loc 1 256 0
+  52 0030 80E0      		ldi r24,0
+  53               	.LVL4:
+  54               	/* epilogue start */
+ 260:Arduino-keyboard.c **** }
+  55               		.loc 1 260 0
+  56 0032 0895      		ret
+  57               		.cfi_endproc
+  58               	.LFE94:
+  60               		.section	.text.ProcessIncomingSerialData,"ax",@progbits
+  61               	.global	ProcessIncomingSerialData
+  63               	ProcessIncomingSerialData:
+  64               	.LFB97:
+ 261:Arduino-keyboard.c **** 
+ 262:Arduino-keyboard.c **** static bool MediaQueue_Pop(uint16_t* Usage) {
+ 263:Arduino-keyboard.c ****     if (MediaHead == MediaTail) return false;
+ 264:Arduino-keyboard.c ****     *Usage = MediaQueue[MediaHead];
+ 265:Arduino-keyboard.c ****     MediaHead = (MediaHead + 1) % MEDIA_QUEUE_SIZE;
+ 266:Arduino-keyboard.c ****     return true;
+ 267:Arduino-keyboard.c **** }
+ 268:Arduino-keyboard.c **** 
+ 269:Arduino-keyboard.c **** // Atomic helper to calculate available raw streaming bytes
+ 270:Arduino-keyboard.c **** static inline uint8_t SafeGetParserCount(void) {
+ 271:Arduino-keyboard.c ****     uint8_t count;
+ 272:Arduino-keyboard.c ****     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+ 273:Arduino-keyboard.c ****         count = parserCount;
+ 274:Arduino-keyboard.c ****     }
+ 275:Arduino-keyboard.c ****     return count;
+ 276:Arduino-keyboard.c **** }
+ 277:Arduino-keyboard.c **** 
+ 278:Arduino-keyboard.c **** 
+ 279:Arduino-keyboard.c **** /* ---------------------------------------------------------
+ 280:Arduino-keyboard.c ****  * FSM Asynchronous Streaming Engine
+ 281:Arduino-keyboard.c ****  * --------------------------------------------------------- */
+ 282:Arduino-keyboard.c **** void ProcessIncomingSerialData(void) {
+  65               		.loc 1 282 0
+  66               		.cfi_startproc
+  67 0000 CF93      		push r28
+  68               	.LCFI0:
+  69               		.cfi_def_cfa_offset 3
+  70               		.cfi_offset 28, -2
   71               	/* prologue: function */
   72               	/* frame size = 0 */
-  73               	/* stack size = 0 */
-  74               	.L__stack_usage = 0
-  75               	.LBB52:
-  76               	.LBB53:
- 207:Arduino-keyboard.c **** }
-  77               		.loc 1 207 0
-  78 0000 2091 0000 		lds r18,MediaHead
-  79               	.LBE53:
-  80               	.LBE52:
- 228:Arduino-keyboard.c ****     if (MediaQueue_IsEmpty())
-  81               		.loc 1 228 0
-  82 0004 3091 0000 		lds r19,MediaTail
-  83 0008 2317      		cp r18,r19
-  84 000a 01F0      		breq .L6
- 229:Arduino-keyboard.c ****         return false;
- 230:Arduino-keyboard.c **** 
- 231:Arduino-keyboard.c ****     *Usage = MediaQueue[MediaHead];
-  85               		.loc 1 231 0
-  86 000c 30E0      		ldi r19,0
-  87 000e F901      		movw r30,r18
-  88 0010 EE0F      		lsl r30
-  89 0012 FF1F      		rol r31
-  90 0014 E050      		subi r30,lo8(-(MediaQueue))
-  91 0016 F040      		sbci r31,hi8(-(MediaQueue))
-  92 0018 4081      		ld r20,Z
-  93 001a 5181      		ldd r21,Z+1
-  94 001c FC01      		movw r30,r24
-  95 001e 5183      		std Z+1,r21
-  96 0020 4083      		st Z,r20
- 232:Arduino-keyboard.c **** 
- 233:Arduino-keyboard.c ****     MediaHead = (MediaHead + 1) % MEDIA_QUEUE_SIZE;
-  97               		.loc 1 233 0
-  98 0022 2F5F      		subi r18,-1
-  99 0024 3F4F      		sbci r19,-1
- 100 0026 2F70      		andi r18,15
- 101 0028 3327      		clr r19
- 102 002a 2093 0000 		sts MediaHead,r18
- 234:Arduino-keyboard.c **** 
- 235:Arduino-keyboard.c ****     return true;
- 103               		.loc 1 235 0
- 104 002e 81E0      		ldi r24,lo8(1)
- 105               	.LVL5:
- 106 0030 0895      		ret
- 107               	.LVL6:
- 108               	.L6:
- 229:Arduino-keyboard.c **** 
- 109               		.loc 1 229 0
- 110 0032 80E0      		ldi r24,0
+  73               	/* stack size = 1 */
+  74               	.L__stack_usage = 1
+ 283:Arduino-keyboard.c ****     // Suspend packet digestion if USB is suspended/disconnected
+ 284:Arduino-keyboard.c ****     if (USB_DeviceState != DEVICE_STATE_Configured) return;
+  75               		.loc 1 284 0
+  76 0002 8EB3      		in r24,0x1e
+  77               	.LBB43:
+ 285:Arduino-keyboard.c **** 
+ 286:Arduino-keyboard.c ****     while (SafeGetParserCount() > 0) {
+ 287:Arduino-keyboard.c ****         uint8_t IncomingByte;
+ 288:Arduino-keyboard.c ****         
+ 289:Arduino-keyboard.c ****         // Safely extract one byte from the ring buffer
+ 290:Arduino-keyboard.c ****         ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+ 291:Arduino-keyboard.c ****             IncomingByte = parserBuffer[parserTail];
+ 292:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
+ 293:Arduino-keyboard.c ****             parserCount--;
+ 294:Arduino-keyboard.c ****         }
+ 295:Arduino-keyboard.c **** 
+ 296:Arduino-keyboard.c ****         switch (CurrentParserState) {
+ 297:Arduino-keyboard.c ****             case STATE_PARSE_HEADER:
+ 298:Arduino-keyboard.c ****                 if (IncomingByte == 0x01 || IncomingByte == 0x02) {
+ 299:Arduino-keyboard.c ****                     ActivePacketType   = IncomingByte;
+ 300:Arduino-keyboard.c ****                     PayloadByteIndex   = 0;
+ 301:Arduino-keyboard.c ****                     CurrentParserState = STATE_PARSE_PAYLOAD;
+  78               		.loc 1 301 0
+  79 0004 C1E0      		ldi r28,lo8(1)
+  80               	.LBE43:
+ 284:Arduino-keyboard.c **** 
+  81               		.loc 1 284 0
+  82 0006 8430      		cpi r24,lo8(4)
+  83 0008 01F0      		breq .L5
+  84               	.L4:
+  85               	/* epilogue start */
+ 302:Arduino-keyboard.c ****                 }
+ 303:Arduino-keyboard.c ****                 // If invalid header, implicitly fall through and discard byte (auto-realigns)
+ 304:Arduino-keyboard.c ****                 break;
+ 305:Arduino-keyboard.c **** 
+ 306:Arduino-keyboard.c ****             case STATE_PARSE_PAYLOAD:
+ 307:Arduino-keyboard.c ****                 CurrentFrameContext.RawBytes[PayloadByteIndex++] = IncomingByte;
+ 308:Arduino-keyboard.c **** 
+ 309:Arduino-keyboard.c ****                 if (PayloadByteIndex >= sizeof(USB_KeyboardReport_Data_t)) {
+ 310:Arduino-keyboard.c ****                     if (ActivePacketType == 0x01) {
+ 311:Arduino-keyboard.c ****                         KeyboardQueue_Push(&CurrentFrameContext.Keyboard);
+ 312:Arduino-keyboard.c ****                     }
+ 313:Arduino-keyboard.c ****                     else if (ActivePacketType == 0x02) {
+ 314:Arduino-keyboard.c ****                         // Extract Media Code mapping
+ 315:Arduino-keyboard.c ****                         uint8_t mediaRaw = CurrentFrameContext.RawBytes[0];
+ 316:Arduino-keyboard.c ****                         if (IsMediaUsage(mediaRaw)) {
+ 317:Arduino-keyboard.c ****                             MediaQueue_Push(MapMediaUsage(mediaRaw));
+ 318:Arduino-keyboard.c ****                         } else if (mediaRaw == 0x00) { // Catch empty release frames
+ 319:Arduino-keyboard.c ****                              MediaQueue_Push(0x0000); 
+ 320:Arduino-keyboard.c ****                         }
+ 321:Arduino-keyboard.c ****                     }
+ 322:Arduino-keyboard.c ****                     // Terminate layout parsing, prepare for next dynamic packet
+ 323:Arduino-keyboard.c ****                     CurrentParserState = STATE_PARSE_HEADER;
+ 324:Arduino-keyboard.c ****                     ActivePacketType   = 0x00;
+ 325:Arduino-keyboard.c ****                     PayloadByteIndex   = 0;
+ 326:Arduino-keyboard.c ****                 }
+ 327:Arduino-keyboard.c ****                 break;
+ 328:Arduino-keyboard.c ****                 
+ 329:Arduino-keyboard.c ****             default:
+ 330:Arduino-keyboard.c ****                 CurrentParserState = STATE_PARSE_HEADER;
+ 331:Arduino-keyboard.c ****                 break;
+ 332:Arduino-keyboard.c ****         }
+ 333:Arduino-keyboard.c ****     }
+ 334:Arduino-keyboard.c **** }
+  86               		.loc 1 334 0
+  87 000a CF91      		pop r28
+  88 000c 0895      		ret
+  89               	.LVL5:
+  90               	.L7:
+  91               	.LBB56:
+ 298:Arduino-keyboard.c ****                     ActivePacketType   = IncomingByte;
+  92               		.loc 1 298 0
+  93 000e 8FEF      		ldi r24,lo8(-1)
+  94 0010 820F      		add r24,r18
+  95 0012 8230      		cpi r24,lo8(2)
+  96 0014 00F4      		brsh .L5
+ 299:Arduino-keyboard.c ****                     PayloadByteIndex   = 0;
+  97               		.loc 1 299 0
+  98 0016 2093 0000 		sts ActivePacketType,r18
+ 300:Arduino-keyboard.c ****                     CurrentParserState = STATE_PARSE_PAYLOAD;
+  99               		.loc 1 300 0
+ 100 001a 1092 0000 		sts PayloadByteIndex,__zero_reg__
+ 301:Arduino-keyboard.c ****                 }
+ 101               		.loc 1 301 0
+ 102 001e C093 0000 		sts CurrentParserState,r28
+ 103               	.LVL6:
+ 104               	.L5:
+ 105               	.LBE56:
+ 106               	.LBB57:
+ 107               	.LBB58:
+ 108               	.LBB59:
+ 272:Arduino-keyboard.c ****         count = parserCount;
+ 109               		.loc 1 272 0
+ 110 0022 9FB7      		in r25,__SREG__
  111               	.LVL7:
- 112               	/* epilogue start */
- 236:Arduino-keyboard.c **** }
- 113               		.loc 1 236 0
- 114 0034 0895      		ret
- 115               		.cfi_endproc
- 116               	.LFE99:
- 118               		.section	.text.RingBuffer_Remove.constprop.3,"ax",@progbits
- 120               	RingBuffer_Remove.constprop.3:
- 121               	.LFB117:
- 122               		.file 2 "Lib/LightweightRingBuff.h"
-   1:Lib/LightweightRingBuff.h **** /*
-   2:Lib/LightweightRingBuff.h ****              LUFA Library
-   3:Lib/LightweightRingBuff.h ****      Copyright (C) Dean Camera, 2010.
-   4:Lib/LightweightRingBuff.h ****               
-   5:Lib/LightweightRingBuff.h ****   dean [at] fourwalledcubicle [dot] com
-   6:Lib/LightweightRingBuff.h ****       www.fourwalledcubicle.com
-   7:Lib/LightweightRingBuff.h **** */
-   8:Lib/LightweightRingBuff.h **** 
-   9:Lib/LightweightRingBuff.h **** /*
-  10:Lib/LightweightRingBuff.h ****   Copyright 2010  Dean Camera (dean [at] fourwalledcubicle [dot] com)
-  11:Lib/LightweightRingBuff.h **** 
-  12:Lib/LightweightRingBuff.h ****   Permission to use, copy, modify, distribute, and sell this 
-  13:Lib/LightweightRingBuff.h ****   software and its documentation for any purpose is hereby granted
-  14:Lib/LightweightRingBuff.h ****   without fee, provided that the above copyright notice appear in 
-  15:Lib/LightweightRingBuff.h ****   all copies and that both that the copyright notice and this
-  16:Lib/LightweightRingBuff.h ****   permission notice and warranty disclaimer appear in supporting 
-  17:Lib/LightweightRingBuff.h ****   documentation, and that the name of the author not be used in 
-  18:Lib/LightweightRingBuff.h ****   advertising or publicity pertaining to distribution of the 
-  19:Lib/LightweightRingBuff.h ****   software without specific, written prior permission.
-  20:Lib/LightweightRingBuff.h **** 
-  21:Lib/LightweightRingBuff.h ****   The author disclaim all warranties with regard to this
-  22:Lib/LightweightRingBuff.h ****   software, including all implied warranties of merchantability
-  23:Lib/LightweightRingBuff.h ****   and fitness.  In no event shall the author be liable for any
-  24:Lib/LightweightRingBuff.h ****   special, indirect or consequential damages or any damages
-  25:Lib/LightweightRingBuff.h ****   whatsoever resulting from loss of use, data or profits, whether
-  26:Lib/LightweightRingBuff.h ****   in an action of contract, negligence or other tortious action,
-  27:Lib/LightweightRingBuff.h ****   arising out of or in connection with the use or performance of
-  28:Lib/LightweightRingBuff.h ****   this software.
-  29:Lib/LightweightRingBuff.h **** */
-  30:Lib/LightweightRingBuff.h **** 
-  31:Lib/LightweightRingBuff.h **** /** \file
-  32:Lib/LightweightRingBuff.h ****  *
-  33:Lib/LightweightRingBuff.h ****  *  Ultra lightweight ring buffer, for fast insertion/deletion.
-  34:Lib/LightweightRingBuff.h ****  */
-  35:Lib/LightweightRingBuff.h ****  
-  36:Lib/LightweightRingBuff.h **** #ifndef _ULW_RING_BUFF_H_
-  37:Lib/LightweightRingBuff.h **** #define _ULW_RING_BUFF_H_
-  38:Lib/LightweightRingBuff.h **** 
-  39:Lib/LightweightRingBuff.h **** 	/* Includes: */
-  40:Lib/LightweightRingBuff.h **** 		#include <util/atomic.h>
-  41:Lib/LightweightRingBuff.h **** 	
-  42:Lib/LightweightRingBuff.h **** 		#include <stdint.h>
-  43:Lib/LightweightRingBuff.h **** 		#include <stdbool.h>
-  44:Lib/LightweightRingBuff.h **** 
-  45:Lib/LightweightRingBuff.h **** 	/* Defines: */
-  46:Lib/LightweightRingBuff.h **** 		/** Size of each ring buffer, in data elements - must be between 1 and 255. */
-  47:Lib/LightweightRingBuff.h **** 		#define BUFFER_SIZE         128
-  48:Lib/LightweightRingBuff.h **** 		
-  49:Lib/LightweightRingBuff.h **** 		/** Maximum number of data elements to buffer before forcing a flush. 
-  50:Lib/LightweightRingBuff.h **** 		 *  Must be less than BUFFER_SIZE
-  51:Lib/LightweightRingBuff.h **** 		 */
-  52:Lib/LightweightRingBuff.h **** 		#define BUFFER_NEARLY_FULL	96
-  53:Lib/LightweightRingBuff.h **** 		
-  54:Lib/LightweightRingBuff.h **** 		/** Type of data to store into the buffer. */
-  55:Lib/LightweightRingBuff.h **** 		#define RingBuff_Data_t     uint8_t
-  56:Lib/LightweightRingBuff.h **** 
-  57:Lib/LightweightRingBuff.h **** 		/** Datatype which may be used to store the count of data stored in a buffer, retrieved
-  58:Lib/LightweightRingBuff.h **** 		 *  via a call to \ref RingBuffer_GetCount().
-  59:Lib/LightweightRingBuff.h **** 		 */
-  60:Lib/LightweightRingBuff.h **** 		#if (BUFFER_SIZE <= 0xFF)
-  61:Lib/LightweightRingBuff.h **** 			#define RingBuff_Count_t   uint8_t
-  62:Lib/LightweightRingBuff.h **** 		#else
-  63:Lib/LightweightRingBuff.h **** 			#define RingBuff_Count_t   uint16_t
-  64:Lib/LightweightRingBuff.h **** 		#endif
-  65:Lib/LightweightRingBuff.h **** 
-  66:Lib/LightweightRingBuff.h **** 	/* Type Defines: */
-  67:Lib/LightweightRingBuff.h **** 		/** Type define for a new ring buffer object. Buffers should be initialized via a call to
-  68:Lib/LightweightRingBuff.h **** 		 *  \ref RingBuffer_InitBuffer() before use.
-  69:Lib/LightweightRingBuff.h **** 		 */
-  70:Lib/LightweightRingBuff.h **** 		typedef struct
-  71:Lib/LightweightRingBuff.h **** 		{
-  72:Lib/LightweightRingBuff.h **** 			RingBuff_Data_t  Buffer[BUFFER_SIZE]; /**< Internal ring buffer data, referenced by the buffer p
-  73:Lib/LightweightRingBuff.h **** 			RingBuff_Data_t* In; /**< Current storage location in the circular buffer */
-  74:Lib/LightweightRingBuff.h **** 			RingBuff_Data_t* Out; /**< Current retrieval location in the circular buffer */
-  75:Lib/LightweightRingBuff.h **** 			RingBuff_Count_t Count;
-  76:Lib/LightweightRingBuff.h **** 		} RingBuff_t;
-  77:Lib/LightweightRingBuff.h **** 	
-  78:Lib/LightweightRingBuff.h **** 	/* Inline Functions: */
-  79:Lib/LightweightRingBuff.h **** 		/** Initializes a ring buffer ready for use. Buffers must be initialized via this function
-  80:Lib/LightweightRingBuff.h **** 		 *  before any operations are called upon them. Already initialized buffers may be reset
-  81:Lib/LightweightRingBuff.h **** 		 *  by re-initializing them using this function.
-  82:Lib/LightweightRingBuff.h **** 		 *
-  83:Lib/LightweightRingBuff.h **** 		 *  \param[out] Buffer  Pointer to a ring buffer structure to initialize
-  84:Lib/LightweightRingBuff.h **** 		 */
-  85:Lib/LightweightRingBuff.h **** 		static inline void RingBuffer_InitBuffer(RingBuff_t* const Buffer)
-  86:Lib/LightweightRingBuff.h **** 		{
-  87:Lib/LightweightRingBuff.h **** 			ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
-  88:Lib/LightweightRingBuff.h **** 			{
-  89:Lib/LightweightRingBuff.h **** 				Buffer->In  = Buffer->Buffer;
-  90:Lib/LightweightRingBuff.h **** 				Buffer->Out = Buffer->Buffer;
-  91:Lib/LightweightRingBuff.h **** 			}
-  92:Lib/LightweightRingBuff.h **** 		}
-  93:Lib/LightweightRingBuff.h **** 		
-  94:Lib/LightweightRingBuff.h **** 		/** Retrieves the minimum number of bytes stored in a particular buffer. This value is computed
-  95:Lib/LightweightRingBuff.h **** 		 *  by entering an atomic lock on the buffer while the IN and OUT locations are fetched, so that
-  96:Lib/LightweightRingBuff.h **** 		 *  the buffer cannot be modified while the computation takes place. This value should be cached
-  97:Lib/LightweightRingBuff.h **** 		 *  when reading out the contents of the buffer, so that as small a time as possible is spent
-  98:Lib/LightweightRingBuff.h **** 		 *  in an atomic lock.
-  99:Lib/LightweightRingBuff.h **** 		 *
- 100:Lib/LightweightRingBuff.h **** 		 *  \note The value returned by this function is guaranteed to only be the minimum number of byte
- 101:Lib/LightweightRingBuff.h **** 		 *        stored in the given buffer; this value may change as other threads write new data and s
- 102:Lib/LightweightRingBuff.h **** 		 *        the returned number should be used only to determine how many successive reads may safe
- 103:Lib/LightweightRingBuff.h **** 		 *        be performed on the buffer.
- 104:Lib/LightweightRingBuff.h **** 		 *
- 105:Lib/LightweightRingBuff.h **** 		 *  \param[in] Buffer  Pointer to a ring buffer structure whose count is to be computed
- 106:Lib/LightweightRingBuff.h **** 		 */
- 107:Lib/LightweightRingBuff.h **** 		static inline RingBuff_Count_t RingBuffer_GetCount(RingBuff_t* const Buffer)
- 108:Lib/LightweightRingBuff.h **** 		{
- 109:Lib/LightweightRingBuff.h **** 			RingBuff_Count_t Count;
- 110:Lib/LightweightRingBuff.h **** 			
- 111:Lib/LightweightRingBuff.h **** 			ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
- 112:Lib/LightweightRingBuff.h **** 			{
- 113:Lib/LightweightRingBuff.h **** 				Count = Buffer->Count;
- 114:Lib/LightweightRingBuff.h **** 			}
- 115:Lib/LightweightRingBuff.h **** 			
- 116:Lib/LightweightRingBuff.h **** 			return Count;
- 117:Lib/LightweightRingBuff.h **** 		}
- 118:Lib/LightweightRingBuff.h **** 		
- 119:Lib/LightweightRingBuff.h **** 		/** Atomically determines if the specified ring buffer contains any free space. This should
- 120:Lib/LightweightRingBuff.h **** 		 *  be tested before storing data to the buffer, to ensure that no data is lost due to a
- 121:Lib/LightweightRingBuff.h **** 		 *  buffer overrun.
- 122:Lib/LightweightRingBuff.h **** 		 *
- 123:Lib/LightweightRingBuff.h **** 		 *  \param[in,out] Buffer  Pointer to a ring buffer structure to insert into
- 124:Lib/LightweightRingBuff.h **** 		 *
- 125:Lib/LightweightRingBuff.h **** 		 *  \return Boolean true if the buffer contains no free space, false otherwise
- 126:Lib/LightweightRingBuff.h **** 		 */		 
- 127:Lib/LightweightRingBuff.h **** 		static inline bool RingBuffer_IsFull(RingBuff_t* const Buffer)
- 128:Lib/LightweightRingBuff.h **** 		{
- 129:Lib/LightweightRingBuff.h **** 			return (RingBuffer_GetCount(Buffer) == BUFFER_SIZE);
- 130:Lib/LightweightRingBuff.h **** 		}
- 131:Lib/LightweightRingBuff.h **** 
- 132:Lib/LightweightRingBuff.h **** 		/** Atomically determines if the specified ring buffer contains any data. This should
- 133:Lib/LightweightRingBuff.h **** 		 *  be tested before removing data from the buffer, to ensure that the buffer does not
- 134:Lib/LightweightRingBuff.h **** 		 *  underflow.
- 135:Lib/LightweightRingBuff.h **** 		 *
- 136:Lib/LightweightRingBuff.h **** 		 *  If the data is to be removed in a loop, store the total number of bytes stored in the
- 137:Lib/LightweightRingBuff.h **** 		 *  buffer (via a call to the \ref RingBuffer_GetCount() function) in a temporary variable
- 138:Lib/LightweightRingBuff.h **** 		 *  to reduce the time spent in atomicity locks.
- 139:Lib/LightweightRingBuff.h **** 		 *
- 140:Lib/LightweightRingBuff.h **** 		 *  \param[in,out] Buffer  Pointer to a ring buffer structure to insert into
- 141:Lib/LightweightRingBuff.h **** 		 *
- 142:Lib/LightweightRingBuff.h **** 		 *  \return Boolean true if the buffer contains no free space, false otherwise
- 143:Lib/LightweightRingBuff.h **** 		 */		 
- 144:Lib/LightweightRingBuff.h **** 		static inline bool RingBuffer_IsEmpty(RingBuff_t* const Buffer)
- 145:Lib/LightweightRingBuff.h **** 		{
- 146:Lib/LightweightRingBuff.h **** 			return (RingBuffer_GetCount(Buffer) == 0);
- 147:Lib/LightweightRingBuff.h **** 		}
- 148:Lib/LightweightRingBuff.h **** 
- 149:Lib/LightweightRingBuff.h **** 		/** Inserts an element into the ring buffer.
- 150:Lib/LightweightRingBuff.h **** 		 *
- 151:Lib/LightweightRingBuff.h **** 		 *  \note Only one execution thread (main program thread or an ISR) may insert into a single buff
- 152:Lib/LightweightRingBuff.h **** 		 *        otherwise data corruption may occur. Insertion and removal may occur from different exe
- 153:Lib/LightweightRingBuff.h **** 		 *        threads.
- 154:Lib/LightweightRingBuff.h **** 		 *
- 155:Lib/LightweightRingBuff.h **** 		 *  \param[in,out] Buffer  Pointer to a ring buffer structure to insert into
- 156:Lib/LightweightRingBuff.h **** 		 *  \param[in]     Data    Data element to insert into the buffer
- 157:Lib/LightweightRingBuff.h **** 		 */
- 158:Lib/LightweightRingBuff.h **** 		static inline void RingBuffer_Insert(RingBuff_t* const Buffer,
- 159:Lib/LightweightRingBuff.h **** 		                                     const RingBuff_Data_t Data)
- 160:Lib/LightweightRingBuff.h **** 		{
- 161:Lib/LightweightRingBuff.h **** 			*Buffer->In = Data;
- 162:Lib/LightweightRingBuff.h **** 			
- 163:Lib/LightweightRingBuff.h **** 			if (++Buffer->In == &Buffer->Buffer[BUFFER_SIZE])
- 164:Lib/LightweightRingBuff.h **** 			  Buffer->In = Buffer->Buffer;
- 165:Lib/LightweightRingBuff.h **** 
- 166:Lib/LightweightRingBuff.h **** 			ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
- 167:Lib/LightweightRingBuff.h **** 			{
- 168:Lib/LightweightRingBuff.h **** 				Buffer->Count++;
- 169:Lib/LightweightRingBuff.h **** 			}
- 170:Lib/LightweightRingBuff.h **** 		}
- 171:Lib/LightweightRingBuff.h **** 
- 172:Lib/LightweightRingBuff.h **** 		/** Removes an element from the ring buffer.
- 173:Lib/LightweightRingBuff.h **** 		 *
- 174:Lib/LightweightRingBuff.h **** 		 *  \note Only one execution thread (main program thread or an ISR) may remove from a single buff
- 175:Lib/LightweightRingBuff.h **** 		 *        otherwise data corruption may occur. Insertion and removal may occur from different exe
- 176:Lib/LightweightRingBuff.h **** 		 *        threads.
- 177:Lib/LightweightRingBuff.h **** 		 *
- 178:Lib/LightweightRingBuff.h **** 		 *  \param[in,out] Buffer  Pointer to a ring buffer structure to retrieve from
- 179:Lib/LightweightRingBuff.h **** 		 *
- 180:Lib/LightweightRingBuff.h **** 		 *  \return Next data element stored in the buffer
- 181:Lib/LightweightRingBuff.h **** 		 */
- 182:Lib/LightweightRingBuff.h **** 		static inline RingBuff_Data_t RingBuffer_Remove(RingBuff_t* const Buffer)
- 123               		.loc 2 182 0
- 124               		.cfi_startproc
- 125               	/* prologue: function */
- 126               	/* frame size = 0 */
- 127               	/* stack size = 0 */
- 128               	.L__stack_usage = 0
- 129               	.LVL8:
- 183:Lib/LightweightRingBuff.h **** 		{
- 184:Lib/LightweightRingBuff.h **** 			RingBuff_Data_t Data = *Buffer->Out;
- 130               		.loc 2 184 0
- 131 0000 E091 0000 		lds r30,USARTtoUSB_Buffer+130
- 132 0004 F091 0000 		lds r31,USARTtoUSB_Buffer+130+1
- 133 0008 8191      		ld r24,Z+
- 134               	.LVL9:
- 185:Lib/LightweightRingBuff.h **** 			
- 186:Lib/LightweightRingBuff.h **** 			if (++Buffer->Out == &Buffer->Buffer[BUFFER_SIZE])
- 135               		.loc 2 186 0
- 136 000a 90E0      		ldi r25,hi8(USARTtoUSB_Buffer+128)
- 137 000c E030      		cpi r30,lo8(USARTtoUSB_Buffer+128)
- 138 000e F907      		cpc r31,r25
- 139 0010 01F0      		breq .L8
- 140 0012 F093 0000 		sts USARTtoUSB_Buffer+130+1,r31
- 141 0016 E093 0000 		sts USARTtoUSB_Buffer+130,r30
- 142               	.L9:
- 143               	.LBB54:
- 187:Lib/LightweightRingBuff.h **** 			  Buffer->Out = Buffer->Buffer;
- 188:Lib/LightweightRingBuff.h **** 
- 189:Lib/LightweightRingBuff.h **** 			ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
- 144               		.loc 2 189 0
- 145 001a 2FB7      		in r18,__SREG__
- 146               	.LVL10:
- 147               	.LBB55:
- 148               	.LBB56:
- 149               		.file 3 "/usr/lib/avr/include/util/atomic.h"
+ 112               	.LBB60:
+ 113               	.LBB61:
+ 114               		.file 2 "/usr/lib/avr/include/util/atomic.h"
    1:/usr/lib/avr/include/util/atomic.h **** /* Copyright (c) 2007 Dean Camera
    2:/usr/lib/avr/include/util/atomic.h ****    All rights reserved.
    3:/usr/lib/avr/include/util/atomic.h **** 
@@ -621,24 +500,21 @@
   48:/usr/lib/avr/include/util/atomic.h **** static __inline__ uint8_t __iCliRetVal(void)
   49:/usr/lib/avr/include/util/atomic.h **** {
   50:/usr/lib/avr/include/util/atomic.h ****     cli();
- 150               		.loc 3 50 0
- 151               	/* #APP */
- 152               	 ;  50 "/usr/lib/avr/include/util/atomic.h" 1
- 153 001c F894      		cli
- 154               	 ;  0 "" 2
- 155               	.LVL11:
- 156               	/* #NOAPP */
- 157               	.LBE56:
- 158               	.LBE55:
- 190:Lib/LightweightRingBuff.h **** 			{
- 191:Lib/LightweightRingBuff.h **** 				Buffer->Count--;
- 159               		.loc 2 191 0
- 160 001e 9091 0000 		lds r25,USARTtoUSB_Buffer+132
- 161 0022 9150      		subi r25,lo8(-(-1))
- 162 0024 9093 0000 		sts USARTtoUSB_Buffer+132,r25
- 163               	.LVL12:
- 164               	.LBB57:
- 165               	.LBB58:
+ 115               		.loc 2 50 0
+ 116               	/* #APP */
+ 117               	 ;  50 "/usr/lib/avr/include/util/atomic.h" 1
+ 118 0024 F894      		cli
+ 119               	 ;  0 "" 2
+ 120               	.LVL8:
+ 121               	/* #NOAPP */
+ 122               	.LBE61:
+ 123               	.LBE60:
+ 273:Arduino-keyboard.c ****     }
+ 124               		.loc 1 273 0
+ 125 0026 8091 0000 		lds r24,parserCount
+ 126               	.LVL9:
+ 127               	.LBB62:
+ 128               	.LBB63:
   51:/usr/lib/avr/include/util/atomic.h ****     return 1;
   52:/usr/lib/avr/include/util/atomic.h **** }
   53:/usr/lib/avr/include/util/atomic.h **** 
@@ -659,148 +535,325 @@
   68:/usr/lib/avr/include/util/atomic.h **** static __inline__ void __iRestore(const  uint8_t *__s)
   69:/usr/lib/avr/include/util/atomic.h **** {
   70:/usr/lib/avr/include/util/atomic.h ****     SREG = *__s;
- 166               		.loc 3 70 0
- 167 0028 2FBF      		out __SREG__,r18
+ 129               		.loc 2 70 0
+ 130 002a 9FBF      		out __SREG__,r25
   71:/usr/lib/avr/include/util/atomic.h ****     __asm__ volatile ("" ::: "memory");
- 168               		.loc 3 71 0
- 169               	.LVL13:
- 170               	/* epilogue start */
- 171               	.LBE58:
- 172               	.LBE57:
- 173               	.LBE54:
- 192:Lib/LightweightRingBuff.h **** 			}
- 193:Lib/LightweightRingBuff.h **** 			
- 194:Lib/LightweightRingBuff.h **** 			return Data;
- 195:Lib/LightweightRingBuff.h **** 		}
- 174               		.loc 2 195 0
- 175 002a 0895      		ret
- 176               	.LVL14:
- 177               	.L8:
- 187:Lib/LightweightRingBuff.h **** 
- 178               		.loc 2 187 0
- 179 002c 20E0      		ldi r18,lo8(USARTtoUSB_Buffer)
- 180 002e 30E0      		ldi r19,hi8(USARTtoUSB_Buffer)
- 181 0030 3093 0000 		sts USARTtoUSB_Buffer+130+1,r19
- 182 0034 2093 0000 		sts USARTtoUSB_Buffer+130,r18
- 183 0038 00C0      		rjmp .L9
- 184               		.cfi_endproc
- 185               	.LFE117:
- 187               		.section	.text.SetupHardware,"ax",@progbits
- 188               	.global	SetupHardware
- 190               	SetupHardware:
- 191               	.LFB102:
- 237:Arduino-keyboard.c **** 
- 238:Arduino-keyboard.c **** static void LoadNextSerialFrameIfAvailable()
- 239:Arduino-keyboard.c **** {
- 240:Arduino-keyboard.c ****     static uint8_t partial_wait = 0;
- 241:Arduino-keyboard.c ****     
- 242:Arduino-keyboard.c ****     if (RingBuffer_GetCount(&USARTtoUSB_Buffer) < 8) {
- 243:Arduino-keyboard.c ****         partial_wait++;
- 244:Arduino-keyboard.c ****         if (partial_wait > 200) {  // ~200 loop iterations with no progress
- 245:Arduino-keyboard.c ****             // Flush the buffer to recover
- 246:Arduino-keyboard.c ****             while (RingBuffer_GetCount(&USARTtoUSB_Buffer))
- 247:Arduino-keyboard.c ****                 (void)RingBuffer_Remove(&USARTtoUSB_Buffer);
- 248:Arduino-keyboard.c ****             partial_wait = 0;
- 249:Arduino-keyboard.c ****         }
- 250:Arduino-keyboard.c ****         return;
- 251:Arduino-keyboard.c ****     }
- 252:Arduino-keyboard.c ****     partial_wait = 0;
- 253:Arduino-keyboard.c **** 
- 254:Arduino-keyboard.c ****     for (uint8_t i = 0; i < 8; i++)
- 255:Arduino-keyboard.c ****         keyboardData[i] = RingBuffer_Remove(&USARTtoUSB_Buffer);
- 256:Arduino-keyboard.c **** 
- 257:Arduino-keyboard.c ****     /* If the incoming “keyboard” frame is actually one of your media pseudo-keys,
- 258:Arduino-keyboard.c ****        convert it into a Consumer Control action and neutralize the keyboard report. */
- 259:Arduino-keyboard.c ****     if (IsMediaUsage(keyboardData[2]))
- 260:Arduino-keyboard.c ****     {
- 261:Arduino-keyboard.c ****         if (MediaQueue_IsFull())
- 262:Arduino-keyboard.c ****         {
- 263:Arduino-keyboard.c ****             uint16_t Dummy;
- 264:Arduino-keyboard.c ****             MediaQueue_Pop(&Dummy);
- 265:Arduino-keyboard.c ****         }
- 266:Arduino-keyboard.c ****         MediaQueue_Push(MapMediaUsage(keyboardData[2]));
- 267:Arduino-keyboard.c **** 
- 268:Arduino-keyboard.c ****         memset(keyboardData, 0, sizeof(keyboardData));
- 269:Arduino-keyboard.c ****     }
- 270:Arduino-keyboard.c **** }
- 271:Arduino-keyboard.c **** 
- 272:Arduino-keyboard.c **** /** Main program entry point. This routine contains the overall program flow, including initial
- 273:Arduino-keyboard.c ****  *  setup of all components and the main program loop.
- 274:Arduino-keyboard.c ****  */
- 275:Arduino-keyboard.c **** int main(void)
- 276:Arduino-keyboard.c **** {
- 277:Arduino-keyboard.c **** 	SetupHardware();
- 278:Arduino-keyboard.c **** 
- 279:Arduino-keyboard.c **** 	RingBuffer_InitBuffer(&USARTtoUSB_Buffer);
- 280:Arduino-keyboard.c **** 
- 281:Arduino-keyboard.c **** 	sei();
- 282:Arduino-keyboard.c **** 
- 283:Arduino-keyboard.c ****     for (;;)
- 284:Arduino-keyboard.c ****     {
- 285:Arduino-keyboard.c ****         /* Make sure we always have the newest serial frame before generating reports */
- 286:Arduino-keyboard.c ****         LoadNextSerialFrameIfAvailable();
- 287:Arduino-keyboard.c **** 
- 288:Arduino-keyboard.c ****         HID_Device_USBTask(&HID_KeyboardInterface);
- 289:Arduino-keyboard.c ****         HID_Device_USBTask(&HID_MediaInterface);
- 290:Arduino-keyboard.c **** 
- 291:Arduino-keyboard.c ****         USB_USBTask();
- 292:Arduino-keyboard.c ****     }
- 293:Arduino-keyboard.c **** }
- 294:Arduino-keyboard.c **** 
- 295:Arduino-keyboard.c **** /** Configures the board hardware and chip peripherals for the demo's functionality. */
- 296:Arduino-keyboard.c **** void SetupHardware(void)
- 297:Arduino-keyboard.c **** {
- 192               		.loc 1 297 0
- 193               		.cfi_startproc
- 194 0000 AF92      		push r10
- 195               	.LCFI0:
- 196               		.cfi_def_cfa_offset 3
- 197               		.cfi_offset 10, -2
- 198 0002 BF92      		push r11
- 199               	.LCFI1:
- 200               		.cfi_def_cfa_offset 4
- 201               		.cfi_offset 11, -3
- 202 0004 DF92      		push r13
- 203               	.LCFI2:
- 204               		.cfi_def_cfa_offset 5
- 205               		.cfi_offset 13, -4
- 206 0006 EF92      		push r14
- 207               	.LCFI3:
- 208               		.cfi_def_cfa_offset 6
- 209               		.cfi_offset 14, -5
- 210 0008 FF92      		push r15
- 211               	.LCFI4:
- 212               		.cfi_def_cfa_offset 7
- 213               		.cfi_offset 15, -6
- 214 000a 0F93      		push r16
- 215               	.LCFI5:
- 216               		.cfi_def_cfa_offset 8
- 217               		.cfi_offset 16, -7
- 218 000c 1F93      		push r17
- 219               	.LCFI6:
- 220               		.cfi_def_cfa_offset 9
- 221               		.cfi_offset 17, -8
- 222 000e CF93      		push r28
- 223               	.LCFI7:
- 224               		.cfi_def_cfa_offset 10
- 225               		.cfi_offset 28, -9
- 226 0010 DF93      		push r29
- 227               	.LCFI8:
- 228               		.cfi_def_cfa_offset 11
- 229               		.cfi_offset 29, -10
- 230               	/* prologue: function */
- 231               	/* frame size = 0 */
- 232               	/* stack size = 9 */
- 233               	.L__stack_usage = 9
- 298:Arduino-keyboard.c **** 	/* Disable watchdog if enabled by bootloader/fuses */
- 299:Arduino-keyboard.c **** 	MCUSR &= ~(1 << WDRF);
- 234               		.loc 1 299 0
- 235 0012 84B7      		in r24,0x34
- 236 0014 877F      		andi r24,lo8(-9)
- 237 0016 84BF      		out 0x34,r24
- 238               	.LBB63:
- 239               	.LBB64:
- 240               		.file 4 "/usr/lib/avr/include/avr/wdt.h"
+ 131               		.loc 2 71 0
+ 132               	.LVL10:
+ 133               	.LBE63:
+ 134               	.LBE62:
+ 135               	.LBE59:
+ 136               	.LBE58:
+ 137               	.LBE57:
+ 286:Arduino-keyboard.c ****         uint8_t IncomingByte;
+ 138               		.loc 1 286 0
+ 139 002c 8823      		tst r24
+ 140 002e 01F0      		breq .L4
+ 141               	.LBB64:
+ 142               	.LBB44:
+ 290:Arduino-keyboard.c ****             IncomingByte = parserBuffer[parserTail];
+ 143               		.loc 1 290 0
+ 144 0030 3FB7      		in r19,__SREG__
+ 145               	.LVL11:
+ 146               	.LBB45:
+ 147               	.LBB46:
+  50:/usr/lib/avr/include/util/atomic.h ****     return 1;
+ 148               		.loc 2 50 0
+ 149               	/* #APP */
+ 150               	 ;  50 "/usr/lib/avr/include/util/atomic.h" 1
+ 151 0032 F894      		cli
+ 152               	 ;  0 "" 2
+ 153               	.LVL12:
+ 154               	/* #NOAPP */
+ 155               	.LBE46:
+ 156               	.LBE45:
+ 291:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
+ 157               		.loc 1 291 0
+ 158 0034 E091 0000 		lds r30,parserTail
+ 159 0038 F0E0      		ldi r31,0
+ 160 003a E050      		subi r30,lo8(-(parserBuffer))
+ 161 003c F040      		sbci r31,hi8(-(parserBuffer))
+ 162 003e 2081      		ld r18,Z
+ 163               	.LVL13:
+ 292:Arduino-keyboard.c ****             parserCount--;
+ 164               		.loc 1 292 0
+ 165 0040 8091 0000 		lds r24,parserTail
+ 166 0044 90E0      		ldi r25,0
+ 167 0046 0196      		adiw r24,1
+ 168 0048 8F73      		andi r24,63
+ 169 004a 9927      		clr r25
+ 170 004c 8093 0000 		sts parserTail,r24
+ 293:Arduino-keyboard.c ****         }
+ 171               		.loc 1 293 0
+ 172 0050 8091 0000 		lds r24,parserCount
+ 173 0054 8150      		subi r24,lo8(-(-1))
+ 174 0056 8093 0000 		sts parserCount,r24
+ 175               	.LVL14:
+ 176               	.LBB47:
+ 177               	.LBB48:
+  70:/usr/lib/avr/include/util/atomic.h ****     __asm__ volatile ("" ::: "memory");
+ 178               		.loc 2 70 0
+ 179 005a 3FBF      		out __SREG__,r19
+ 180               		.loc 2 71 0
+ 181               	.LVL15:
+ 182               	.LBE48:
+ 183               	.LBE47:
+ 184               	.LBE44:
+ 296:Arduino-keyboard.c ****             case STATE_PARSE_HEADER:
+ 185               		.loc 1 296 0
+ 186 005c 8091 0000 		lds r24,CurrentParserState
+ 187 0060 8823      		tst r24
+ 188 0062 01F0      		breq .L7
+ 189 0064 8130      		cpi r24,lo8(1)
+ 190 0066 01F0      		breq .L8
+ 330:Arduino-keyboard.c ****                 break;
+ 191               		.loc 1 330 0
+ 192 0068 1092 0000 		sts CurrentParserState,__zero_reg__
+ 331:Arduino-keyboard.c ****         }
+ 193               		.loc 1 331 0
+ 194 006c 00C0      		rjmp .L5
+ 195               	.L8:
+ 307:Arduino-keyboard.c **** 
+ 196               		.loc 1 307 0
+ 197 006e E091 0000 		lds r30,PayloadByteIndex
+ 198 0072 81E0      		ldi r24,lo8(1)
+ 199 0074 8E0F      		add r24,r30
+ 200 0076 8093 0000 		sts PayloadByteIndex,r24
+ 201 007a F0E0      		ldi r31,0
+ 202 007c E050      		subi r30,lo8(-(CurrentFrameContext))
+ 203 007e F040      		sbci r31,hi8(-(CurrentFrameContext))
+ 204 0080 2083      		st Z,r18
+ 309:Arduino-keyboard.c ****                     if (ActivePacketType == 0x01) {
+ 205               		.loc 1 309 0
+ 206 0082 8830      		cpi r24,lo8(8)
+ 207 0084 00F0      		brlo .L5
+ 310:Arduino-keyboard.c ****                         KeyboardQueue_Push(&CurrentFrameContext.Keyboard);
+ 208               		.loc 1 310 0
+ 209 0086 8091 0000 		lds r24,ActivePacketType
+ 210 008a 8130      		cpi r24,lo8(1)
+ 211 008c 01F4      		brne .L12
+ 212               	.LVL16:
+ 213               	.LBB49:
+ 214               	.LBB50:
+ 240:Arduino-keyboard.c ****     if (nextTail == KeyboardHead) return false;
+ 215               		.loc 1 240 0
+ 216 008e 8091 0000 		lds r24,KeyboardTail
+ 217 0092 90E0      		ldi r25,0
+ 218 0094 0196      		adiw r24,1
+ 219 0096 8770      		andi r24,7
+ 220 0098 9927      		clr r25
+ 221               	.LVL17:
+ 241:Arduino-keyboard.c ****     KeyboardQueue[KeyboardTail] = *Report;
+ 222               		.loc 1 241 0
+ 223 009a 2091 0000 		lds r18,KeyboardHead
+ 224               	.LVL18:
+ 225 009e 2817      		cp r18,r24
+ 226 00a0 01F0      		breq .L13
+ 242:Arduino-keyboard.c ****     KeyboardTail = nextTail;
+ 227               		.loc 1 242 0
+ 228 00a2 A091 0000 		lds r26,KeyboardTail
+ 229 00a6 B0E0      		ldi r27,0
+ 230 00a8 93E0      		ldi r25,3
+ 231               		1:
+ 232 00aa AA0F      		lsl r26
+ 233 00ac BB1F      		rol r27
+ 234 00ae 9A95      		dec r25
+ 235 00b0 01F4      		brne 1b
+ 236 00b2 A050      		subi r26,lo8(-(KeyboardQueue))
+ 237 00b4 B040      		sbci r27,hi8(-(KeyboardQueue))
+ 238 00b6 98E0      		ldi r25,lo8(8)
+ 239 00b8 E0E0      		ldi r30,lo8(CurrentFrameContext)
+ 240 00ba F0E0      		ldi r31,hi8(CurrentFrameContext)
+ 241               	.LVL19:
+ 242               		0:
+ 243 00bc 0190      		ld r0,Z+
+ 244 00be 0D92      		st X+,r0
+ 245 00c0 9A95      		dec r25
+ 246 00c2 01F4      		brne 0b
+ 243:Arduino-keyboard.c ****     return true;
+ 247               		.loc 1 243 0
+ 248 00c4 8093 0000 		sts KeyboardTail,r24
+ 249               	.LVL20:
+ 250               	.L13:
+ 251               	.LBE50:
+ 252               	.LBE49:
+ 323:Arduino-keyboard.c ****                     ActivePacketType   = 0x00;
+ 253               		.loc 1 323 0
+ 254 00c8 1092 0000 		sts CurrentParserState,__zero_reg__
+ 324:Arduino-keyboard.c ****                     PayloadByteIndex   = 0;
+ 255               		.loc 1 324 0
+ 256 00cc 1092 0000 		sts ActivePacketType,__zero_reg__
+ 325:Arduino-keyboard.c ****                 }
+ 257               		.loc 1 325 0
+ 258 00d0 1092 0000 		sts PayloadByteIndex,__zero_reg__
+ 259 00d4 00C0      		rjmp .L5
+ 260               	.LVL21:
+ 261               	.L12:
+ 313:Arduino-keyboard.c ****                         // Extract Media Code mapping
+ 262               		.loc 1 313 0
+ 263 00d6 8230      		cpi r24,lo8(2)
+ 264 00d8 01F4      		brne .L13
+ 265               	.LBB51:
+ 315:Arduino-keyboard.c ****                         if (IsMediaUsage(mediaRaw)) {
+ 266               		.loc 1 315 0
+ 267 00da E091 0000 		lds r30,CurrentFrameContext
+ 268               	.LVL22:
+ 269               	.LBB52:
+ 270               	.LBB53:
+ 215:Arduino-keyboard.c ****             (usage == 0xEA) || /* Volume Down */
+ 271               		.loc 1 215 0
+ 272 00de 87E1      		ldi r24,lo8(23)
+ 273 00e0 8E0F      		add r24,r30
+ 220:Arduino-keyboard.c ****             (usage == 0xB7);    /* Stop */
+ 274               		.loc 1 220 0
+ 275 00e2 8230      		cpi r24,lo8(2)
+ 276 00e4 00F0      		brlo .L21
+ 216:Arduino-keyboard.c ****             (usage == 0xE2) || /* Mute */
+ 277               		.loc 1 216 0
+ 278 00e6 E23E      		cpi r30,lo8(-30)
+ 279 00e8 01F0      		breq .L21
+ 220:Arduino-keyboard.c ****             (usage == 0xB7);    /* Stop */
+ 280               		.loc 1 220 0
+ 281 00ea 81E0      		ldi r24,lo8(1)
+ 217:Arduino-keyboard.c ****             (usage == 0xCD) || /* Play/Pause */
+ 282               		.loc 1 217 0
+ 283 00ec ED3C      		cpi r30,lo8(-51)
+ 284 00ee 01F0      		breq .L14
+ 218:Arduino-keyboard.c ****             (usage == 0xB5) || /* Next Track */
+ 285               		.loc 1 218 0
+ 286 00f0 9BE4      		ldi r25,lo8(75)
+ 287 00f2 9E0F      		add r25,r30
+ 288 00f4 9330      		cpi r25,lo8(3)
+ 289 00f6 00F0      		brlo .L14
+ 290 00f8 80E0      		ldi r24,0
+ 291               	.L14:
+ 292               	.LVL23:
+ 293               	.LBE53:
+ 294               	.LBE52:
+ 316:Arduino-keyboard.c ****                             MediaQueue_Push(MapMediaUsage(mediaRaw));
+ 295               		.loc 1 316 0
+ 296 00fa 80FF      		sbrs r24,0
+ 297 00fc 00C0      		rjmp .L16
+ 298               	.LVL24:
+ 299 00fe E55B      		subi r30,lo8(-(75))
+ 300               	.LVL25:
+ 301 0100 E633      		cpi r30,lo8(54)
+ 302 0102 00F4      		brsh .L27
+ 303 0104 F0E0      		ldi r31,0
+ 304 0106 E050      		subi r30,lo8(-(CSWTCH.44))
+ 305 0108 F040      		sbci r31,hi8(-(CSWTCH.44))
+ 306 010a 8081      		ld r24,Z
+ 307 010c 90E0      		ldi r25,0
+ 308               	.LVL26:
+ 309               	.L26:
+ 319:Arduino-keyboard.c ****                         }
+ 310               		.loc 1 319 0
+ 311 010e 0E94 0000 		call MediaQueue_Push
+ 312               	.LVL27:
+ 313 0112 00C0      		rjmp .L13
+ 314               	.LVL28:
+ 315               	.L21:
+ 316               	.LBB55:
+ 317               	.LBB54:
+ 220:Arduino-keyboard.c ****             (usage == 0xB7);    /* Stop */
+ 318               		.loc 1 220 0
+ 319 0114 81E0      		ldi r24,lo8(1)
+ 320 0116 00C0      		rjmp .L14
+ 321               	.LVL29:
+ 322               	.L16:
+ 323               	.LBE54:
+ 324               	.LBE55:
+ 318:Arduino-keyboard.c ****                              MediaQueue_Push(0x0000); 
+ 325               		.loc 1 318 0
+ 326 0118 E111      		cpse r30,__zero_reg__
+ 327 011a 00C0      		rjmp .L13
+ 328               	.LVL30:
+ 329               	.L27:
+ 319:Arduino-keyboard.c ****                         }
+ 330               		.loc 1 319 0
+ 331 011c 90E0      		ldi r25,0
+ 332 011e 80E0      		ldi r24,0
+ 333 0120 00C0      		rjmp .L26
+ 334               	.LBE51:
+ 335               	.LBE64:
+ 336               		.cfi_endproc
+ 337               	.LFE97:
+ 339               		.section	.text.SetupHardware,"ax",@progbits
+ 340               	.global	SetupHardware
+ 342               	SetupHardware:
+ 343               	.LFB99:
+ 335:Arduino-keyboard.c **** 
+ 336:Arduino-keyboard.c **** /* ---------------------------------------------------------
+ 337:Arduino-keyboard.c ****  * Hardware Polling Loops & LUFA Integration
+ 338:Arduino-keyboard.c ****  * --------------------------------------------------------- */
+ 339:Arduino-keyboard.c **** int main(void) {
+ 340:Arduino-keyboard.c ****     SetupHardware();
+ 341:Arduino-keyboard.c ****     sei();
+ 342:Arduino-keyboard.c **** 
+ 343:Arduino-keyboard.c ****     for (;;) {
+ 344:Arduino-keyboard.c ****         // Execute background serial pipeline parsing continuously
+ 345:Arduino-keyboard.c ****         ProcessIncomingSerialData();
+ 346:Arduino-keyboard.c **** 
+ 347:Arduino-keyboard.c ****         // Service USB Endpoint transactions synchronously
+ 348:Arduino-keyboard.c ****         HID_Device_USBTask(&HID_KeyboardInterface);
+ 349:Arduino-keyboard.c ****         HID_Device_USBTask(&HID_MediaInterface);
+ 350:Arduino-keyboard.c ****         USB_USBTask();
+ 351:Arduino-keyboard.c ****     }
+ 352:Arduino-keyboard.c **** }
+ 353:Arduino-keyboard.c **** 
+ 354:Arduino-keyboard.c **** void SetupHardware(void)
+ 355:Arduino-keyboard.c **** {
+ 344               		.loc 1 355 0
+ 345               		.cfi_startproc
+ 346 0000 AF92      		push r10
+ 347               	.LCFI1:
+ 348               		.cfi_def_cfa_offset 3
+ 349               		.cfi_offset 10, -2
+ 350 0002 BF92      		push r11
+ 351               	.LCFI2:
+ 352               		.cfi_def_cfa_offset 4
+ 353               		.cfi_offset 11, -3
+ 354 0004 DF92      		push r13
+ 355               	.LCFI3:
+ 356               		.cfi_def_cfa_offset 5
+ 357               		.cfi_offset 13, -4
+ 358 0006 EF92      		push r14
+ 359               	.LCFI4:
+ 360               		.cfi_def_cfa_offset 6
+ 361               		.cfi_offset 14, -5
+ 362 0008 FF92      		push r15
+ 363               	.LCFI5:
+ 364               		.cfi_def_cfa_offset 7
+ 365               		.cfi_offset 15, -6
+ 366 000a 0F93      		push r16
+ 367               	.LCFI6:
+ 368               		.cfi_def_cfa_offset 8
+ 369               		.cfi_offset 16, -7
+ 370 000c 1F93      		push r17
+ 371               	.LCFI7:
+ 372               		.cfi_def_cfa_offset 9
+ 373               		.cfi_offset 17, -8
+ 374 000e CF93      		push r28
+ 375               	.LCFI8:
+ 376               		.cfi_def_cfa_offset 10
+ 377               		.cfi_offset 28, -9
+ 378 0010 DF93      		push r29
+ 379               	.LCFI9:
+ 380               		.cfi_def_cfa_offset 11
+ 381               		.cfi_offset 29, -10
+ 382               	/* prologue: function */
+ 383               	/* frame size = 0 */
+ 384               	/* stack size = 9 */
+ 385               	.L__stack_usage = 9
+ 356:Arduino-keyboard.c ****      /* Disable watchdog if enabled by bootloader/fuses */
+ 357:Arduino-keyboard.c ****      MCUSR &= ~(1 << WDRF);
+ 386               		.loc 1 357 0
+ 387 0012 84B7      		in r24,0x34
+ 388 0014 877F      		andi r24,lo8(-9)
+ 389 0016 84BF      		out 0x34,r24
+ 390               	.LBB69:
+ 391               	.LBB70:
+ 392               		.file 3 "/usr/lib/avr/include/avr/wdt.h"
    1:/usr/lib/avr/include/avr/wdt.h **** /* Copyright (c) 2002, 2004 Marek Michalkiewicz
    2:/usr/lib/avr/include/avr/wdt.h ****    Copyright (c) 2005, 2006, 2007 Eric B. Weddington
    3:/usr/lib/avr/include/avr/wdt.h ****    All rights reserved.
@@ -1316,26 +1369,26 @@
  513:/usr/lib/avr/include/avr/wdt.h **** 	{
  514:/usr/lib/avr/include/avr/wdt.h ****         uint8_t register temp_reg;
  515:/usr/lib/avr/include/avr/wdt.h **** 		__asm__ __volatile__ (
- 241               		.loc 4 515 0
- 242               	/* #APP */
- 243               	 ;  515 "/usr/lib/avr/include/avr/wdt.h" 1
- 244 0018 0FB6      		in __tmp_reg__,__SREG__
- 245 001a F894      		cli
- 246 001c A895      		wdr
- 247 001e 8091 6000 		lds r24,96
- 248 0022 8861      		ori r24,24
- 249 0024 8093 6000 		sts 96,r24
- 250 0028 1092 6000 		sts 96,__zero_reg__
- 251 002c 0FBE      		out __SREG__,__tmp_reg__
- 252               		
- 253               	 ;  0 "" 2
- 254               	.LVL15:
- 255               	/* #NOAPP */
- 256               	.LBE64:
- 257               	.LBE63:
- 258               	.LBB65:
- 259               	.LBB66:
- 260               		.file 5 "./LUFA/Drivers/Peripheral/Serial.h"
+ 393               		.loc 3 515 0
+ 394               	/* #APP */
+ 395               	 ;  515 "/usr/lib/avr/include/avr/wdt.h" 1
+ 396 0018 0FB6      		in __tmp_reg__,__SREG__
+ 397 001a F894      		cli
+ 398 001c A895      		wdr
+ 399 001e 8091 6000 		lds r24,96
+ 400 0022 8861      		ori r24,24
+ 401 0024 8093 6000 		sts 96,r24
+ 402 0028 1092 6000 		sts 96,__zero_reg__
+ 403 002c 0FBE      		out __SREG__,__tmp_reg__
+ 404               		
+ 405               	 ;  0 "" 2
+ 406               	.LVL31:
+ 407               	/* #NOAPP */
+ 408               	.LBE70:
+ 409               	.LBE69:
+ 410               	.LBB71:
+ 411               	.LBB72:
+ 412               		.file 4 "./LUFA/Drivers/Peripheral/Serial.h"
    1:./LUFA/Drivers/Peripheral/Serial.h **** /*
    2:./LUFA/Drivers/Peripheral/Serial.h ****              LUFA Library
    3:./LUFA/Drivers/Peripheral/Serial.h ****      Copyright (C) Dean Camera, 2010.
@@ -1438,532 +1491,509 @@
  100:./LUFA/Drivers/Peripheral/Serial.h **** 			                               const bool DoubleSpeed)
  101:./LUFA/Drivers/Peripheral/Serial.h **** 			{
  102:./LUFA/Drivers/Peripheral/Serial.h **** 				UBRR1  = (DoubleSpeed ? SERIAL_2X_UBBRVAL(BaudRate) : SERIAL_UBBRVAL(BaudRate));
- 261               		.loc 5 102 0
- 262 002e 8CEC      		ldi r24,lo8(-52)
- 263 0030 A82E      		mov r10,r24
- 264 0032 B12C      		mov r11,__zero_reg__
- 265 0034 87E6      		ldi r24,lo8(103)
- 266 0036 90E0      		ldi r25,0
- 267 0038 F501      		movw r30,r10
- 268 003a 9183      		std Z+1,r25
- 269 003c 8083      		st Z,r24
+ 413               		.loc 4 102 0
+ 414 002e 8CEC      		ldi r24,lo8(-52)
+ 415 0030 A82E      		mov r10,r24
+ 416 0032 B12C      		mov r11,__zero_reg__
+ 417 0034 87E6      		ldi r24,lo8(103)
+ 418 0036 90E0      		ldi r25,0
+ 419 0038 F501      		movw r30,r10
+ 420 003a 9183      		std Z+1,r25
+ 421 003c 8083      		st Z,r24
  103:./LUFA/Drivers/Peripheral/Serial.h **** 
  104:./LUFA/Drivers/Peripheral/Serial.h **** 				UCSR1C = ((1 << UCSZ11) | (1 << UCSZ10));
- 270               		.loc 5 104 0
- 271 003e 9AEC      		ldi r25,lo8(-54)
- 272 0040 E92E      		mov r14,r25
- 273 0042 F12C      		mov r15,__zero_reg__
- 274 0044 26E0      		ldi r18,lo8(6)
- 275 0046 D22E      		mov r13,r18
- 276 0048 F701      		movw r30,r14
- 277 004a D082      		st Z,r13
+ 422               		.loc 4 104 0
+ 423 003e 9AEC      		ldi r25,lo8(-54)
+ 424 0040 E92E      		mov r14,r25
+ 425 0042 F12C      		mov r15,__zero_reg__
+ 426 0044 26E0      		ldi r18,lo8(6)
+ 427 0046 D22E      		mov r13,r18
+ 428 0048 F701      		movw r30,r14
+ 429 004a D082      		st Z,r13
  105:./LUFA/Drivers/Peripheral/Serial.h **** 				UCSR1A = (DoubleSpeed ? (1 << U2X1) : 0);
- 278               		.loc 5 105 0
- 279 004c 08EC      		ldi r16,lo8(-56)
- 280 004e 10E0      		ldi r17,0
- 281 0050 F801      		movw r30,r16
- 282 0052 1082      		st Z,__zero_reg__
+ 430               		.loc 4 105 0
+ 431 004c 08EC      		ldi r16,lo8(-56)
+ 432 004e 10E0      		ldi r17,0
+ 433 0050 F801      		movw r30,r16
+ 434 0052 1082      		st Z,__zero_reg__
  106:./LUFA/Drivers/Peripheral/Serial.h **** 				UCSR1B = ((1 << TXEN1)  | (1 << RXEN1));
- 283               		.loc 5 106 0
- 284 0054 C9EC      		ldi r28,lo8(-55)
- 285 0056 D0E0      		ldi r29,0
- 286 0058 88E1      		ldi r24,lo8(24)
- 287 005a 8883      		st Y,r24
+ 435               		.loc 4 106 0
+ 436 0054 C9EC      		ldi r28,lo8(-55)
+ 437 0056 D0E0      		ldi r29,0
+ 438 0058 88E1      		ldi r24,lo8(24)
+ 439 005a 8883      		st Y,r24
  107:./LUFA/Drivers/Peripheral/Serial.h **** 				
  108:./LUFA/Drivers/Peripheral/Serial.h **** 				DDRD  |= (1 << 3);
- 288               		.loc 5 108 0
- 289 005c 539A      		sbi 0xa,3
+ 440               		.loc 4 108 0
+ 441 005c 539A      		sbi 0xa,3
  109:./LUFA/Drivers/Peripheral/Serial.h **** 				PORTD |= (1 << 2);
- 290               		.loc 5 109 0
- 291 005e 5A9A      		sbi 0xb,2
- 292               	.LVL16:
- 293               	.LBE66:
- 294               	.LBE65:
- 300:Arduino-keyboard.c **** 	wdt_disable();
- 301:Arduino-keyboard.c **** 
- 302:Arduino-keyboard.c **** 	/* Hardware Initialization */
- 303:Arduino-keyboard.c **** 	Serial_Init(9600, false);
- 304:Arduino-keyboard.c **** 	USB_Init();
- 295               		.loc 1 304 0
- 296 0060 0E94 0000 		call USB_Init
- 297               	.LVL17:
- 305:Arduino-keyboard.c **** 
- 306:Arduino-keyboard.c **** 	/* Start the flush timer so that overflows occur rapidly to push received bytes to the USB interfa
- 307:Arduino-keyboard.c **** 	TCCR0B = (1 << CS02);
- 298               		.loc 1 307 0
- 299 0064 84E0      		ldi r24,lo8(4)
- 300 0066 85BD      		out 0x25,r24
- 308:Arduino-keyboard.c **** 	
- 309:Arduino-keyboard.c **** 	/* Pull target /RESET line high */
- 310:Arduino-keyboard.c **** 	AVR_RESET_LINE_PORT |= AVR_RESET_LINE_MASK;
- 301               		.loc 1 310 0
- 302 0068 5F9A      		sbi 0xb,7
- 311:Arduino-keyboard.c **** 	AVR_RESET_LINE_DDR  |= AVR_RESET_LINE_MASK;
- 303               		.loc 1 311 0
- 304 006a 579A      		sbi 0xa,7
- 312:Arduino-keyboard.c **** 
- 313:Arduino-keyboard.c **** 	/* Must turn off USART before reconfiguring it, otherwise incorrect operation may occur */
- 314:Arduino-keyboard.c **** 	UCSR1B = 0;
- 305               		.loc 1 314 0
- 306 006c 1882      		st Y,__zero_reg__
- 315:Arduino-keyboard.c **** 	UCSR1A = 0;
- 307               		.loc 1 315 0
- 308 006e F801      		movw r30,r16
- 309 0070 1082      		st Z,__zero_reg__
- 316:Arduino-keyboard.c **** 	UCSR1C = 0;
- 310               		.loc 1 316 0
- 311 0072 F701      		movw r30,r14
- 312 0074 1082      		st Z,__zero_reg__
- 317:Arduino-keyboard.c **** 
- 318:Arduino-keyboard.c **** 	/* Special case 57600 baud for compatibility with the ATmega328 bootloader. */	
- 319:Arduino-keyboard.c **** 	UBRR1  = SERIAL_2X_UBBRVAL(9600);
- 313               		.loc 1 319 0
- 314 0076 8FEC      		ldi r24,lo8(-49)
- 315 0078 90E0      		ldi r25,0
- 316 007a F501      		movw r30,r10
- 317 007c 9183      		std Z+1,r25
- 318 007e 8083      		st Z,r24
- 320:Arduino-keyboard.c **** 
- 321:Arduino-keyboard.c **** 	UCSR1C = ((1 << UCSZ11) | (1 << UCSZ10));
- 319               		.loc 1 321 0
- 320 0080 F701      		movw r30,r14
- 321 0082 D082      		st Z,r13
- 322:Arduino-keyboard.c **** 	UCSR1A = (1 << U2X1);
- 322               		.loc 1 322 0
- 323 0084 82E0      		ldi r24,lo8(2)
- 324 0086 F801      		movw r30,r16
- 325 0088 8083      		st Z,r24
- 323:Arduino-keyboard.c **** 	UCSR1B = ((1 << RXCIE1) | (1 << TXEN1) | (1 << RXEN1));
- 326               		.loc 1 323 0
- 327 008a 88E9      		ldi r24,lo8(-104)
- 328 008c 8883      		st Y,r24
- 329               	/* epilogue start */
- 324:Arduino-keyboard.c **** }
- 330               		.loc 1 324 0
- 331 008e DF91      		pop r29
- 332 0090 CF91      		pop r28
- 333 0092 1F91      		pop r17
- 334 0094 0F91      		pop r16
- 335 0096 FF90      		pop r15
- 336 0098 EF90      		pop r14
- 337 009a DF90      		pop r13
- 338 009c BF90      		pop r11
- 339 009e AF90      		pop r10
- 340 00a0 0895      		ret
- 341               		.cfi_endproc
- 342               	.LFE102:
- 344               		.section	.text.startup.main,"ax",@progbits
- 345               	.global	main
- 347               	main:
- 348               	.LFB101:
- 276:Arduino-keyboard.c **** 	SetupHardware();
- 349               		.loc 1 276 0
- 350               		.cfi_startproc
- 351 0000 CF93      		push r28
- 352               	.LCFI9:
- 353               		.cfi_def_cfa_offset 3
- 354               		.cfi_offset 28, -2
- 355 0002 DF93      		push r29
- 356               	.LCFI10:
- 357               		.cfi_def_cfa_offset 4
- 358               		.cfi_offset 29, -3
- 359 0004 00D0      		rcall .
- 360               	.LCFI11:
- 361               		.cfi_def_cfa_offset 6
- 362 0006 CDB7      		in r28,__SP_L__
- 363 0008 DEB7      		in r29,__SP_H__
- 364               	.LCFI12:
- 365               		.cfi_def_cfa_register 28
- 366               	/* prologue: function */
- 367               	/* frame size = 2 */
- 368               	/* stack size = 4 */
- 369               	.L__stack_usage = 4
- 277:Arduino-keyboard.c **** 
- 370               		.loc 1 277 0
- 371 000a 0E94 0000 		call SetupHardware
- 372               	.LVL18:
- 373               	.LBB98:
- 374               	.LBB99:
-  87:Lib/LightweightRingBuff.h **** 			{
- 375               		.loc 2 87 0
- 376 000e 2FB7      		in r18,__SREG__
- 377               	.LVL19:
- 378               	.LBB100:
- 379               	.LBB101:
-  50:/usr/lib/avr/include/util/atomic.h ****     return 1;
- 380               		.loc 3 50 0
- 381               	/* #APP */
- 382               	 ;  50 "/usr/lib/avr/include/util/atomic.h" 1
- 383 0010 F894      		cli
- 384               	 ;  0 "" 2
- 385               	.LVL20:
- 386               	/* #NOAPP */
- 387               	.LBE101:
- 388               	.LBE100:
-  89:Lib/LightweightRingBuff.h **** 				Buffer->Out = Buffer->Buffer;
- 389               		.loc 2 89 0
- 390 0012 80E0      		ldi r24,lo8(USARTtoUSB_Buffer)
- 391 0014 90E0      		ldi r25,hi8(USARTtoUSB_Buffer)
- 392 0016 9093 0000 		sts USARTtoUSB_Buffer+128+1,r25
- 393 001a 8093 0000 		sts USARTtoUSB_Buffer+128,r24
-  90:Lib/LightweightRingBuff.h **** 			}
- 394               		.loc 2 90 0
- 395 001e 9093 0000 		sts USARTtoUSB_Buffer+130+1,r25
- 396 0022 8093 0000 		sts USARTtoUSB_Buffer+130,r24
- 397               	.LVL21:
- 398               	.LBB102:
- 399               	.LBB103:
-  70:/usr/lib/avr/include/util/atomic.h ****     __asm__ volatile ("" ::: "memory");
- 400               		.loc 3 70 0
- 401 0026 2FBF      		out __SREG__,r18
- 402               		.loc 3 71 0
- 403               	.LVL22:
- 404               	.LBE103:
- 405               	.LBE102:
- 406               	.LBE99:
- 407               	.LBE98:
- 281:Arduino-keyboard.c **** 
- 408               		.loc 1 281 0
- 409               	/* #APP */
- 410               	 ;  281 "Arduino-keyboard.c" 1
- 411 0028 7894      		sei
- 412               	 ;  0 "" 2
- 413               	/* #NOAPP */
- 414               	.LBB104:
- 415               	.LBB105:
- 268:Arduino-keyboard.c ****     }
- 416               		.loc 1 268 0
- 417 002a 00E0      		ldi r16,lo8(keyboardData)
- 418 002c 10E0      		ldi r17,hi8(keyboardData)
- 419 002e 98E0      		ldi r25,lo8(8)
- 420 0030 F92E      		mov r15,r25
- 421               	.LVL23:
- 422               	.L22:
- 423               	.LBB106:
- 424               	.LBB107:
- 425               	.LBB108:
- 111:Lib/LightweightRingBuff.h **** 			{
- 426               		.loc 2 111 0 discriminator 1
- 427 0032 9FB7      		in r25,__SREG__
- 428               	.LVL24:
- 429               	.LBB109:
- 430               	.LBB110:
-  50:/usr/lib/avr/include/util/atomic.h ****     return 1;
- 431               		.loc 3 50 0 discriminator 1
- 432               	/* #APP */
- 433               	 ;  50 "/usr/lib/avr/include/util/atomic.h" 1
- 434 0034 F894      		cli
- 435               	 ;  0 "" 2
- 436               	.LVL25:
- 437               	/* #NOAPP */
- 438               	.LBE110:
- 439               	.LBE109:
- 113:Lib/LightweightRingBuff.h **** 			}
- 440               		.loc 2 113 0 discriminator 1
- 441 0036 8091 0000 		lds r24,USARTtoUSB_Buffer+132
- 442               	.LVL26:
- 443               	.LBB111:
- 444               	.LBB112:
-  70:/usr/lib/avr/include/util/atomic.h ****     __asm__ volatile ("" ::: "memory");
- 445               		.loc 3 70 0 discriminator 1
- 446 003a 9FBF      		out __SREG__,r25
- 447               		.loc 3 71 0 discriminator 1
- 448               	.LVL27:
- 449               	.LBE112:
- 450               	.LBE111:
- 451               	.LBE108:
- 452               	.LBE107:
- 453               	.LBE106:
- 242:Arduino-keyboard.c ****         partial_wait++;
- 454               		.loc 1 242 0 discriminator 1
- 455 003c 8830      		cpi r24,lo8(8)
- 456 003e 00F4      		brsh .L12
- 243:Arduino-keyboard.c ****         if (partial_wait > 200) {  // ~200 loop iterations with no progress
- 457               		.loc 1 243 0
- 458 0040 8091 0000 		lds r24,partial_wait.3143
- 459 0044 8F5F      		subi r24,lo8(-(1))
- 460 0046 8093 0000 		sts partial_wait.3143,r24
- 244:Arduino-keyboard.c ****             // Flush the buffer to recover
- 461               		.loc 1 244 0
- 462 004a 893C      		cpi r24,lo8(-55)
- 463 004c 00F4      		brsh .L13
- 464               	.LVL28:
- 465               	.L14:
- 466               	.LBE105:
- 467               	.LBE104:
- 288:Arduino-keyboard.c ****         HID_Device_USBTask(&HID_MediaInterface);
- 468               		.loc 1 288 0 discriminator 1
- 469 004e 80E0      		ldi r24,lo8(HID_KeyboardInterface)
- 470 0050 90E0      		ldi r25,hi8(HID_KeyboardInterface)
- 471 0052 0E94 0000 		call HID_Device_USBTask
- 472               	.LVL29:
- 289:Arduino-keyboard.c **** 
- 473               		.loc 1 289 0 discriminator 1
- 474 0056 80E0      		ldi r24,lo8(HID_MediaInterface)
- 475 0058 90E0      		ldi r25,hi8(HID_MediaInterface)
- 476 005a 0E94 0000 		call HID_Device_USBTask
- 477               	.LVL30:
- 291:Arduino-keyboard.c ****     }
- 478               		.loc 1 291 0 discriminator 1
- 479 005e 0E94 0000 		call USB_USBTask
- 480               	.LVL31:
- 481 0062 00C0      		rjmp .L22
- 482               	.LVL32:
- 483               	.L15:
- 484               	.LBB129:
- 485               	.LBB128:
- 247:Arduino-keyboard.c ****             partial_wait = 0;
- 486               		.loc 1 247 0
- 487 0064 0E94 0000 		call RingBuffer_Remove.constprop.3
- 488               	.LVL33:
- 489               	.L13:
- 490               	.LBB113:
- 491               	.LBB114:
- 492               	.LBB115:
- 111:Lib/LightweightRingBuff.h **** 			{
- 493               		.loc 2 111 0
- 494 0068 9FB7      		in r25,__SREG__
- 495               	.LVL34:
- 496               	.LBB116:
- 497               	.LBB117:
-  50:/usr/lib/avr/include/util/atomic.h ****     return 1;
- 498               		.loc 3 50 0
- 499               	/* #APP */
- 500               	 ;  50 "/usr/lib/avr/include/util/atomic.h" 1
- 501 006a F894      		cli
- 502               	 ;  0 "" 2
- 503               	.LVL35:
- 504               	/* #NOAPP */
- 505               	.LBE117:
- 506               	.LBE116:
- 113:Lib/LightweightRingBuff.h **** 			}
- 507               		.loc 2 113 0
- 508 006c 8091 0000 		lds r24,USARTtoUSB_Buffer+132
- 509               	.LVL36:
- 510               	.LBB118:
- 511               	.LBB119:
-  70:/usr/lib/avr/include/util/atomic.h ****     __asm__ volatile ("" ::: "memory");
- 512               		.loc 3 70 0
- 513 0070 9FBF      		out __SREG__,r25
- 514               		.loc 3 71 0
- 515               	.LVL37:
- 516               	.LBE119:
- 517               	.LBE118:
- 518               	.LBE115:
- 519               	.LBE114:
- 520               	.LBE113:
- 246:Arduino-keyboard.c ****                 (void)RingBuffer_Remove(&USARTtoUSB_Buffer);
- 521               		.loc 1 246 0
- 522 0072 8111      		cpse r24,__zero_reg__
- 523 0074 00C0      		rjmp .L15
- 248:Arduino-keyboard.c ****         }
- 524               		.loc 1 248 0
- 525 0076 1092 0000 		sts partial_wait.3143,__zero_reg__
- 526 007a 00C0      		rjmp .L14
- 527               	.LVL38:
- 528               	.L12:
- 252:Arduino-keyboard.c **** 
- 529               		.loc 1 252 0
- 530 007c 1092 0000 		sts partial_wait.3143,__zero_reg__
- 531               	.LVL39:
- 532 0080 80E0      		ldi r24,lo8(keyboardData)
- 533 0082 C82E      		mov r12,r24
- 534 0084 80E0      		ldi r24,hi8(keyboardData)
- 535 0086 D82E      		mov r13,r24
- 536               	.LVL40:
- 537               	.L16:
- 538               	.LBB120:
- 255:Arduino-keyboard.c **** 
- 539               		.loc 1 255 0
- 540 0088 0E94 0000 		call RingBuffer_Remove.constprop.3
- 541               	.LVL41:
- 542 008c F601      		movw r30,r12
- 543 008e 8193      		st Z+,r24
- 544 0090 6F01      		movw r12,r30
- 545               	.LVL42:
- 254:Arduino-keyboard.c ****         keyboardData[i] = RingBuffer_Remove(&USARTtoUSB_Buffer);
- 546               		.loc 1 254 0
- 547 0092 F0E0      		ldi r31,lo8(keyboardData+8)
- 548 0094 CF16      		cp r12,r31
- 549 0096 F0E0      		ldi r31,hi8(keyboardData+8)
- 550 0098 DF06      		cpc r13,r31
- 551 009a 01F4      		brne .L16
- 552               	.LBE120:
- 259:Arduino-keyboard.c ****     {
- 553               		.loc 1 259 0
- 554 009c 8091 0000 		lds r24,keyboardData+2
- 555               	.LVL43:
- 556               	.LBB121:
- 557               	.LBB122:
- 148:Arduino-keyboard.c ****            (usage == 0xEA) || /* Volume Down */
- 558               		.loc 1 148 0
- 559 00a0 97E1      		ldi r25,lo8(23)
- 560 00a2 980F      		add r25,r24
- 153:Arduino-keyboard.c ****            (usage == 0xB7);   /* Stop */
- 561               		.loc 1 153 0
- 562 00a4 9230      		cpi r25,lo8(2)
- 563 00a6 00F0      		brlo .L25
- 149:Arduino-keyboard.c ****            (usage == 0xE2) || /* Mute */
- 564               		.loc 1 149 0
- 565 00a8 823E      		cpi r24,lo8(-30)
- 566 00aa 01F0      		breq .L25
- 150:Arduino-keyboard.c ****            (usage == 0xCD) || /* Play/Pause */
- 567               		.loc 1 150 0
- 568 00ac 8D3C      		cpi r24,lo8(-51)
- 569 00ae 01F0      		breq .L25
- 151:Arduino-keyboard.c ****            (usage == 0xB5) || /* Next Track */
- 570               		.loc 1 151 0
- 571 00b0 9BE4      		ldi r25,lo8(75)
- 572 00b2 980F      		add r25,r24
- 573 00b4 81E0      		ldi r24,lo8(1)
- 574               	.LVL44:
- 575 00b6 9330      		cpi r25,lo8(3)
- 576 00b8 00F0      		brlo .L17
- 577 00ba 80E0      		ldi r24,0
- 578               	.L17:
- 579               	.LVL45:
- 580               	.LBE122:
- 581               	.LBE121:
- 259:Arduino-keyboard.c ****     {
- 582               		.loc 1 259 0
- 583 00bc 80FF      		sbrs r24,0
- 584 00be 00C0      		rjmp .L14
- 585               	.LBB124:
- 586               	.LBB125:
- 212:Arduino-keyboard.c **** }
- 587               		.loc 1 212 0
- 588 00c0 8091 0000 		lds r24,MediaTail
- 589 00c4 90E0      		ldi r25,0
- 590 00c6 0196      		adiw r24,1
- 591 00c8 8F70      		andi r24,15
- 592 00ca 9927      		clr r25
- 593 00cc 2091 0000 		lds r18,MediaHead
- 594               	.LBE125:
- 595               	.LBE124:
- 261:Arduino-keyboard.c ****         {
- 596               		.loc 1 261 0
- 597 00d0 2817      		cp r18,r24
- 598 00d2 1906      		cpc __zero_reg__,r25
- 599 00d4 01F4      		brne .L20
- 600               	.LBB126:
- 264:Arduino-keyboard.c ****         }
- 601               		.loc 1 264 0
- 602 00d6 CE01      		movw r24,r28
- 603 00d8 0196      		adiw r24,1
- 604 00da 0E94 0000 		call MediaQueue_Pop
- 605               	.LVL46:
- 606               	.L20:
- 607 00de E091 0000 		lds r30,keyboardData+2
- 608 00e2 E55B      		subi r30,lo8(-(75))
- 609               	.LBE126:
- 266:Arduino-keyboard.c **** 
- 610               		.loc 1 266 0
- 611 00e4 90E0      		ldi r25,0
- 612 00e6 80E0      		ldi r24,0
- 613 00e8 E633      		cpi r30,lo8(54)
- 614 00ea 00F4      		brsh .L21
- 615 00ec F0E0      		ldi r31,0
- 616 00ee E050      		subi r30,lo8(-(CSWTCH.79))
- 617 00f0 F040      		sbci r31,hi8(-(CSWTCH.79))
- 618 00f2 8081      		ld r24,Z
- 619 00f4 90E0      		ldi r25,0
- 620               	.L21:
- 621               	.LVL47:
- 622 00f6 0E94 0000 		call MediaQueue_Push
- 623               	.LVL48:
- 268:Arduino-keyboard.c ****     }
- 624               		.loc 1 268 0
- 625 00fa F801      		movw r30,r16
- 626 00fc 8F2D      		mov r24,r15
- 627               		0:
- 628 00fe 1192      		st Z+,__zero_reg__
- 629 0100 8A95      		dec r24
- 630 0102 01F4      		brne 0b
- 631 0104 00C0      		rjmp .L14
- 632               	.LVL49:
- 633               	.L25:
- 634               	.LBB127:
- 635               	.LBB123:
- 153:Arduino-keyboard.c ****            (usage == 0xB7);   /* Stop */
- 636               		.loc 1 153 0
- 637 0106 81E0      		ldi r24,lo8(1)
- 638               	.LVL50:
- 639 0108 00C0      		rjmp .L17
- 640               	.LBE123:
- 641               	.LBE127:
- 642               	.LBE128:
- 643               	.LBE129:
- 644               		.cfi_endproc
- 645               	.LFE101:
- 647               		.section	.text.EVENT_USB_Device_Connect,"ax",@progbits
- 648               	.global	EVENT_USB_Device_Connect
- 650               	EVENT_USB_Device_Connect:
- 651               	.LFB103:
- 325:Arduino-keyboard.c **** 
- 326:Arduino-keyboard.c **** /** Event handler for the library USB Connection event. */
- 327:Arduino-keyboard.c **** void EVENT_USB_Device_Connect(void)
- 328:Arduino-keyboard.c **** {
- 652               		.loc 1 328 0
- 653               		.cfi_startproc
- 654               	/* prologue: function */
- 655               	/* frame size = 0 */
- 656               	/* stack size = 0 */
- 657               	.L__stack_usage = 0
- 658               	/* epilogue start */
- 329:Arduino-keyboard.c **** 	//LEDs_SetAllLEDs(LEDMASK_USB_ENUMERATING);
- 330:Arduino-keyboard.c **** }
- 659               		.loc 1 330 0
- 660 0000 0895      		ret
- 661               		.cfi_endproc
- 662               	.LFE103:
- 664               		.section	.text.EVENT_USB_Device_Disconnect,"ax",@progbits
- 665               	.global	EVENT_USB_Device_Disconnect
- 667               	EVENT_USB_Device_Disconnect:
- 668               	.LFB114:
- 669               		.cfi_startproc
- 670               	/* prologue: function */
- 671               	/* frame size = 0 */
- 672               	/* stack size = 0 */
- 673               	.L__stack_usage = 0
- 674               	/* epilogue start */
- 675 0000 0895      		ret
- 676               		.cfi_endproc
- 677               	.LFE114:
- 679               		.section	.text.EVENT_USB_Device_ConfigurationChanged,"ax",@progbits
- 680               	.global	EVENT_USB_Device_ConfigurationChanged
- 682               	EVENT_USB_Device_ConfigurationChanged:
- 683               	.LFB105:
- 331:Arduino-keyboard.c **** 
- 332:Arduino-keyboard.c **** /** Event handler for the library USB Disconnection event. */
- 333:Arduino-keyboard.c **** void EVENT_USB_Device_Disconnect(void)
- 334:Arduino-keyboard.c **** {
- 335:Arduino-keyboard.c **** 	//LEDs_SetAllLEDs(LEDMASK_USB_NOTREADY);
- 336:Arduino-keyboard.c **** }
- 337:Arduino-keyboard.c **** 
- 338:Arduino-keyboard.c **** /** Event handler for the library USB Configuration Changed event. */
- 339:Arduino-keyboard.c **** void EVENT_USB_Device_ConfigurationChanged(void)
- 340:Arduino-keyboard.c **** {
- 684               		.loc 1 340 0
- 685               		.cfi_startproc
- 686               	/* prologue: function */
- 687               	/* frame size = 0 */
- 688               	/* stack size = 0 */
- 689               	.L__stack_usage = 0
- 341:Arduino-keyboard.c ****     HID_Device_ConfigureEndpoints(&HID_KeyboardInterface);
- 690               		.loc 1 341 0
- 691 0000 80E0      		ldi r24,lo8(HID_KeyboardInterface)
- 692 0002 90E0      		ldi r25,hi8(HID_KeyboardInterface)
- 693 0004 0E94 0000 		call HID_Device_ConfigureEndpoints
- 694               	.LVL51:
- 342:Arduino-keyboard.c ****     HID_Device_ConfigureEndpoints(&HID_MediaInterface);
- 695               		.loc 1 342 0
- 696 0008 80E0      		ldi r24,lo8(HID_MediaInterface)
- 697 000a 90E0      		ldi r25,hi8(HID_MediaInterface)
- 698 000c 0E94 0000 		call HID_Device_ConfigureEndpoints
- 699               	.LVL52:
- 700               	.LBB130:
- 701               	.LBB131:
- 702               		.file 6 "./LUFA/Drivers/USB/HighLevel/../LowLevel/Device.h"
+ 442               		.loc 4 109 0
+ 443 005e 5A9A      		sbi 0xb,2
+ 444               	.LVL32:
+ 445               	.LBE72:
+ 446               	.LBE71:
+ 358:Arduino-keyboard.c ****      wdt_disable();
+ 359:Arduino-keyboard.c **** 
+ 360:Arduino-keyboard.c ****      /* Hardware Initialization */
+ 361:Arduino-keyboard.c ****      Serial_Init(9600, false);
+ 362:Arduino-keyboard.c ****      USB_Init();
+ 447               		.loc 1 362 0
+ 448 0060 0E94 0000 		call USB_Init
+ 449               	.LVL33:
+ 363:Arduino-keyboard.c **** 
+ 364:Arduino-keyboard.c ****      /* Start the flush timer so that overflows occur rapidly to push received bytes to the USB int
+ 365:Arduino-keyboard.c ****      TCCR0B = (1 << CS02);
+ 450               		.loc 1 365 0
+ 451 0064 84E0      		ldi r24,lo8(4)
+ 452 0066 85BD      		out 0x25,r24
+ 366:Arduino-keyboard.c ****     
+ 367:Arduino-keyboard.c ****      /* Pull target /RESET line high */
+ 368:Arduino-keyboard.c ****      AVR_RESET_LINE_PORT |= AVR_RESET_LINE_MASK;
+ 453               		.loc 1 368 0
+ 454 0068 5F9A      		sbi 0xb,7
+ 369:Arduino-keyboard.c ****      AVR_RESET_LINE_DDR  |= AVR_RESET_LINE_MASK;
+ 455               		.loc 1 369 0
+ 456 006a 579A      		sbi 0xa,7
+ 370:Arduino-keyboard.c **** 
+ 371:Arduino-keyboard.c ****      /* Must turn off USART before reconfiguring it, otherwise incorrect operation may occur */
+ 372:Arduino-keyboard.c ****      UCSR1B = 0;
+ 457               		.loc 1 372 0
+ 458 006c 1882      		st Y,__zero_reg__
+ 373:Arduino-keyboard.c ****      UCSR1A = 0;
+ 459               		.loc 1 373 0
+ 460 006e F801      		movw r30,r16
+ 461 0070 1082      		st Z,__zero_reg__
+ 374:Arduino-keyboard.c ****      UCSR1C = 0;
+ 462               		.loc 1 374 0
+ 463 0072 F701      		movw r30,r14
+ 464 0074 1082      		st Z,__zero_reg__
+ 375:Arduino-keyboard.c **** 
+ 376:Arduino-keyboard.c ****      /* Special case 57600 baud for compatibility with the ATmega328 bootloader. */    
+ 377:Arduino-keyboard.c ****      UBRR1  = SERIAL_2X_UBBRVAL(9600);
+ 465               		.loc 1 377 0
+ 466 0076 8FEC      		ldi r24,lo8(-49)
+ 467 0078 90E0      		ldi r25,0
+ 468 007a F501      		movw r30,r10
+ 469 007c 9183      		std Z+1,r25
+ 470 007e 8083      		st Z,r24
+ 378:Arduino-keyboard.c **** 
+ 379:Arduino-keyboard.c ****      UCSR1C = ((1 << UCSZ11) | (1 << UCSZ10));
+ 471               		.loc 1 379 0
+ 472 0080 F701      		movw r30,r14
+ 473 0082 D082      		st Z,r13
+ 380:Arduino-keyboard.c ****      UCSR1A = (1 << U2X1);
+ 474               		.loc 1 380 0
+ 475 0084 82E0      		ldi r24,lo8(2)
+ 476 0086 F801      		movw r30,r16
+ 477 0088 8083      		st Z,r24
+ 381:Arduino-keyboard.c ****      UCSR1B = ((1 << RXCIE1) | (1 << TXEN1) | (1 << RXEN1));
+ 478               		.loc 1 381 0
+ 479 008a 88E9      		ldi r24,lo8(-104)
+ 480 008c 8883      		st Y,r24
+ 481               	/* epilogue start */
+ 382:Arduino-keyboard.c **** }
+ 482               		.loc 1 382 0
+ 483 008e DF91      		pop r29
+ 484 0090 CF91      		pop r28
+ 485 0092 1F91      		pop r17
+ 486 0094 0F91      		pop r16
+ 487 0096 FF90      		pop r15
+ 488 0098 EF90      		pop r14
+ 489 009a DF90      		pop r13
+ 490 009c BF90      		pop r11
+ 491 009e AF90      		pop r10
+ 492 00a0 0895      		ret
+ 493               		.cfi_endproc
+ 494               	.LFE99:
+ 496               		.section	.text.startup.main,"ax",@progbits
+ 497               	.global	main
+ 499               	main:
+ 500               	.LFB98:
+ 339:Arduino-keyboard.c ****     SetupHardware();
+ 501               		.loc 1 339 0
+ 502               		.cfi_startproc
+ 503               	/* prologue: function */
+ 504               	/* frame size = 0 */
+ 505               	/* stack size = 0 */
+ 506               	.L__stack_usage = 0
+ 340:Arduino-keyboard.c ****     sei();
+ 507               		.loc 1 340 0
+ 508 0000 0E94 0000 		call SetupHardware
+ 509               	.LVL34:
+ 341:Arduino-keyboard.c **** 
+ 510               		.loc 1 341 0
+ 511               	/* #APP */
+ 512               	 ;  341 "Arduino-keyboard.c" 1
+ 513 0004 7894      		sei
+ 514               	 ;  0 "" 2
+ 515               	/* #NOAPP */
+ 516               	.L30:
+ 345:Arduino-keyboard.c **** 
+ 517               		.loc 1 345 0 discriminator 1
+ 518 0006 0E94 0000 		call ProcessIncomingSerialData
+ 519               	.LVL35:
+ 348:Arduino-keyboard.c ****         HID_Device_USBTask(&HID_MediaInterface);
+ 520               		.loc 1 348 0 discriminator 1
+ 521 000a 80E0      		ldi r24,lo8(HID_KeyboardInterface)
+ 522 000c 90E0      		ldi r25,hi8(HID_KeyboardInterface)
+ 523 000e 0E94 0000 		call HID_Device_USBTask
+ 524               	.LVL36:
+ 349:Arduino-keyboard.c ****         USB_USBTask();
+ 525               		.loc 1 349 0 discriminator 1
+ 526 0012 80E0      		ldi r24,lo8(HID_MediaInterface)
+ 527 0014 90E0      		ldi r25,hi8(HID_MediaInterface)
+ 528 0016 0E94 0000 		call HID_Device_USBTask
+ 529               	.LVL37:
+ 350:Arduino-keyboard.c ****     }
+ 530               		.loc 1 350 0 discriminator 1
+ 531 001a 0E94 0000 		call USB_USBTask
+ 532               	.LVL38:
+ 533 001e 00C0      		rjmp .L30
+ 534               		.cfi_endproc
+ 535               	.LFE98:
+ 537               		.section	.text.CALLBACK_HID_Device_CreateHIDReport,"ax",@progbits
+ 538               	.global	CALLBACK_HID_Device_CreateHIDReport
+ 540               	CALLBACK_HID_Device_CreateHIDReport:
+ 541               	.LFB100:
+ 383:Arduino-keyboard.c **** 
+ 384:Arduino-keyboard.c **** 
+ 385:Arduino-keyboard.c **** /* ---------------------------------------------------------
+ 386:Arduino-keyboard.c ****  * USB Endpoint Transmission Architecture callbacks
+ 387:Arduino-keyboard.c ****  * --------------------------------------------------------- */
+ 388:Arduino-keyboard.c **** bool CALLBACK_HID_Device_CreateHIDReport(
+ 389:Arduino-keyboard.c ****     USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
+ 390:Arduino-keyboard.c ****     uint8_t* const ReportID,
+ 391:Arduino-keyboard.c ****     const uint8_t ReportType,
+ 392:Arduino-keyboard.c ****     void* ReportData,
+ 393:Arduino-keyboard.c ****     uint16_t* const ReportSize)
+ 394:Arduino-keyboard.c **** {
+ 542               		.loc 1 394 0
+ 543               		.cfi_startproc
+ 544               	.LVL39:
+ 545 0000 0F93      		push r16
+ 546               	.LCFI10:
+ 547               		.cfi_def_cfa_offset 3
+ 548               		.cfi_offset 16, -2
+ 549 0002 1F93      		push r17
+ 550               	.LCFI11:
+ 551               		.cfi_def_cfa_offset 4
+ 552               		.cfi_offset 17, -3
+ 553 0004 CF93      		push r28
+ 554               	.LCFI12:
+ 555               		.cfi_def_cfa_offset 5
+ 556               		.cfi_offset 28, -4
+ 557 0006 DF93      		push r29
+ 558               	.LCFI13:
+ 559               		.cfi_def_cfa_offset 6
+ 560               		.cfi_offset 29, -5
+ 561 0008 CDB7      		in r28,__SP_L__
+ 562 000a DEB7      		in r29,__SP_H__
+ 563               	.LCFI14:
+ 564               		.cfi_def_cfa_register 28
+ 565 000c 2897      		sbiw r28,8
+ 566               	.LCFI15:
+ 567               		.cfi_def_cfa_offset 14
+ 568 000e 0FB6      		in __tmp_reg__,__SREG__
+ 569 0010 F894      		cli
+ 570 0012 DEBF      		out __SP_H__,r29
+ 571 0014 0FBE      		out __SREG__,__tmp_reg__
+ 572 0016 CDBF      		out __SP_L__,r28
+ 573               	/* prologue: function */
+ 574               	/* frame size = 8 */
+ 575               	/* stack size = 12 */
+ 576               	.L__stack_usage = 12
+ 395:Arduino-keyboard.c ****     (void)ReportID;
+ 396:Arduino-keyboard.c ****     (void)ReportType;
+ 397:Arduino-keyboard.c **** 
+ 398:Arduino-keyboard.c ****     // Output mapped matrix layout into Endpoint 1
+ 399:Arduino-keyboard.c ****     if (HIDInterfaceInfo == &HID_KeyboardInterface) {
+ 577               		.loc 1 399 0
+ 578 0018 40E0      		ldi r20,hi8(HID_KeyboardInterface)
+ 579 001a 8030      		cpi r24,lo8(HID_KeyboardInterface)
+ 580 001c 9407      		cpc r25,r20
+ 581               	.LVL40:
+ 582 001e 01F4      		brne .L32
+ 583               	.LBB79:
+ 584               	.LBB80:
+ 585               	.LBB81:
+ 248:Arduino-keyboard.c ****     *Report = KeyboardQueue[KeyboardHead];
+ 586               		.loc 1 248 0
+ 587 0020 9091 0000 		lds r25,KeyboardHead
+ 588 0024 8091 0000 		lds r24,KeyboardTail
+ 589               	.LVL41:
+ 590 0028 9813      		cpse r25,r24
+ 591 002a 00C0      		rjmp .L33
+ 592               	.L36:
+ 593               	.LBE81:
+ 594               	.LBE80:
+ 595               	.LBE79:
+ 400:Arduino-keyboard.c ****         USB_KeyboardReport_Data_t activeBufferFrame;
+ 401:Arduino-keyboard.c **** 
+ 402:Arduino-keyboard.c ****         if (KeyboardQueue_Pop(&activeBufferFrame)) {
+ 403:Arduino-keyboard.c ****             memcpy(ReportData, &activeBufferFrame, sizeof(USB_KeyboardReport_Data_t));
+ 404:Arduino-keyboard.c ****             *ReportSize = sizeof(USB_KeyboardReport_Data_t);
+ 405:Arduino-keyboard.c ****             return true;
+ 406:Arduino-keyboard.c ****         }
+ 407:Arduino-keyboard.c ****         *ReportSize = 0;
+ 408:Arduino-keyboard.c ****         return false;
+ 409:Arduino-keyboard.c ****     }
+ 410:Arduino-keyboard.c **** 
+ 411:Arduino-keyboard.c ****     // Output consumer command usages into Endpoint 2
+ 412:Arduino-keyboard.c ****     if (HIDInterfaceInfo == &HID_MediaInterface) {
+ 413:Arduino-keyboard.c ****         USB_MediaReport_Data_t* MediaReport = (USB_MediaReport_Data_t*)ReportData;
+ 414:Arduino-keyboard.c **** 
+ 415:Arduino-keyboard.c ****         if (MediaState == MEDIA_IDLE) {
+ 416:Arduino-keyboard.c ****             if (MediaQueue_Pop(&currentMediaUsage)) {
+ 417:Arduino-keyboard.c ****                 MediaReport->Usage = currentMediaUsage;
+ 418:Arduino-keyboard.c ****                 MediaState = MEDIA_SEND_RELEASE;
+ 419:Arduino-keyboard.c ****                 *ReportSize = sizeof(USB_MediaReport_Data_t);
+ 420:Arduino-keyboard.c ****                 return true;
+ 421:Arduino-keyboard.c ****             }
+ 422:Arduino-keyboard.c ****         }
+ 423:Arduino-keyboard.c ****         else if (MediaState == MEDIA_SEND_RELEASE) {
+ 424:Arduino-keyboard.c ****             MediaReport->Usage = 0x0000;
+ 425:Arduino-keyboard.c ****             MediaState = MEDIA_IDLE;
+ 426:Arduino-keyboard.c ****             *ReportSize = sizeof(USB_MediaReport_Data_t);
+ 427:Arduino-keyboard.c ****             return true;
+ 428:Arduino-keyboard.c ****         }
+ 429:Arduino-keyboard.c **** 
+ 430:Arduino-keyboard.c ****         MediaReport->Usage = 0;
+ 431:Arduino-keyboard.c ****         *ReportSize = sizeof(USB_MediaReport_Data_t);
+ 432:Arduino-keyboard.c ****         return false;
+ 433:Arduino-keyboard.c ****     }
+ 434:Arduino-keyboard.c **** 
+ 435:Arduino-keyboard.c ****     *ReportSize = 0;
+ 596               		.loc 1 435 0
+ 597 002c F801      		movw r30,r16
+ 598 002e 1182      		std Z+1,__zero_reg__
+ 599 0030 1082      		st Z,__zero_reg__
+ 600 0032 00C0      		rjmp .L39
+ 601               	.L33:
+ 602               	.LBB84:
+ 603               	.LBB83:
+ 604               	.LBB82:
+ 249:Arduino-keyboard.c ****     KeyboardHead = (KeyboardHead + 1) % KEYBOARD_QUEUE_SIZE;
+ 605               		.loc 1 249 0
+ 606 0034 E091 0000 		lds r30,KeyboardHead
+ 607 0038 F0E0      		ldi r31,0
+ 608 003a 93E0      		ldi r25,3
+ 609               		1:
+ 610 003c EE0F      		lsl r30
+ 611 003e FF1F      		rol r31
+ 612 0040 9A95      		dec r25
+ 613 0042 01F4      		brne 1b
+ 614 0044 E050      		subi r30,lo8(-(KeyboardQueue))
+ 615 0046 F040      		sbci r31,hi8(-(KeyboardQueue))
+ 616 0048 88E0      		ldi r24,lo8(8)
+ 617 004a DE01      		movw r26,r28
+ 618 004c 1196      		adiw r26,1
+ 619               		0:
+ 620 004e 0190      		ld r0,Z+
+ 621 0050 0D92      		st X+,r0
+ 622 0052 8A95      		dec r24
+ 623 0054 01F4      		brne 0b
+ 250:Arduino-keyboard.c ****     return true;
+ 624               		.loc 1 250 0
+ 625 0056 8091 0000 		lds r24,KeyboardHead
+ 626 005a 90E0      		ldi r25,0
+ 627 005c 0196      		adiw r24,1
+ 628 005e 8770      		andi r24,7
+ 629 0060 9927      		clr r25
+ 630 0062 8093 0000 		sts KeyboardHead,r24
+ 631               	.LBE82:
+ 632               	.LBE83:
+ 403:Arduino-keyboard.c ****             *ReportSize = sizeof(USB_KeyboardReport_Data_t);
+ 633               		.loc 1 403 0
+ 634 0066 88E0      		ldi r24,lo8(8)
+ 635 0068 FE01      		movw r30,r28
+ 636 006a 3196      		adiw r30,1
+ 637 006c D901      		movw r26,r18
+ 638               		0:
+ 639 006e 0190      		ld r0,Z+
+ 640 0070 0D92      		st X+,r0
+ 641 0072 8A95      		dec r24
+ 642 0074 01F4      		brne 0b
+ 404:Arduino-keyboard.c ****             return true;
+ 643               		.loc 1 404 0
+ 644 0076 88E0      		ldi r24,lo8(8)
+ 645 0078 90E0      		ldi r25,0
+ 646               	.L41:
+ 647               	.LBE84:
+ 648               	.LBB85:
+ 426:Arduino-keyboard.c ****             return true;
+ 649               		.loc 1 426 0
+ 650 007a F801      		movw r30,r16
+ 651 007c 9183      		std Z+1,r25
+ 652 007e 8083      		st Z,r24
+ 427:Arduino-keyboard.c ****         }
+ 653               		.loc 1 427 0
+ 654 0080 81E0      		ldi r24,lo8(1)
+ 655               	.L31:
+ 656               	/* epilogue start */
+ 657               	.LBE85:
+ 436:Arduino-keyboard.c ****     return false;
+ 437:Arduino-keyboard.c **** }
+ 658               		.loc 1 437 0
+ 659 0082 2896      		adiw r28,8
+ 660 0084 0FB6      		in __tmp_reg__,__SREG__
+ 661 0086 F894      		cli
+ 662 0088 DEBF      		out __SP_H__,r29
+ 663 008a 0FBE      		out __SREG__,__tmp_reg__
+ 664 008c CDBF      		out __SP_L__,r28
+ 665 008e DF91      		pop r29
+ 666 0090 CF91      		pop r28
+ 667 0092 1F91      		pop r17
+ 668 0094 0F91      		pop r16
+ 669               	.LVL42:
+ 670 0096 0895      		ret
+ 671               	.LVL43:
+ 672               	.L32:
+ 412:Arduino-keyboard.c ****         USB_MediaReport_Data_t* MediaReport = (USB_MediaReport_Data_t*)ReportData;
+ 673               		.loc 1 412 0
+ 674 0098 8050      		subi r24,lo8(HID_MediaInterface)
+ 675 009a 9040      		sbci r25,hi8(HID_MediaInterface)
+ 676 009c 01F4      		brne .L36
+ 677               	.LVL44:
+ 678               	.LBB88:
+ 415:Arduino-keyboard.c ****             if (MediaQueue_Pop(&currentMediaUsage)) {
+ 679               		.loc 1 415 0
+ 680 009e 8091 0000 		lds r24,MediaState
+ 681               	.LVL45:
+ 682 00a2 8111      		cpse r24,__zero_reg__
+ 683 00a4 00C0      		rjmp .L37
+ 684               	.LVL46:
+ 685               	.LBB86:
+ 686               	.LBB87:
+ 263:Arduino-keyboard.c ****     *Usage = MediaQueue[MediaHead];
+ 687               		.loc 1 263 0
+ 688 00a6 9091 0000 		lds r25,MediaHead
+ 689 00aa 8091 0000 		lds r24,MediaTail
+ 690 00ae 9817      		cp r25,r24
+ 691 00b0 01F0      		breq .L38
+ 264:Arduino-keyboard.c ****     MediaHead = (MediaHead + 1) % MEDIA_QUEUE_SIZE;
+ 692               		.loc 1 264 0
+ 693 00b2 E091 0000 		lds r30,MediaHead
+ 694 00b6 F0E0      		ldi r31,0
+ 695 00b8 EE0F      		lsl r30
+ 696 00ba FF1F      		rol r31
+ 697 00bc E050      		subi r30,lo8(-(MediaQueue))
+ 698 00be F040      		sbci r31,hi8(-(MediaQueue))
+ 699 00c0 4081      		ld r20,Z
+ 700 00c2 5181      		ldd r21,Z+1
+ 701 00c4 5093 0000 		sts currentMediaUsage+1,r21
+ 702 00c8 4093 0000 		sts currentMediaUsage,r20
+ 265:Arduino-keyboard.c ****     return true;
+ 703               		.loc 1 265 0
+ 704 00cc 8091 0000 		lds r24,MediaHead
+ 705 00d0 90E0      		ldi r25,0
+ 706 00d2 0196      		adiw r24,1
+ 707 00d4 8F70      		andi r24,15
+ 708 00d6 9927      		clr r25
+ 709 00d8 8093 0000 		sts MediaHead,r24
+ 710               	.LVL47:
+ 711               	.LBE87:
+ 712               	.LBE86:
+ 417:Arduino-keyboard.c ****                 MediaState = MEDIA_SEND_RELEASE;
+ 713               		.loc 1 417 0
+ 714 00dc F901      		movw r30,r18
+ 715 00de 5183      		std Z+1,r21
+ 716 00e0 4083      		st Z,r20
+ 418:Arduino-keyboard.c ****                 *ReportSize = sizeof(USB_MediaReport_Data_t);
+ 717               		.loc 1 418 0
+ 718 00e2 81E0      		ldi r24,lo8(1)
+ 719 00e4 8093 0000 		sts MediaState,r24
+ 720               	.L40:
+ 426:Arduino-keyboard.c ****             return true;
+ 721               		.loc 1 426 0
+ 722 00e8 82E0      		ldi r24,lo8(2)
+ 723 00ea 90E0      		ldi r25,0
+ 724 00ec 00C0      		rjmp .L41
+ 725               	.L37:
+ 423:Arduino-keyboard.c ****             MediaReport->Usage = 0x0000;
+ 726               		.loc 1 423 0
+ 727 00ee 8130      		cpi r24,lo8(1)
+ 728 00f0 01F4      		brne .L38
+ 424:Arduino-keyboard.c ****             MediaState = MEDIA_IDLE;
+ 729               		.loc 1 424 0
+ 730 00f2 F901      		movw r30,r18
+ 731 00f4 1182      		std Z+1,__zero_reg__
+ 732 00f6 1082      		st Z,__zero_reg__
+ 425:Arduino-keyboard.c ****             *ReportSize = sizeof(USB_MediaReport_Data_t);
+ 733               		.loc 1 425 0
+ 734 00f8 1092 0000 		sts MediaState,__zero_reg__
+ 735 00fc 00C0      		rjmp .L40
+ 736               	.L38:
+ 430:Arduino-keyboard.c ****         *ReportSize = sizeof(USB_MediaReport_Data_t);
+ 737               		.loc 1 430 0
+ 738 00fe F901      		movw r30,r18
+ 739 0100 1182      		std Z+1,__zero_reg__
+ 740 0102 1082      		st Z,__zero_reg__
+ 431:Arduino-keyboard.c ****         return false;
+ 741               		.loc 1 431 0
+ 742 0104 82E0      		ldi r24,lo8(2)
+ 743 0106 90E0      		ldi r25,0
+ 744 0108 F801      		movw r30,r16
+ 745 010a 9183      		std Z+1,r25
+ 746 010c 8083      		st Z,r24
+ 747               	.LVL48:
+ 748               	.L39:
+ 749               	.LBE88:
+ 436:Arduino-keyboard.c **** }
+ 750               		.loc 1 436 0
+ 751 010e 80E0      		ldi r24,0
+ 752 0110 00C0      		rjmp .L31
+ 753               		.cfi_endproc
+ 754               	.LFE100:
+ 756               		.section	.text.CALLBACK_HID_Device_ProcessHIDReport,"ax",@progbits
+ 757               	.global	CALLBACK_HID_Device_ProcessHIDReport
+ 759               	CALLBACK_HID_Device_ProcessHIDReport:
+ 760               	.LFB101:
+ 438:Arduino-keyboard.c **** 
+ 439:Arduino-keyboard.c **** void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
+ 440:Arduino-keyboard.c ****                                           const uint8_t ReportID,
+ 441:Arduino-keyboard.c ****                                           const uint8_t ReportType,
+ 442:Arduino-keyboard.c ****                                           const void* ReportData,
+ 443:Arduino-keyboard.c ****                                           const uint16_t ReportSize)
+ 444:Arduino-keyboard.c **** { }
+ 761               		.loc 1 444 0
+ 762               		.cfi_startproc
+ 763               	.LVL49:
+ 764               	/* prologue: function */
+ 765               	/* frame size = 0 */
+ 766               	/* stack size = 0 */
+ 767               	.L__stack_usage = 0
+ 768               	/* epilogue start */
+ 769               		.loc 1 444 0
+ 770 0000 0895      		ret
+ 771               		.cfi_endproc
+ 772               	.LFE101:
+ 774               		.section	.text.EVENT_USB_Device_ConfigurationChanged,"ax",@progbits
+ 775               	.global	EVENT_USB_Device_ConfigurationChanged
+ 777               	EVENT_USB_Device_ConfigurationChanged:
+ 778               	.LFB102:
+ 445:Arduino-keyboard.c **** 
+ 446:Arduino-keyboard.c **** void EVENT_USB_Device_ConfigurationChanged(void) {
+ 779               		.loc 1 446 0
+ 780               		.cfi_startproc
+ 781               	/* prologue: function */
+ 782               	/* frame size = 0 */
+ 783               	/* stack size = 0 */
+ 784               	.L__stack_usage = 0
+ 447:Arduino-keyboard.c ****     HID_Device_ConfigureEndpoints(&HID_KeyboardInterface);
+ 785               		.loc 1 447 0
+ 786 0000 80E0      		ldi r24,lo8(HID_KeyboardInterface)
+ 787 0002 90E0      		ldi r25,hi8(HID_KeyboardInterface)
+ 788 0004 0E94 0000 		call HID_Device_ConfigureEndpoints
+ 789               	.LVL50:
+ 448:Arduino-keyboard.c ****     HID_Device_ConfigureEndpoints(&HID_MediaInterface);
+ 790               		.loc 1 448 0
+ 791 0008 80E0      		ldi r24,lo8(HID_MediaInterface)
+ 792 000a 90E0      		ldi r25,hi8(HID_MediaInterface)
+ 793 000c 0E94 0000 		call HID_Device_ConfigureEndpoints
+ 794               	.LVL51:
+ 795               	.LBB89:
+ 796               	.LBB90:
+ 797               		.file 5 "./LUFA/Drivers/USB/HighLevel/../LowLevel/Device.h"
    1:./LUFA/Drivers/USB/HighLevel/../LowLevel/Device.h **** /*
    2:./LUFA/Drivers/USB/HighLevel/../LowLevel/Device.h ****              LUFA Library
    3:./LUFA/Drivers/USB/HighLevel/../LowLevel/Device.h ****      Copyright (C) Dean Camera, 2010.
@@ -2114,69 +2144,64 @@
  148:./LUFA/Drivers/USB/HighLevel/../LowLevel/Device.h **** 			static inline void USB_Device_EnableSOFEvents(void)
  149:./LUFA/Drivers/USB/HighLevel/../LowLevel/Device.h **** 			{
  150:./LUFA/Drivers/USB/HighLevel/../LowLevel/Device.h **** 				USB_INT_Enable(USB_INT_SOFI);
- 703               		.loc 6 150 0
- 704 0010 E2EE      		ldi r30,lo8(-30)
- 705 0012 F0E0      		ldi r31,0
- 706 0014 8081      		ld r24,Z
- 707 0016 8460      		ori r24,lo8(4)
- 708 0018 8083      		st Z,r24
- 709               	/* epilogue start */
- 710               	.LBE131:
- 711               	.LBE130:
- 343:Arduino-keyboard.c **** 
- 344:Arduino-keyboard.c ****     USB_Device_EnableSOFEvents();
- 345:Arduino-keyboard.c **** }
- 712               		.loc 1 345 0
- 713 001a 0895      		ret
- 714               		.cfi_endproc
- 715               	.LFE105:
- 717               		.section	.text.EVENT_USB_Device_UnhandledControlRequest,"ax",@progbits
- 718               	.global	EVENT_USB_Device_UnhandledControlRequest
- 720               	EVENT_USB_Device_UnhandledControlRequest:
- 721               	.LFB106:
- 346:Arduino-keyboard.c **** 
- 347:Arduino-keyboard.c **** /** Event handler for the library USB Unhandled Control Request event. */
- 348:Arduino-keyboard.c **** void EVENT_USB_Device_UnhandledControlRequest(void)
- 349:Arduino-keyboard.c **** {
- 722               		.loc 1 349 0
- 723               		.cfi_startproc
- 724               	/* prologue: function */
- 725               	/* frame size = 0 */
- 726               	/* stack size = 0 */
- 727               	.L__stack_usage = 0
- 350:Arduino-keyboard.c ****     HID_Device_ProcessControlRequest(&HID_KeyboardInterface);
- 728               		.loc 1 350 0
- 729 0000 80E0      		ldi r24,lo8(HID_KeyboardInterface)
- 730 0002 90E0      		ldi r25,hi8(HID_KeyboardInterface)
- 731 0004 0E94 0000 		call HID_Device_ProcessControlRequest
- 732               	.LVL53:
- 351:Arduino-keyboard.c ****     HID_Device_ProcessControlRequest(&HID_MediaInterface);
- 733               		.loc 1 351 0
- 734 0008 80E0      		ldi r24,lo8(HID_MediaInterface)
- 735 000a 90E0      		ldi r25,hi8(HID_MediaInterface)
- 736 000c 0C94 0000 		jmp HID_Device_ProcessControlRequest
- 737               	.LVL54:
- 738               		.cfi_endproc
- 739               	.LFE106:
- 741               		.section	.text.EVENT_USB_Device_StartOfFrame,"ax",@progbits
- 742               	.global	EVENT_USB_Device_StartOfFrame
- 744               	EVENT_USB_Device_StartOfFrame:
- 745               	.LFB107:
- 352:Arduino-keyboard.c **** }
- 353:Arduino-keyboard.c **** 
- 354:Arduino-keyboard.c **** /** Event handler for the USB device Start Of Frame event. */
- 355:Arduino-keyboard.c **** void EVENT_USB_Device_StartOfFrame(void)
- 356:Arduino-keyboard.c **** {
- 746               		.loc 1 356 0
- 747               		.cfi_startproc
- 748               	/* prologue: function */
- 749               	/* frame size = 0 */
- 750               	/* stack size = 0 */
- 751               	.L__stack_usage = 0
- 752               	.LVL55:
- 753               	.LBB132:
- 754               	.LBB133:
- 755               		.file 7 "./LUFA/Drivers/USB/Class/Device/HID.h"
+ 798               		.loc 5 150 0
+ 799 0010 E2EE      		ldi r30,lo8(-30)
+ 800 0012 F0E0      		ldi r31,0
+ 801 0014 8081      		ld r24,Z
+ 802 0016 8460      		ori r24,lo8(4)
+ 803 0018 8083      		st Z,r24
+ 804               	/* epilogue start */
+ 805               	.LBE90:
+ 806               	.LBE89:
+ 449:Arduino-keyboard.c ****     USB_Device_EnableSOFEvents();
+ 450:Arduino-keyboard.c **** }
+ 807               		.loc 1 450 0
+ 808 001a 0895      		ret
+ 809               		.cfi_endproc
+ 810               	.LFE102:
+ 812               		.section	.text.EVENT_USB_Device_UnhandledControlRequest,"ax",@progbits
+ 813               	.global	EVENT_USB_Device_UnhandledControlRequest
+ 815               	EVENT_USB_Device_UnhandledControlRequest:
+ 816               	.LFB103:
+ 451:Arduino-keyboard.c **** 
+ 452:Arduino-keyboard.c **** void EVENT_USB_Device_UnhandledControlRequest(void) {
+ 817               		.loc 1 452 0
+ 818               		.cfi_startproc
+ 819               	/* prologue: function */
+ 820               	/* frame size = 0 */
+ 821               	/* stack size = 0 */
+ 822               	.L__stack_usage = 0
+ 453:Arduino-keyboard.c ****     HID_Device_ProcessControlRequest(&HID_KeyboardInterface);
+ 823               		.loc 1 453 0
+ 824 0000 80E0      		ldi r24,lo8(HID_KeyboardInterface)
+ 825 0002 90E0      		ldi r25,hi8(HID_KeyboardInterface)
+ 826 0004 0E94 0000 		call HID_Device_ProcessControlRequest
+ 827               	.LVL52:
+ 454:Arduino-keyboard.c ****     HID_Device_ProcessControlRequest(&HID_MediaInterface);
+ 828               		.loc 1 454 0
+ 829 0008 80E0      		ldi r24,lo8(HID_MediaInterface)
+ 830 000a 90E0      		ldi r25,hi8(HID_MediaInterface)
+ 831 000c 0C94 0000 		jmp HID_Device_ProcessControlRequest
+ 832               	.LVL53:
+ 833               		.cfi_endproc
+ 834               	.LFE103:
+ 836               		.section	.text.EVENT_USB_Device_StartOfFrame,"ax",@progbits
+ 837               	.global	EVENT_USB_Device_StartOfFrame
+ 839               	EVENT_USB_Device_StartOfFrame:
+ 840               	.LFB104:
+ 455:Arduino-keyboard.c **** }
+ 456:Arduino-keyboard.c **** 
+ 457:Arduino-keyboard.c **** void EVENT_USB_Device_StartOfFrame(void) {
+ 841               		.loc 1 457 0
+ 842               		.cfi_startproc
+ 843               	/* prologue: function */
+ 844               	/* frame size = 0 */
+ 845               	/* stack size = 0 */
+ 846               	.L__stack_usage = 0
+ 847               	.LVL54:
+ 848               	.LBB91:
+ 849               	.LBB92:
+ 850               		.file 6 "./LUFA/Drivers/USB/Class/Device/HID.h"
    1:./LUFA/Drivers/USB/Class/Device/HID.h **** /*
    2:./LUFA/Drivers/USB/Class/Device/HID.h ****              LUFA Library
    3:./LUFA/Drivers/USB/Class/Device/HID.h ****      Copyright (C) Dean Camera, 2010.
@@ -2378,965 +2403,335 @@
  199:./LUFA/Drivers/USB/Class/Device/HID.h **** 			static inline void HID_Device_MillisecondElapsed(USB_ClassInfo_HID_Device_t* const HIDInterfaceI
  200:./LUFA/Drivers/USB/Class/Device/HID.h **** 			{
  201:./LUFA/Drivers/USB/Class/Device/HID.h **** 				if (HIDInterfaceInfo->State.IdleMSRemaining)
- 756               		.loc 7 201 0
- 757 0000 8091 0000 		lds r24,HID_KeyboardInterface+11
- 758 0004 9091 0000 		lds r25,HID_KeyboardInterface+11+1
- 759 0008 0097      		sbiw r24,0
- 760 000a 01F0      		breq .L37
+ 851               		.loc 6 201 0
+ 852 0000 8091 0000 		lds r24,HID_KeyboardInterface+11
+ 853 0004 9091 0000 		lds r25,HID_KeyboardInterface+11+1
+ 854 0008 0097      		sbiw r24,0
+ 855 000a 01F0      		breq .L46
  202:./LUFA/Drivers/USB/Class/Device/HID.h **** 				  HIDInterfaceInfo->State.IdleMSRemaining--;
- 761               		.loc 7 202 0
- 762 000c 0197      		sbiw r24,1
- 763 000e 9093 0000 		sts HID_KeyboardInterface+11+1,r25
- 764 0012 8093 0000 		sts HID_KeyboardInterface+11,r24
- 765               	.L37:
- 766               	.LVL56:
- 767               	.LBE133:
- 768               	.LBE132:
- 769               	.LBB134:
- 770               	.LBB135:
+ 856               		.loc 6 202 0
+ 857 000c 0197      		sbiw r24,1
+ 858 000e 9093 0000 		sts HID_KeyboardInterface+11+1,r25
+ 859 0012 8093 0000 		sts HID_KeyboardInterface+11,r24
+ 860               	.L46:
+ 861               	.LVL55:
+ 862               	.LBE92:
+ 863               	.LBE91:
+ 864               	.LBB93:
+ 865               	.LBB94:
  201:./LUFA/Drivers/USB/Class/Device/HID.h **** 				  HIDInterfaceInfo->State.IdleMSRemaining--;
- 771               		.loc 7 201 0
- 772 0016 8091 0000 		lds r24,HID_MediaInterface+11
- 773 001a 9091 0000 		lds r25,HID_MediaInterface+11+1
- 774 001e 0097      		sbiw r24,0
- 775 0020 01F0      		breq .L36
- 776               		.loc 7 202 0
- 777 0022 0197      		sbiw r24,1
- 778 0024 9093 0000 		sts HID_MediaInterface+11+1,r25
- 779 0028 8093 0000 		sts HID_MediaInterface+11,r24
- 780               	.LVL57:
- 781               	.L36:
- 782               	/* epilogue start */
- 783               	.LBE135:
- 784               	.LBE134:
- 357:Arduino-keyboard.c ****     HID_Device_MillisecondElapsed(&HID_KeyboardInterface);
- 358:Arduino-keyboard.c ****     HID_Device_MillisecondElapsed(&HID_MediaInterface);
- 359:Arduino-keyboard.c **** }
- 785               		.loc 1 359 0
- 786 002c 0895      		ret
- 787               		.cfi_endproc
- 788               	.LFE107:
- 790               		.section	.text.CALLBACK_HID_Device_CreateHIDReport,"ax",@progbits
- 791               	.global	CALLBACK_HID_Device_CreateHIDReport
- 793               	CALLBACK_HID_Device_CreateHIDReport:
- 794               	.LFB108:
- 360:Arduino-keyboard.c **** 
- 361:Arduino-keyboard.c **** 
- 362:Arduino-keyboard.c **** /** HID class driver callback function for the creation of HID reports to the host.
- 363:Arduino-keyboard.c ****  *
- 364:Arduino-keyboard.c ****  *  \param[in]     HIDInterfaceInfo  Pointer to the HID class interface configuration structure bei
- 365:Arduino-keyboard.c ****  *  \param[in,out] ReportID    Report ID requested by the host if non-zero, otherwise callback shou
- 366:Arduino-keyboard.c ****  *  \param[in]     ReportType  Type of the report to create, either REPORT_ITEM_TYPE_In or REPORT_I
- 367:Arduino-keyboard.c ****  *  \param[out]    ReportData  Pointer to a buffer where the created report should be stored
- 368:Arduino-keyboard.c ****  *  \param[out]    ReportSize  Number of bytes written in the report (or zero if no report is to be
- 369:Arduino-keyboard.c ****  *
- 370:Arduino-keyboard.c ****  *  \return Boolean true to force the sending of the report, false to let the library determine if 
- 371:Arduino-keyboard.c ****  */
- 372:Arduino-keyboard.c **** bool CALLBACK_HID_Device_CreateHIDReport(
- 373:Arduino-keyboard.c ****     USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
- 374:Arduino-keyboard.c ****     uint8_t* const ReportID,
- 375:Arduino-keyboard.c ****     const uint8_t ReportType,
- 376:Arduino-keyboard.c ****     void* ReportData,
- 377:Arduino-keyboard.c ****     uint16_t* const ReportSize)
- 378:Arduino-keyboard.c **** {
- 795               		.loc 1 378 0
- 796               		.cfi_startproc
- 797               	.LVL58:
- 798 0000 EF92      		push r14
- 799               	.LCFI13:
- 800               		.cfi_def_cfa_offset 3
- 801               		.cfi_offset 14, -2
- 802 0002 FF92      		push r15
- 803               	.LCFI14:
- 804               		.cfi_def_cfa_offset 4
- 805               		.cfi_offset 15, -3
- 806 0004 0F93      		push r16
- 807               	.LCFI15:
- 808               		.cfi_def_cfa_offset 5
- 809               		.cfi_offset 16, -4
- 810 0006 1F93      		push r17
- 811               	.LCFI16:
- 812               		.cfi_def_cfa_offset 6
- 813               		.cfi_offset 17, -5
- 814 0008 CF93      		push r28
- 815               	.LCFI17:
- 816               		.cfi_def_cfa_offset 7
- 817               		.cfi_offset 28, -6
- 818 000a DF93      		push r29
- 819               	.LCFI18:
- 820               		.cfi_def_cfa_offset 8
- 821               		.cfi_offset 29, -7
- 822 000c 00D0      		rcall .
- 823               	.LCFI19:
- 824               		.cfi_def_cfa_offset 10
- 825 000e CDB7      		in r28,__SP_L__
- 826 0010 DEB7      		in r29,__SP_H__
- 827               	.LCFI20:
- 828               		.cfi_def_cfa_register 28
- 829               	/* prologue: function */
- 830               	/* frame size = 2 */
- 831               	/* stack size = 8 */
- 832               	.L__stack_usage = 8
- 833 0012 F801      		movw r30,r16
- 379:Arduino-keyboard.c ****     uint16_t currentMediaUsage = 0;
- 834               		.loc 1 379 0
- 835 0014 1A82      		std Y+2,__zero_reg__
- 836 0016 1982      		std Y+1,__zero_reg__
- 380:Arduino-keyboard.c ****     (void)ReportID;
- 381:Arduino-keyboard.c ****     (void)ReportType;
- 382:Arduino-keyboard.c **** 
- 383:Arduino-keyboard.c **** /* ---------------- Keyboard interface ---------------- */
- 384:Arduino-keyboard.c ****     if (HIDInterfaceInfo == &HID_KeyboardInterface)
- 837               		.loc 1 384 0
- 838 0018 40E0      		ldi r20,hi8(HID_KeyboardInterface)
- 839 001a 8030      		cpi r24,lo8(HID_KeyboardInterface)
- 840 001c 9407      		cpc r25,r20
- 841               	.LVL59:
- 842 001e 01F4      		brne .L46
- 843               	.LVL60:
- 844               	.LBB142:
- 845               	.LBB143:
- 846               	.LBB144:
- 847               	.LBB145:
- 848               	.LBB146:
- 174:Arduino-keyboard.c **** }
- 849               		.loc 1 174 0
- 850 0020 8091 0000 		lds r24,KeyboardHead
- 851               	.LVL61:
- 852               	.LBE146:
- 853               	.LBE145:
- 195:Arduino-keyboard.c ****         return false;
- 854               		.loc 1 195 0
- 855 0024 9091 0000 		lds r25,KeyboardTail
- 856 0028 8913      		cpse r24,r25
- 857 002a 00C0      		rjmp .L47
- 858               	.LVL62:
- 859               	.L50:
- 860               	.LBE144:
- 861               	.LBE143:
- 862               	.LBE142:
- 385:Arduino-keyboard.c ****     {
- 386:Arduino-keyboard.c ****         USB_KeyboardReport_Data_t activeBufferFrame;
- 387:Arduino-keyboard.c **** 
- 388:Arduino-keyboard.c ****         if (KeyboardQueue_Pop(&activeBufferFrame))
- 389:Arduino-keyboard.c ****         {
- 390:Arduino-keyboard.c ****             memcpy(ReportData, &activeBufferFrame, sizeof(USB_KeyboardReport_Data_t));
- 391:Arduino-keyboard.c ****             *ReportSize = sizeof(USB_KeyboardReport_Data_t);
- 392:Arduino-keyboard.c ****         }
- 393:Arduino-keyboard.c ****         else
- 394:Arduino-keyboard.c ****         {
- 395:Arduino-keyboard.c ****             *ReportSize = 0;
- 396:Arduino-keyboard.c ****         }
- 397:Arduino-keyboard.c **** 
- 398:Arduino-keyboard.c ****         return false;
- 399:Arduino-keyboard.c ****     }
- 400:Arduino-keyboard.c **** 
- 401:Arduino-keyboard.c ****     /* ---------------- Media interface ---------------- */
- 402:Arduino-keyboard.c ****     if (HIDInterfaceInfo == &HID_MediaInterface)
- 403:Arduino-keyboard.c ****     {
- 404:Arduino-keyboard.c ****         USB_MediaReport_Data_t* MediaReport = (USB_MediaReport_Data_t*)ReportData;
- 405:Arduino-keyboard.c ****         MediaReport->Usage = 0;
- 406:Arduino-keyboard.c **** 
- 407:Arduino-keyboard.c ****         if (MediaState == MEDIA_IDLE)
- 408:Arduino-keyboard.c ****         {
- 409:Arduino-keyboard.c ****             if (MediaQueue_Pop(&currentMediaUsage))
- 410:Arduino-keyboard.c ****             {
- 411:Arduino-keyboard.c ****                 MediaReport->Usage = currentMediaUsage;
- 412:Arduino-keyboard.c ****                 MediaState = MEDIA_SEND_RELEASE;
- 413:Arduino-keyboard.c ****             }
- 414:Arduino-keyboard.c ****         }
- 415:Arduino-keyboard.c ****         else if (MediaState == MEDIA_SEND_RELEASE)
- 416:Arduino-keyboard.c ****         {
- 417:Arduino-keyboard.c ****             MediaReport->Usage = 0;
- 418:Arduino-keyboard.c ****             MediaState = MEDIA_IDLE;
- 419:Arduino-keyboard.c ****         }
- 420:Arduino-keyboard.c **** 
- 421:Arduino-keyboard.c ****         *ReportSize = sizeof(USB_MediaReport_Data_t);
- 422:Arduino-keyboard.c ****         return false;
- 423:Arduino-keyboard.c ****     }
- 424:Arduino-keyboard.c **** 
- 425:Arduino-keyboard.c ****     *ReportSize = 0;
- 863               		.loc 1 425 0
- 864 002c 1182      		std Z+1,__zero_reg__
- 865 002e 1082      		st Z,__zero_reg__
- 426:Arduino-keyboard.c ****     return false;
- 866               		.loc 1 426 0
- 867 0030 00C0      		rjmp .L49
- 868               	.LVL63:
- 869               	.L47:
- 870               	.LBB149:
- 871               	.LBB148:
- 872               	.LBB147:
- 198:Arduino-keyboard.c **** 
- 873               		.loc 1 198 0
- 874 0032 90E0      		ldi r25,0
- 875 0034 DC01      		movw r26,r24
- 876 0036 AA0F      		lsl r26
- 877 0038 BB1F      		rol r27
- 878 003a A050      		subi r26,lo8(-(KeyboardQueue))
- 879 003c B040      		sbci r27,hi8(-(KeyboardQueue))
- 880 003e 4D91      		ld r20,X+
- 881 0040 5C91      		ld r21,X
- 882               	.LVL64:
- 200:Arduino-keyboard.c **** 
- 883               		.loc 1 200 0
- 884 0042 0196      		adiw r24,1
- 885 0044 8770      		andi r24,7
- 886 0046 9927      		clr r25
- 887 0048 8093 0000 		sts KeyboardHead,r24
- 888               	.LVL65:
- 889               	.LBE147:
- 890               	.LBE148:
- 390:Arduino-keyboard.c ****             *ReportSize = sizeof(USB_KeyboardReport_Data_t);
- 891               		.loc 1 390 0
- 892 004c D901      		movw r26,r18
- 893 004e 4D93      		st X+,r20
- 894 0050 5C93      		st X,r21
- 391:Arduino-keyboard.c ****         }
- 895               		.loc 1 391 0
- 896 0052 88E0      		ldi r24,lo8(8)
- 897 0054 90E0      		ldi r25,0
- 898               	.LVL66:
- 899               	.L55:
- 900               	.LBE149:
- 901               	.LBB150:
- 421:Arduino-keyboard.c ****         return false;
- 902               		.loc 1 421 0
- 903 0056 9183      		std Z+1,r25
- 904 0058 8083      		st Z,r24
- 905               	.L49:
- 906               	.LBE150:
- 427:Arduino-keyboard.c **** }
- 907               		.loc 1 427 0 discriminator 1
- 908 005a 80E0      		ldi r24,0
- 909               	/* epilogue start */
- 910 005c 0F90      		pop __tmp_reg__
- 911 005e 0F90      		pop __tmp_reg__
- 912 0060 DF91      		pop r29
- 913 0062 CF91      		pop r28
- 914 0064 1F91      		pop r17
- 915 0066 0F91      		pop r16
- 916               	.LVL67:
- 917 0068 FF90      		pop r15
- 918 006a EF90      		pop r14
- 919 006c 0895      		ret
- 920               	.LVL68:
- 921               	.L46:
- 402:Arduino-keyboard.c ****     {
- 922               		.loc 1 402 0
- 923 006e 8050      		subi r24,lo8(HID_MediaInterface)
- 924 0070 9040      		sbci r25,hi8(HID_MediaInterface)
- 925 0072 01F4      		brne .L50
- 926 0074 7901      		movw r14,r18
- 927               	.LVL69:
- 928               	.LBB151:
- 405:Arduino-keyboard.c **** 
- 929               		.loc 1 405 0
- 930 0076 F901      		movw r30,r18
- 931 0078 1182      		std Z+1,__zero_reg__
- 932 007a 1082      		st Z,__zero_reg__
- 407:Arduino-keyboard.c ****         {
- 933               		.loc 1 407 0
- 934 007c 8091 0000 		lds r24,MediaState
- 935               	.LVL70:
- 936 0080 8111      		cpse r24,__zero_reg__
- 937 0082 00C0      		rjmp .L51
- 938               	.LVL71:
- 409:Arduino-keyboard.c ****             {
- 939               		.loc 1 409 0
- 940 0084 CE01      		movw r24,r28
- 941 0086 0196      		adiw r24,1
- 942 0088 0E94 0000 		call MediaQueue_Pop
- 943               	.LVL72:
- 944 008c 8823      		tst r24
- 945 008e 01F0      		breq .L53
- 411:Arduino-keyboard.c ****                 MediaState = MEDIA_SEND_RELEASE;
- 946               		.loc 1 411 0
- 947 0090 8981      		ldd r24,Y+1
- 948 0092 9A81      		ldd r25,Y+2
- 949 0094 D701      		movw r26,r14
- 950 0096 8D93      		st X+,r24
- 951 0098 9C93      		st X,r25
- 412:Arduino-keyboard.c ****             }
- 952               		.loc 1 412 0
- 953 009a 81E0      		ldi r24,lo8(1)
- 954 009c 8093 0000 		sts MediaState,r24
- 955               	.L53:
- 421:Arduino-keyboard.c ****         return false;
- 956               		.loc 1 421 0
- 957 00a0 82E0      		ldi r24,lo8(2)
- 958 00a2 90E0      		ldi r25,0
- 959 00a4 F801      		movw r30,r16
- 960 00a6 00C0      		rjmp .L55
- 961               	.LVL73:
- 962               	.L51:
- 415:Arduino-keyboard.c ****         {
- 963               		.loc 1 415 0
- 964 00a8 8130      		cpi r24,lo8(1)
- 965 00aa 01F4      		brne .L53
- 418:Arduino-keyboard.c ****         }
- 966               		.loc 1 418 0
- 967 00ac 1092 0000 		sts MediaState,__zero_reg__
- 968 00b0 00C0      		rjmp .L53
- 969               	.LBE151:
- 970               		.cfi_endproc
- 971               	.LFE108:
- 973               		.section	.text.CALLBACK_HID_Device_ProcessHIDReport,"ax",@progbits
- 974               	.global	CALLBACK_HID_Device_ProcessHIDReport
- 976               	CALLBACK_HID_Device_ProcessHIDReport:
- 977               	.LFB109:
- 428:Arduino-keyboard.c **** 
- 429:Arduino-keyboard.c **** 
- 430:Arduino-keyboard.c **** /** HID class driver callback function for the processing of HID reports from the host.
- 431:Arduino-keyboard.c ****  *
- 432:Arduino-keyboard.c ****  *  \param[in] HIDInterfaceInfo  Pointer to the HID class interface configuration structure being r
- 433:Arduino-keyboard.c ****  *  \param[in] ReportID    Report ID of the received report from the host
- 434:Arduino-keyboard.c ****  *  \param[in] ReportType  The type of report that the host has sent, either REPORT_ITEM_TYPE_Out o
- 435:Arduino-keyboard.c ****  *  \param[in] ReportData  Pointer to a buffer where the created report has been stored
- 436:Arduino-keyboard.c ****  *  \param[in] ReportSize  Size in bytes of the received HID report
- 437:Arduino-keyboard.c ****  */
- 438:Arduino-keyboard.c **** void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
- 439:Arduino-keyboard.c ****                                           const uint8_t ReportID,
- 440:Arduino-keyboard.c ****                                           const uint8_t ReportType,
- 441:Arduino-keyboard.c ****                                           const void* ReportData,
- 442:Arduino-keyboard.c ****                                           const uint16_t ReportSize)
- 443:Arduino-keyboard.c **** { }
- 978               		.loc 1 443 0
- 979               		.cfi_startproc
- 980               	.LVL74:
- 981               	/* prologue: function */
- 982               	/* frame size = 0 */
- 983               	/* stack size = 0 */
- 984               	.L__stack_usage = 0
- 985               	/* epilogue start */
- 986               		.loc 1 443 0
- 987 0000 0895      		ret
- 988               		.cfi_endproc
- 989               	.LFE109:
- 991               		.section	.text.__vector_23,"ax",@progbits
- 992               	.global	__vector_23
- 994               	__vector_23:
- 995               	.LFB110:
- 444:Arduino-keyboard.c **** 
- 445:Arduino-keyboard.c **** /* Explicit internal circular byte array implementation to handle packet framing */
- 446:Arduino-keyboard.c **** #define SERIAL_PARSER_BUFFER_SIZE 32
- 447:Arduino-keyboard.c **** static uint8_t  parserBuffer[SERIAL_PARSER_BUFFER_SIZE];
- 448:Arduino-keyboard.c **** static uint8_t  parserHead = 0;
- 449:Arduino-keyboard.c **** static uint8_t  parserTail = 0;
- 450:Arduino-keyboard.c **** static uint8_t  parserCount = 0;
- 451:Arduino-keyboard.c **** 
- 452:Arduino-keyboard.c **** /** ISR to manage the reception of data from the serial port, placing received bytes into a circula
- 453:Arduino-keyboard.c ****  *  for later transmission to the host.
- 454:Arduino-keyboard.c ****  */
- 455:Arduino-keyboard.c **** ISR(USART1_RX_vect, ISR_BLOCK)
- 456:Arduino-keyboard.c **** {
- 996               		.loc 1 456 0
- 997               		.cfi_startproc
- 998 0000 1F92      		push r1
- 999               	.LCFI21:
- 1000               		.cfi_def_cfa_offset 3
- 1001               		.cfi_offset 1, -2
- 1002 0002 0F92      		push r0
- 1003               	.LCFI22:
- 1004               		.cfi_def_cfa_offset 4
- 1005               		.cfi_offset 0, -3
- 1006 0004 0FB6      		in r0,__SREG__
- 1007 0006 0F92      		push r0
- 1008 0008 1124      		clr __zero_reg__
- 1009 000a EF92      		push r14
- 1010               	.LCFI23:
- 1011               		.cfi_def_cfa_offset 5
- 1012               		.cfi_offset 14, -4
- 1013 000c FF92      		push r15
- 1014               	.LCFI24:
- 1015               		.cfi_def_cfa_offset 6
- 1016               		.cfi_offset 15, -5
- 1017 000e 0F93      		push r16
- 1018               	.LCFI25:
- 1019               		.cfi_def_cfa_offset 7
- 1020               		.cfi_offset 16, -6
- 1021 0010 1F93      		push r17
- 1022               	.LCFI26:
- 1023               		.cfi_def_cfa_offset 8
- 1024               		.cfi_offset 17, -7
- 1025 0012 2F93      		push r18
- 1026               	.LCFI27:
- 1027               		.cfi_def_cfa_offset 9
- 1028               		.cfi_offset 18, -8
- 1029 0014 3F93      		push r19
- 1030               	.LCFI28:
- 1031               		.cfi_def_cfa_offset 10
- 1032               		.cfi_offset 19, -9
- 1033 0016 4F93      		push r20
- 1034               	.LCFI29:
- 1035               		.cfi_def_cfa_offset 11
- 1036               		.cfi_offset 20, -10
- 1037 0018 5F93      		push r21
- 1038               	.LCFI30:
- 1039               		.cfi_def_cfa_offset 12
- 1040               		.cfi_offset 21, -11
- 1041 001a 6F93      		push r22
- 1042               	.LCFI31:
- 1043               		.cfi_def_cfa_offset 13
- 1044               		.cfi_offset 22, -12
- 1045 001c 7F93      		push r23
- 1046               	.LCFI32:
- 1047               		.cfi_def_cfa_offset 14
- 1048               		.cfi_offset 23, -13
- 1049 001e 8F93      		push r24
- 1050               	.LCFI33:
- 1051               		.cfi_def_cfa_offset 15
- 1052               		.cfi_offset 24, -14
- 1053 0020 9F93      		push r25
- 1054               	.LCFI34:
- 1055               		.cfi_def_cfa_offset 16
- 1056               		.cfi_offset 25, -15
- 1057 0022 AF93      		push r26
- 1058               	.LCFI35:
- 1059               		.cfi_def_cfa_offset 17
- 1060               		.cfi_offset 26, -16
- 1061 0024 BF93      		push r27
- 1062               	.LCFI36:
- 1063               		.cfi_def_cfa_offset 18
- 1064               		.cfi_offset 27, -17
- 1065 0026 EF93      		push r30
- 1066               	.LCFI37:
- 1067               		.cfi_def_cfa_offset 19
- 1068               		.cfi_offset 30, -18
- 1069 0028 FF93      		push r31
- 1070               	.LCFI38:
- 1071               		.cfi_def_cfa_offset 20
- 1072               		.cfi_offset 31, -19
- 1073 002a CF93      		push r28
- 1074               	.LCFI39:
- 1075               		.cfi_def_cfa_offset 21
- 1076               		.cfi_offset 28, -20
- 1077 002c DF93      		push r29
- 1078               	.LCFI40:
- 1079               		.cfi_def_cfa_offset 22
- 1080               		.cfi_offset 29, -21
- 1081 002e CDB7      		in r28,__SP_L__
- 1082 0030 DEB7      		in r29,__SP_H__
- 1083               	.LCFI41:
- 1084               		.cfi_def_cfa_register 28
- 1085 0032 2897      		sbiw r28,8
- 1086               	.LCFI42:
- 1087               		.cfi_def_cfa_offset 30
- 1088 0034 DEBF      		out __SP_H__,r29
- 1089 0036 CDBF      		out __SP_L__,r28
- 1090               	/* prologue: Signal */
- 1091               	/* frame size = 8 */
- 1092               	/* stack size = 29 */
- 1093               	.L__stack_usage = 29
- 457:Arduino-keyboard.c ****     uint8_t ReceivedByte = UDR1;
- 1094               		.loc 1 457 0
- 1095 0038 3091 CE00 		lds r19,206
- 1096               	.LVL75:
- 458:Arduino-keyboard.c **** 
- 459:Arduino-keyboard.c ****     if (USB_DeviceState != DEVICE_STATE_Configured)
- 1097               		.loc 1 459 0
- 1098 003c 8EB3      		in r24,0x1e
- 1099 003e 8430      		cpi r24,lo8(4)
- 1100 0040 01F4      		brne .L57
- 460:Arduino-keyboard.c ****         return;
+ 866               		.loc 6 201 0
+ 867 0016 8091 0000 		lds r24,HID_MediaInterface+11
+ 868 001a 9091 0000 		lds r25,HID_MediaInterface+11+1
+ 869 001e 0097      		sbiw r24,0
+ 870 0020 01F0      		breq .L45
+ 871               		.loc 6 202 0
+ 872 0022 0197      		sbiw r24,1
+ 873 0024 9093 0000 		sts HID_MediaInterface+11+1,r25
+ 874 0028 8093 0000 		sts HID_MediaInterface+11,r24
+ 875               	.LVL56:
+ 876               	.L45:
+ 877               	/* epilogue start */
+ 878               	.LBE94:
+ 879               	.LBE93:
+ 458:Arduino-keyboard.c ****     HID_Device_MillisecondElapsed(&HID_KeyboardInterface);
+ 459:Arduino-keyboard.c ****     HID_Device_MillisecondElapsed(&HID_MediaInterface);
+ 460:Arduino-keyboard.c **** }
+ 880               		.loc 1 460 0
+ 881 002c 0895      		ret
+ 882               		.cfi_endproc
+ 883               	.LFE104:
+ 885               		.section	.text.EVENT_USB_Device_Connect,"ax",@progbits
+ 886               	.global	EVENT_USB_Device_Connect
+ 888               	EVENT_USB_Device_Connect:
+ 889               	.LFB105:
  461:Arduino-keyboard.c **** 
- 462:Arduino-keyboard.c ****     // Append standard byte array values into the local circular parser ring allocation structure
- 463:Arduino-keyboard.c ****     if (parserCount < SERIAL_PARSER_BUFFER_SIZE)
- 1101               		.loc 1 463 0
- 1102 0042 2091 0000 		lds r18,parserCount
- 1103 0046 2032      		cpi r18,lo8(32)
- 1104 0048 00F4      		brsh .L59
- 464:Arduino-keyboard.c ****     {
- 465:Arduino-keyboard.c ****         parserBuffer[parserHead] = ReceivedByte;
- 1105               		.loc 1 465 0
- 1106 004a 8091 0000 		lds r24,parserHead
- 1107 004e 90E0      		ldi r25,0
- 1108 0050 FC01      		movw r30,r24
- 1109 0052 E050      		subi r30,lo8(-(parserBuffer))
- 1110 0054 F040      		sbci r31,hi8(-(parserBuffer))
- 1111 0056 3083      		st Z,r19
- 466:Arduino-keyboard.c ****         parserHead = (parserHead + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 1112               		.loc 1 466 0
- 1113 0058 0196      		adiw r24,1
- 1114 005a 8F71      		andi r24,31
- 1115 005c 9927      		clr r25
- 1116 005e 8093 0000 		sts parserHead,r24
- 467:Arduino-keyboard.c ****         parserCount++;
- 1117               		.loc 1 467 0
- 1118 0062 2F5F      		subi r18,lo8(-(1))
- 1119 0064 2093 0000 		sts parserCount,r18
- 1120               	.L59:
- 1121 0068 8E01      		movw r16,r28
- 1122 006a 0F5F      		subi r16,-1
- 1123 006c 1F4F      		sbci r17,-1
- 1124 006e 7E01      		movw r14,r28
- 1125 0070 89E0      		ldi r24,9
- 1126 0072 E80E      		add r14,r24
- 1127 0074 F11C      		adc r15,__zero_reg__
- 1128               	.LVL76:
- 1129               	.L60:
- 468:Arduino-keyboard.c ****     }
- 469:Arduino-keyboard.c **** 
- 470:Arduino-keyboard.c ****     // Process all full 9-byte frames available inside the serial stream ring buffer
- 471:Arduino-keyboard.c ****     while (parserCount >= 9)
- 1130               		.loc 1 471 0
- 1131 0076 9091 0000 		lds r25,parserCount
- 1132 007a 9930      		cpi r25,lo8(9)
- 1133 007c 00F4      		brsh .L67
- 1134               	.L57:
- 1135               	/* epilogue start */
- 472:Arduino-keyboard.c ****     {
- 473:Arduino-keyboard.c ****         uint8_t reportType = parserBuffer[parserTail];
- 474:Arduino-keyboard.c **** 
- 475:Arduino-keyboard.c ****         if (reportType == 0x01) // Keyboard Frame Allocation Mapping Process
- 476:Arduino-keyboard.c ****         {
- 477:Arduino-keyboard.c ****             USB_KeyboardReport_Data_t rawKeyboardFrame;
- 478:Arduino-keyboard.c ****             
- 479:Arduino-keyboard.c ****             // Step tail past packet type ID byte
- 480:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 481:Arduino-keyboard.c ****             parserCount--;
- 482:Arduino-keyboard.c **** 
- 483:Arduino-keyboard.c ****             rawKeyboardFrame.Modifier = parserBuffer[parserTail];
- 484:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 485:Arduino-keyboard.c ****             parserCount--;
- 486:Arduino-keyboard.c **** 
- 487:Arduino-keyboard.c ****             rawKeyboardFrame.Reserved = parserBuffer[parserTail];
- 488:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 489:Arduino-keyboard.c ****             parserCount--;
- 490:Arduino-keyboard.c **** 
- 491:Arduino-keyboard.c ****             for (int ind = 0; ind < 6; ind++)
- 492:Arduino-keyboard.c ****             {
- 493:Arduino-keyboard.c ****                 rawKeyboardFrame.KeyCode[ind] = parserBuffer[parserTail];
- 494:Arduino-keyboard.c ****                 parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 495:Arduino-keyboard.c ****                 parserCount--;
- 496:Arduino-keyboard.c ****             }
- 497:Arduino-keyboard.c **** 
- 498:Arduino-keyboard.c ****             // Route standard keyboard data frame safely into the type-correct queue
- 499:Arduino-keyboard.c ****             KeyboardQueue_Push(&rawKeyboardFrame);
- 500:Arduino-keyboard.c ****         }
- 501:Arduino-keyboard.c ****         else if (reportType == 0x02) // Consumer Media Control Payload Structure
- 502:Arduino-keyboard.c ****         {
- 503:Arduino-keyboard.c ****             // Step tail past packet type ID byte
- 504:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 505:Arduino-keyboard.c ****             parserCount--;
- 506:Arduino-keyboard.c **** 
- 507:Arduino-keyboard.c ****             uint8_t mLow = parserBuffer[parserTail];
- 508:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 509:Arduino-keyboard.c ****             parserCount--;
- 510:Arduino-keyboard.c **** 
- 511:Arduino-keyboard.c ****             uint8_t mHigh = parserBuffer[parserTail];
- 512:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 513:Arduino-keyboard.c ****             parserCount--;
- 514:Arduino-keyboard.c **** 
- 515:Arduino-keyboard.c ****             uint16_t mediaUsage = ((uint16_t)mHigh << 8) | mLow;
- 516:Arduino-keyboard.c **** 
- 517:Arduino-keyboard.c ****             // Strip out remaining 6 padding framing layout layout bytes
- 518:Arduino-keyboard.c ****             for (int ind = 0; ind < 6; ind++)
- 519:Arduino-keyboard.c ****             {
- 520:Arduino-keyboard.c ****                 parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 521:Arduino-keyboard.c ****                 parserCount--;
- 522:Arduino-keyboard.c ****             }
- 523:Arduino-keyboard.c **** 
- 524:Arduino-keyboard.c ****             // Route decoded media usage code safely into its queue
- 525:Arduino-keyboard.c ****             MediaQueue_Push(mediaUsage);
- 526:Arduino-keyboard.c ****         }
- 527:Arduino-keyboard.c ****         else
- 528:Arduino-keyboard.c ****         {
- 529:Arduino-keyboard.c ****             // Parser Re-alignment Engine: step along unaligned bytes to re-acquire sync boundaries
- 530:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 531:Arduino-keyboard.c ****             parserCount--;
- 532:Arduino-keyboard.c ****         }
- 533:Arduino-keyboard.c ****     }
- 534:Arduino-keyboard.c **** }
- 1136               		.loc 1 534 0
- 1137 007e 2896      		adiw r28,8
- 1138 0080 0FB6      		in __tmp_reg__,__SREG__
- 1139 0082 F894      		cli
- 1140 0084 DEBF      		out __SP_H__,r29
- 1141 0086 0FBE      		out __SREG__,__tmp_reg__
- 1142 0088 CDBF      		out __SP_L__,r28
- 1143 008a DF91      		pop r29
- 1144 008c CF91      		pop r28
- 1145 008e FF91      		pop r31
- 1146 0090 EF91      		pop r30
- 1147 0092 BF91      		pop r27
- 1148 0094 AF91      		pop r26
- 1149 0096 9F91      		pop r25
- 1150 0098 8F91      		pop r24
- 1151 009a 7F91      		pop r23
- 1152 009c 6F91      		pop r22
- 1153 009e 5F91      		pop r21
- 1154 00a0 4F91      		pop r20
- 1155 00a2 3F91      		pop r19
- 1156 00a4 2F91      		pop r18
- 1157 00a6 1F91      		pop r17
- 1158 00a8 0F91      		pop r16
- 1159 00aa FF90      		pop r15
- 1160 00ac EF90      		pop r14
- 1161 00ae 0F90      		pop r0
- 1162 00b0 0FBE      		out __SREG__,r0
- 1163 00b2 0F90      		pop r0
- 1164 00b4 1F90      		pop r1
- 1165 00b6 1895      		reti
- 1166               	.L67:
- 1167               	.LBB161:
- 473:Arduino-keyboard.c **** 
- 1168               		.loc 1 473 0
- 1169 00b8 2091 0000 		lds r18,parserTail
- 1170 00bc 30E0      		ldi r19,0
- 1171 00be F901      		movw r30,r18
- 1172 00c0 E050      		subi r30,lo8(-(parserBuffer))
- 1173 00c2 F040      		sbci r31,hi8(-(parserBuffer))
- 1174 00c4 8081      		ld r24,Z
- 1175               	.LVL77:
- 1176 00c6 2F5F      		subi r18,-1
- 1177 00c8 3F4F      		sbci r19,-1
- 1178 00ca 2F71      		andi r18,31
- 1179 00cc 3327      		clr r19
- 475:Arduino-keyboard.c ****         {
- 1180               		.loc 1 475 0
- 1181 00ce 8130      		cpi r24,lo8(1)
- 1182 00d0 01F0      		breq .+2
- 1183 00d2 00C0      		rjmp .L61
- 1184               	.LBB162:
- 483:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 1185               		.loc 1 483 0
- 1186 00d4 F901      		movw r30,r18
- 1187 00d6 E050      		subi r30,lo8(-(parserBuffer))
- 1188 00d8 F040      		sbci r31,hi8(-(parserBuffer))
- 1189 00da 8081      		ld r24,Z
- 1190               	.LVL78:
- 1191 00dc 8983      		std Y+1,r24
- 484:Arduino-keyboard.c ****             parserCount--;
- 1192               		.loc 1 484 0
- 1193 00de 2F5F      		subi r18,-1
- 1194 00e0 3F4F      		sbci r19,-1
- 1195 00e2 2F71      		andi r18,31
- 1196 00e4 3327      		clr r19
- 487:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 1197               		.loc 1 487 0
- 1198 00e6 F901      		movw r30,r18
- 1199 00e8 E050      		subi r30,lo8(-(parserBuffer))
- 1200 00ea F040      		sbci r31,hi8(-(parserBuffer))
- 1201 00ec 8081      		ld r24,Z
- 1202 00ee 8A83      		std Y+2,r24
- 488:Arduino-keyboard.c ****             parserCount--;
- 1203               		.loc 1 488 0
- 1204 00f0 2F5F      		subi r18,-1
- 1205 00f2 3F4F      		sbci r19,-1
- 1206 00f4 2F71      		andi r18,lo8(31)
- 1207               	.LVL79:
- 1208 00f6 FE01      		movw r30,r28
- 1209 00f8 3396      		adiw r30,3
- 1210               	.LVL80:
- 1211               	.L62:
- 1212               	.LBB163:
- 493:Arduino-keyboard.c ****                 parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 1213               		.loc 1 493 0 discriminator 3
- 1214 00fa 30E0      		ldi r19,0
- 1215 00fc D901      		movw r26,r18
- 1216 00fe A050      		subi r26,lo8(-(parserBuffer))
- 1217 0100 B040      		sbci r27,hi8(-(parserBuffer))
- 1218 0102 8C91      		ld r24,X
- 1219 0104 8193      		st Z+,r24
- 494:Arduino-keyboard.c ****                 parserCount--;
- 1220               		.loc 1 494 0 discriminator 3
- 1221 0106 2F5F      		subi r18,-1
- 1222 0108 3F4F      		sbci r19,-1
- 1223 010a A901      		movw r20,r18
- 1224 010c 4F71      		andi r20,31
- 1225 010e 5527      		clr r21
- 1226 0110 242F      		mov r18,r20
- 491:Arduino-keyboard.c ****             {
- 1227               		.loc 1 491 0 discriminator 3
- 1228 0112 EE16      		cp r14,r30
- 1229 0114 FF06      		cpc r15,r31
- 1230 0116 01F4      		brne .L62
- 1231 0118 4093 0000 		sts parserTail,r20
- 1232 011c 9950      		subi r25,lo8(-(-9))
- 1233 011e 9093 0000 		sts parserCount,r25
- 1234               	.LBE163:
- 1235               	.LBB164:
- 1236               	.LBB165:
- 1237               	.LBB166:
- 1238               	.LBB167:
- 179:Arduino-keyboard.c **** }
- 1239               		.loc 1 179 0
- 1240 0122 8091 0000 		lds r24,KeyboardTail
- 1241 0126 90E0      		ldi r25,0
- 1242 0128 9C01      		movw r18,r24
- 1243 012a 2F5F      		subi r18,-1
- 1244 012c 3F4F      		sbci r19,-1
- 1245 012e 2770      		andi r18,7
- 1246 0130 3327      		clr r19
- 1247 0132 4091 0000 		lds r20,KeyboardHead
- 1248               	.LBE167:
- 1249               	.LBE166:
- 184:Arduino-keyboard.c ****         return false;
- 1250               		.loc 1 184 0
- 1251 0136 4217      		cp r20,r18
- 1252 0138 1306      		cpc __zero_reg__,r19
- 1253 013a 01F4      		brne .+2
- 1254 013c 00C0      		rjmp .L60
- 187:Arduino-keyboard.c ****     KeyboardTail = (KeyboardTail + 1) % KEYBOARD_QUEUE_SIZE;
- 1255               		.loc 1 187 0
- 1256 013e 880F      		lsl r24
- 1257 0140 991F      		rol r25
- 1258 0142 FC01      		movw r30,r24
- 1259 0144 E050      		subi r30,lo8(-(KeyboardQueue))
- 1260 0146 F040      		sbci r31,hi8(-(KeyboardQueue))
- 1261 0148 1183      		std Z+1,r17
- 1262 014a 0083      		st Z,r16
- 188:Arduino-keyboard.c **** 
- 1263               		.loc 1 188 0
- 1264 014c 2093 0000 		sts KeyboardTail,r18
- 1265 0150 00C0      		rjmp .L60
- 1266               	.LVL81:
- 1267               	.L61:
- 1268               	.LBE165:
- 1269               	.LBE164:
- 1270               	.LBE162:
- 501:Arduino-keyboard.c ****         {
- 1271               		.loc 1 501 0
- 1272 0152 8230      		cpi r24,lo8(2)
- 1273 0154 01F4      		brne .L65
- 1274               	.LVL82:
- 1275               	.LBB168:
- 508:Arduino-keyboard.c ****             parserCount--;
- 1276               		.loc 1 508 0
- 1277 0156 A901      		movw r20,r18
- 1278 0158 4F5F      		subi r20,-1
- 1279 015a 5F4F      		sbci r21,-1
- 1280 015c 4F71      		andi r20,31
- 1281 015e 5527      		clr r21
- 1282               	.LVL83:
- 512:Arduino-keyboard.c ****             parserCount--;
- 1283               		.loc 1 512 0
- 1284 0160 BA01      		movw r22,r20
- 1285 0162 6F5F      		subi r22,-1
- 1286 0164 7F4F      		sbci r23,-1
- 1287 0166 6F71      		andi r22,lo8(31)
- 511:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 1288               		.loc 1 511 0
- 1289 0168 4050      		subi r20,lo8(-(parserBuffer))
- 1290 016a 5040      		sbci r21,hi8(-(parserBuffer))
- 1291               	.LVL84:
- 515:Arduino-keyboard.c **** 
- 1292               		.loc 1 515 0
- 1293 016c FA01      		movw r30,r20
- 1294 016e 4081      		ld r20,Z
- 1295               	.LVL85:
- 507:Arduino-keyboard.c ****             parserTail = (parserTail + 1) % SERIAL_PARSER_BUFFER_SIZE;
- 1296               		.loc 1 507 0
- 1297 0170 2050      		subi r18,lo8(-(parserBuffer))
- 1298 0172 3040      		sbci r19,hi8(-(parserBuffer))
- 1299               	.LVL86:
- 515:Arduino-keyboard.c **** 
- 1300               		.loc 1 515 0
- 1301 0174 F901      		movw r30,r18
- 1302 0176 8081      		ld r24,Z
- 1303               	.LVL87:
- 1304 0178 542F      		mov r21,r20
- 1305 017a 482F      		mov r20,r24
- 1306               	.LVL88:
- 1307 017c E6E0      		ldi r30,lo8(6)
- 1308 017e F0E0      		ldi r31,0
- 1309               	.LVL89:
- 1310               	.L66:
- 1311               	.LBB169:
- 520:Arduino-keyboard.c ****                 parserCount--;
- 1312               		.loc 1 520 0 discriminator 3
- 1313 0180 262F      		mov r18,r22
- 1314 0182 30E0      		ldi r19,0
- 1315 0184 2F5F      		subi r18,-1
- 1316 0186 3F4F      		sbci r19,-1
- 1317 0188 2F71      		andi r18,31
- 1318 018a 3327      		clr r19
- 1319 018c 622F      		mov r22,r18
- 1320               	.LVL90:
- 1321 018e 3197      		sbiw r30,1
- 1322               	.LVL91:
- 518:Arduino-keyboard.c ****             {
- 1323               		.loc 1 518 0 discriminator 3
- 1324 0190 01F4      		brne .L66
- 1325 0192 2093 0000 		sts parserTail,r18
- 1326 0196 9950      		subi r25,lo8(-(-9))
- 1327 0198 9093 0000 		sts parserCount,r25
- 1328               	.LBE169:
- 525:Arduino-keyboard.c ****         }
- 1329               		.loc 1 525 0
- 1330 019c CA01      		movw r24,r20
- 1331 019e 0E94 0000 		call MediaQueue_Push
- 1332               	.LVL92:
- 1333               	.LBE168:
- 1334 01a2 00C0      		rjmp .L60
- 1335               	.LVL93:
- 1336               	.L65:
- 530:Arduino-keyboard.c ****             parserCount--;
- 1337               		.loc 1 530 0
- 1338 01a4 2093 0000 		sts parserTail,r18
- 531:Arduino-keyboard.c ****         }
- 1339               		.loc 1 531 0
- 1340 01a8 9150      		subi r25,lo8(-(-1))
- 1341 01aa 9093 0000 		sts parserCount,r25
- 1342 01ae 00C0      		rjmp .L60
- 1343               	.LBE161:
- 1344               		.cfi_endproc
- 1345               	.LFE110:
- 1347               		.section	.rodata
- 1350               	CSWTCH.79:
- 1351 0000 B5        		.byte	-75
- 1352 0001 B6        		.byte	-74
- 1353 0002 B7        		.byte	-73
- 1354 0003 00        		.byte	0
- 1355 0004 00        		.byte	0
- 1356 0005 00        		.byte	0
- 1357 0006 00        		.byte	0
- 1358 0007 00        		.byte	0
- 1359 0008 00        		.byte	0
- 1360 0009 00        		.byte	0
- 1361 000a 00        		.byte	0
- 1362 000b 00        		.byte	0
- 1363 000c 00        		.byte	0
- 1364 000d 00        		.byte	0
- 1365 000e 00        		.byte	0
- 1366 000f 00        		.byte	0
- 1367 0010 00        		.byte	0
- 1368 0011 00        		.byte	0
- 1369 0012 00        		.byte	0
- 1370 0013 00        		.byte	0
- 1371 0014 00        		.byte	0
- 1372 0015 00        		.byte	0
- 1373 0016 00        		.byte	0
- 1374 0017 00        		.byte	0
- 1375 0018 CD        		.byte	-51
- 1376 0019 00        		.byte	0
- 1377 001a 00        		.byte	0
- 1378 001b 00        		.byte	0
- 1379 001c 00        		.byte	0
- 1380 001d 00        		.byte	0
- 1381 001e 00        		.byte	0
- 1382 001f 00        		.byte	0
- 1383 0020 00        		.byte	0
- 1384 0021 00        		.byte	0
- 1385 0022 00        		.byte	0
- 1386 0023 00        		.byte	0
- 1387 0024 00        		.byte	0
- 1388 0025 00        		.byte	0
- 1389 0026 00        		.byte	0
- 1390 0027 00        		.byte	0
- 1391 0028 00        		.byte	0
- 1392 0029 00        		.byte	0
- 1393 002a 00        		.byte	0
- 1394 002b 00        		.byte	0
- 1395 002c 00        		.byte	0
- 1396 002d E2        		.byte	-30
- 1397 002e 00        		.byte	0
- 1398 002f 00        		.byte	0
- 1399 0030 00        		.byte	0
- 1400 0031 00        		.byte	0
- 1401 0032 00        		.byte	0
- 1402 0033 00        		.byte	0
- 1403 0034 E9        		.byte	-23
- 1404 0035 EA        		.byte	-22
- 1405               		.local	partial_wait.3143
- 1406               		.comm	partial_wait.3143,1,1
- 1407               		.local	parserCount
- 1408               		.comm	parserCount,1,1
- 1409               		.local	parserTail
- 1410               		.comm	parserTail,1,1
- 1411               		.local	parserHead
- 1412               		.comm	parserHead,1,1
- 1413               		.local	parserBuffer
- 1414               		.comm	parserBuffer,32,1
- 1415               		.local	MediaState
- 1416               		.comm	MediaState,1,1
- 1417               		.local	MediaTail
- 1418               		.comm	MediaTail,1,1
- 1419               		.local	MediaHead
- 1420               		.comm	MediaHead,1,1
- 1421               		.local	MediaQueue
- 1422               		.comm	MediaQueue,32,1
- 1423               		.local	KeyboardTail
- 1424               		.comm	KeyboardTail,1,1
- 1425               		.local	KeyboardHead
- 1426               		.comm	KeyboardHead,1,1
- 1427               		.local	KeyboardQueue
- 1428               		.comm	KeyboardQueue,16,1
- 1429               		.local	keyboardData
- 1430               		.comm	keyboardData,8,1
- 1431               		.comm	USARTtoUSB_Buffer,133,1
- 1432               	.global	HID_MediaInterface
- 1433               		.data
- 1436               	HID_MediaInterface:
- 1437 0000 01        		.byte	1
- 1438 0001 02        		.byte	2
- 1439 0002 0800      		.word	8
- 1440 0004 00        		.byte	0
- 1441 0005 0000      		.word	PrevMediaHIDReportBuffer
- 1442 0007 02        		.byte	2
- 1443 0008 0000 0000 		.zero	5
- 1443      00
- 1444               	.global	HID_KeyboardInterface
- 1447               	HID_KeyboardInterface:
- 1448 000d 00        		.byte	0
- 1449 000e 01        		.byte	1
- 1450 000f 0800      		.word	8
- 1451 0011 00        		.byte	0
- 1452 0012 0000      		.word	PrevKeyboardHIDReportBuffer
- 1453 0014 08        		.byte	8
- 1454 0015 0000 0000 		.zero	5
- 1454      00
- 1455               		.comm	PrevMediaHIDReportBuffer,2,1
- 1456               		.comm	PrevKeyboardHIDReportBuffer,8,1
- 1457               		.text
- 1458               	.Letext0:
- 1459               		.file 8 "/usr/lib/avr/include/stdint.h"
- 1460               		.file 9 "./LUFA/Drivers/USB/HighLevel/../LowLevel/../HighLevel/StdRequestType.h"
- 1461               		.file 10 "./LUFA/Drivers/USB/HighLevel/../LowLevel/../HighLevel/DeviceStandardReq.h"
- 1462               		.file 11 "./LUFA/Drivers/USB/HighLevel/USBTask.h"
- 1463               		.file 12 "./LUFA/Drivers/USB/Class/Device/../Common/HID.h"
- 1464               		.file 13 "Descriptors.h"
- 1465               		.file 14 "/usr/lib/avr/include/stdio.h"
- 1466               		.file 15 "Arduino-keyboard.h"
- 1467               		.file 16 "./LUFA/Drivers/USB/HighLevel/../LowLevel/USBController.h"
+ 462:Arduino-keyboard.c **** void EVENT_USB_Device_Connect(void) { }
+ 890               		.loc 1 462 0
+ 891               		.cfi_startproc
+ 892               	/* prologue: function */
+ 893               	/* frame size = 0 */
+ 894               	/* stack size = 0 */
+ 895               	.L__stack_usage = 0
+ 896               	/* epilogue start */
+ 897               		.loc 1 462 0
+ 898 0000 0895      		ret
+ 899               		.cfi_endproc
+ 900               	.LFE105:
+ 902               		.section	.text.EVENT_USB_Device_Disconnect,"ax",@progbits
+ 903               	.global	EVENT_USB_Device_Disconnect
+ 905               	EVENT_USB_Device_Disconnect:
+ 906               	.LFB110:
+ 907               		.cfi_startproc
+ 908               	/* prologue: function */
+ 909               	/* frame size = 0 */
+ 910               	/* stack size = 0 */
+ 911               	.L__stack_usage = 0
+ 912               	/* epilogue start */
+ 913 0000 0895      		ret
+ 914               		.cfi_endproc
+ 915               	.LFE110:
+ 917               		.section	.text.__vector_23,"ax",@progbits
+ 918               	.global	__vector_23
+ 920               	__vector_23:
+ 921               	.LFB107:
+ 463:Arduino-keyboard.c **** void EVENT_USB_Device_Disconnect(void) { }
+ 464:Arduino-keyboard.c **** 
+ 465:Arduino-keyboard.c **** /* ---------------------------------------------------------
+ 466:Arduino-keyboard.c ****  * Hardware Interrupt Sequence Vector
+ 467:Arduino-keyboard.c ****  * --------------------------------------------------------- */
+ 468:Arduino-keyboard.c **** ISR(USART1_RX_vect, ISR_BLOCK)
+ 469:Arduino-keyboard.c **** {
+ 922               		.loc 1 469 0
+ 923               		.cfi_startproc
+ 924               		.loc 1 469 0
+ 925 0000 1F92      		push r1
+ 926               	.LCFI16:
+ 927               		.cfi_def_cfa_offset 3
+ 928               		.cfi_offset 1, -2
+ 929 0002 0F92      		push r0
+ 930               	.LCFI17:
+ 931               		.cfi_def_cfa_offset 4
+ 932               		.cfi_offset 0, -3
+ 933 0004 0FB6      		in r0,__SREG__
+ 934 0006 0F92      		push r0
+ 935 0008 1124      		clr __zero_reg__
+ 936 000a 8F93      		push r24
+ 937               	.LCFI18:
+ 938               		.cfi_def_cfa_offset 5
+ 939               		.cfi_offset 24, -4
+ 940 000c 9F93      		push r25
+ 941               	.LCFI19:
+ 942               		.cfi_def_cfa_offset 6
+ 943               		.cfi_offset 25, -5
+ 944 000e EF93      		push r30
+ 945               	.LCFI20:
+ 946               		.cfi_def_cfa_offset 7
+ 947               		.cfi_offset 30, -6
+ 948 0010 FF93      		push r31
+ 949               	.LCFI21:
+ 950               		.cfi_def_cfa_offset 8
+ 951               		.cfi_offset 31, -7
+ 952               	/* prologue: Signal */
+ 953               	/* frame size = 0 */
+ 954               	/* stack size = 7 */
+ 955               	.L__stack_usage = 7
+ 470:Arduino-keyboard.c ****      // ALWAYS read first to clear the flag and prevent hardware lockups
+ 471:Arduino-keyboard.c ****      uint8_t ReceivedByte = UDR1;
+ 956               		.loc 1 471 0
+ 957 0012 8091 CE00 		lds r24,206
+ 958               	.LVL57:
+ 472:Arduino-keyboard.c **** 
+ 473:Arduino-keyboard.c ****      // Append standard byte array values into the local circular parser ring allocation structure
+ 474:Arduino-keyboard.c ****      if (parserCount < SERIAL_PARSER_BUFFER_SIZE)
+ 959               		.loc 1 474 0
+ 960 0016 9091 0000 		lds r25,parserCount
+ 961 001a 9034      		cpi r25,lo8(64)
+ 962 001c 00F4      		brsh .L56
+ 475:Arduino-keyboard.c ****      {
+ 476:Arduino-keyboard.c ****          parserBuffer[parserHead] = ReceivedByte;
+ 963               		.loc 1 476 0
+ 964 001e E091 0000 		lds r30,parserHead
+ 965 0022 F0E0      		ldi r31,0
+ 966 0024 E050      		subi r30,lo8(-(parserBuffer))
+ 967 0026 F040      		sbci r31,hi8(-(parserBuffer))
+ 968 0028 8083      		st Z,r24
+ 477:Arduino-keyboard.c ****          parserHead = (parserHead + 1) % SERIAL_PARSER_BUFFER_SIZE;
+ 969               		.loc 1 477 0
+ 970 002a 8091 0000 		lds r24,parserHead
+ 971               	.LVL58:
+ 972 002e 90E0      		ldi r25,0
+ 973 0030 0196      		adiw r24,1
+ 974 0032 8F73      		andi r24,63
+ 975 0034 9927      		clr r25
+ 976 0036 8093 0000 		sts parserHead,r24
+ 977               	.LVL59:
+ 478:Arduino-keyboard.c ****          parserCount++;
+ 978               		.loc 1 478 0
+ 979 003a 8091 0000 		lds r24,parserCount
+ 980 003e 8F5F      		subi r24,lo8(-(1))
+ 981 0040 8093 0000 		sts parserCount,r24
+ 982               	.L56:
+ 983               	/* epilogue start */
+ 479:Arduino-keyboard.c ****      }
+ 480:Arduino-keyboard.c **** }
+ 984               		.loc 1 480 0
+ 985 0044 FF91      		pop r31
+ 986 0046 EF91      		pop r30
+ 987 0048 9F91      		pop r25
+ 988 004a 8F91      		pop r24
+ 989 004c 0F90      		pop r0
+ 990 004e 0FBE      		out __SREG__,r0
+ 991 0050 0F90      		pop r0
+ 992 0052 1F90      		pop r1
+ 993 0054 1895      		reti
+ 994               		.cfi_endproc
+ 995               	.LFE107:
+ 997               		.section	.rodata
+ 1000               	CSWTCH.44:
+ 1001 0000 B5        		.byte	-75
+ 1002 0001 B6        		.byte	-74
+ 1003 0002 B7        		.byte	-73
+ 1004 0003 00        		.byte	0
+ 1005 0004 00        		.byte	0
+ 1006 0005 00        		.byte	0
+ 1007 0006 00        		.byte	0
+ 1008 0007 00        		.byte	0
+ 1009 0008 00        		.byte	0
+ 1010 0009 00        		.byte	0
+ 1011 000a 00        		.byte	0
+ 1012 000b 00        		.byte	0
+ 1013 000c 00        		.byte	0
+ 1014 000d 00        		.byte	0
+ 1015 000e 00        		.byte	0
+ 1016 000f 00        		.byte	0
+ 1017 0010 00        		.byte	0
+ 1018 0011 00        		.byte	0
+ 1019 0012 00        		.byte	0
+ 1020 0013 00        		.byte	0
+ 1021 0014 00        		.byte	0
+ 1022 0015 00        		.byte	0
+ 1023 0016 00        		.byte	0
+ 1024 0017 00        		.byte	0
+ 1025 0018 CD        		.byte	-51
+ 1026 0019 00        		.byte	0
+ 1027 001a 00        		.byte	0
+ 1028 001b 00        		.byte	0
+ 1029 001c 00        		.byte	0
+ 1030 001d 00        		.byte	0
+ 1031 001e 00        		.byte	0
+ 1032 001f 00        		.byte	0
+ 1033 0020 00        		.byte	0
+ 1034 0021 00        		.byte	0
+ 1035 0022 00        		.byte	0
+ 1036 0023 00        		.byte	0
+ 1037 0024 00        		.byte	0
+ 1038 0025 00        		.byte	0
+ 1039 0026 00        		.byte	0
+ 1040 0027 00        		.byte	0
+ 1041 0028 00        		.byte	0
+ 1042 0029 00        		.byte	0
+ 1043 002a 00        		.byte	0
+ 1044 002b 00        		.byte	0
+ 1045 002c 00        		.byte	0
+ 1046 002d E2        		.byte	-30
+ 1047 002e 00        		.byte	0
+ 1048 002f 00        		.byte	0
+ 1049 0030 00        		.byte	0
+ 1050 0031 00        		.byte	0
+ 1051 0032 00        		.byte	0
+ 1052 0033 00        		.byte	0
+ 1053 0034 E9        		.byte	-23
+ 1054 0035 EA        		.byte	-22
+ 1055               		.local	CurrentFrameContext
+ 1056               		.comm	CurrentFrameContext,8,1
+ 1057               		.local	PayloadByteIndex
+ 1058               		.comm	PayloadByteIndex,1,1
+ 1059               		.local	ActivePacketType
+ 1060               		.comm	ActivePacketType,1,1
+ 1061               		.local	CurrentParserState
+ 1062               		.comm	CurrentParserState,1,1
+ 1063               		.local	parserCount
+ 1064               		.comm	parserCount,1,1
+ 1065               		.local	parserTail
+ 1066               		.comm	parserTail,1,1
+ 1067               		.local	parserHead
+ 1068               		.comm	parserHead,1,1
+ 1069               		.local	parserBuffer
+ 1070               		.comm	parserBuffer,64,1
+ 1071               	.global	ledReport
+ 1072               		.section .bss
+ 1075               	ledReport:
+ 1076 0000 00        		.zero	1
+ 1077               		.local	currentMediaUsage
+ 1078               		.comm	currentMediaUsage,2,1
+ 1079               		.local	MediaState
+ 1080               		.comm	MediaState,1,1
+ 1081               		.local	MediaTail
+ 1082               		.comm	MediaTail,1,1
+ 1083               		.local	MediaHead
+ 1084               		.comm	MediaHead,1,1
+ 1085               		.local	MediaQueue
+ 1086               		.comm	MediaQueue,32,1
+ 1087               		.local	KeyboardTail
+ 1088               		.comm	KeyboardTail,1,1
+ 1089               		.local	KeyboardHead
+ 1090               		.comm	KeyboardHead,1,1
+ 1091               		.local	KeyboardQueue
+ 1092               		.comm	KeyboardQueue,64,1
+ 1093               	.global	HID_MediaInterface
+ 1094               		.data
+ 1097               	HID_MediaInterface:
+ 1098 0000 01        		.byte	1
+ 1099 0001 02        		.byte	2
+ 1100 0002 0800      		.word	8
+ 1101 0004 00        		.byte	0
+ 1102 0005 0000      		.word	PrevMediaHIDReportBuffer
+ 1103 0007 02        		.byte	2
+ 1104 0008 0000 0000 		.zero	5
+ 1104      00
+ 1105               	.global	HID_KeyboardInterface
+ 1108               	HID_KeyboardInterface:
+ 1109 000d 00        		.byte	0
+ 1110 000e 01        		.byte	1
+ 1111 000f 0800      		.word	8
+ 1112 0011 00        		.byte	0
+ 1113 0012 0000      		.word	PrevKeyboardHIDReportBuffer
+ 1114 0014 08        		.byte	8
+ 1115 0015 0000 0000 		.zero	5
+ 1115      00
+ 1116               		.comm	PrevMediaHIDReportBuffer,2,1
+ 1117               		.comm	PrevKeyboardHIDReportBuffer,8,1
+ 1118               		.text
+ 1119               	.Letext0:
+ 1120               		.file 7 "/usr/lib/avr/include/stdint.h"
+ 1121               		.file 8 "./LUFA/Drivers/USB/HighLevel/../LowLevel/../HighLevel/StdRequestType.h"
+ 1122               		.file 9 "./LUFA/Drivers/USB/HighLevel/../LowLevel/../HighLevel/DeviceStandardReq.h"
+ 1123               		.file 10 "./LUFA/Drivers/USB/HighLevel/USBTask.h"
+ 1124               		.file 11 "./LUFA/Drivers/USB/Class/Device/../Common/HID.h"
+ 1125               		.file 12 "Descriptors.h"
+ 1126               		.file 13 "/usr/lib/avr/include/stdio.h"
+ 1127               		.file 14 "Arduino-keyboard.h"
+ 1128               		.file 15 "./LUFA/Drivers/USB/HighLevel/../LowLevel/USBController.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 Arduino-keyboard.c
-/tmp/user/1000/ccPK6rUh.s:2      *ABS*:000000000000003e __SP_H__
-/tmp/user/1000/ccPK6rUh.s:3      *ABS*:000000000000003d __SP_L__
-/tmp/user/1000/ccPK6rUh.s:4      *ABS*:000000000000003f __SREG__
-/tmp/user/1000/ccPK6rUh.s:5      *ABS*:0000000000000000 __tmp_reg__
-/tmp/user/1000/ccPK6rUh.s:6      *ABS*:0000000000000001 __zero_reg__
-/tmp/user/1000/ccPK6rUh.s:12     .text.MediaQueue_Push:0000000000000000 MediaQueue_Push
-/tmp/user/1000/ccPK6rUh.s:1416   .bss:0000000000000025 MediaTail
-/tmp/user/1000/ccPK6rUh.s:1418   .bss:0000000000000026 MediaHead
-/tmp/user/1000/ccPK6rUh.s:1420   .bss:0000000000000027 MediaQueue
-/tmp/user/1000/ccPK6rUh.s:66     .text.MediaQueue_Pop:0000000000000000 MediaQueue_Pop
-/tmp/user/1000/ccPK6rUh.s:120    .text.RingBuffer_Remove.constprop.3:0000000000000000 RingBuffer_Remove.constprop.3
-                            *COM*:0000000000000085 USARTtoUSB_Buffer
-/tmp/user/1000/ccPK6rUh.s:190    .text.SetupHardware:0000000000000000 SetupHardware
-/tmp/user/1000/ccPK6rUh.s:347    .text.startup.main:0000000000000000 main
-/tmp/user/1000/ccPK6rUh.s:1428   .bss:0000000000000059 keyboardData
-                             .bss:0000000000000000 partial_wait.3143
-/tmp/user/1000/ccPK6rUh.s:1447   .data:000000000000000d HID_KeyboardInterface
-/tmp/user/1000/ccPK6rUh.s:1436   .data:0000000000000000 HID_MediaInterface
-/tmp/user/1000/ccPK6rUh.s:1350   .rodata:0000000000000000 CSWTCH.79
-/tmp/user/1000/ccPK6rUh.s:650    .text.EVENT_USB_Device_Connect:0000000000000000 EVENT_USB_Device_Connect
-/tmp/user/1000/ccPK6rUh.s:667    .text.EVENT_USB_Device_Disconnect:0000000000000000 EVENT_USB_Device_Disconnect
-/tmp/user/1000/ccPK6rUh.s:682    .text.EVENT_USB_Device_ConfigurationChanged:0000000000000000 EVENT_USB_Device_ConfigurationChanged
-/tmp/user/1000/ccPK6rUh.s:720    .text.EVENT_USB_Device_UnhandledControlRequest:0000000000000000 EVENT_USB_Device_UnhandledControlRequest
-/tmp/user/1000/ccPK6rUh.s:744    .text.EVENT_USB_Device_StartOfFrame:0000000000000000 EVENT_USB_Device_StartOfFrame
-/tmp/user/1000/ccPK6rUh.s:793    .text.CALLBACK_HID_Device_CreateHIDReport:0000000000000000 CALLBACK_HID_Device_CreateHIDReport
-/tmp/user/1000/ccPK6rUh.s:1424   .bss:0000000000000048 KeyboardHead
-/tmp/user/1000/ccPK6rUh.s:1422   .bss:0000000000000047 KeyboardTail
-/tmp/user/1000/ccPK6rUh.s:1426   .bss:0000000000000049 KeyboardQueue
-/tmp/user/1000/ccPK6rUh.s:1414   .bss:0000000000000024 MediaState
-/tmp/user/1000/ccPK6rUh.s:976    .text.CALLBACK_HID_Device_ProcessHIDReport:0000000000000000 CALLBACK_HID_Device_ProcessHIDReport
-/tmp/user/1000/ccPK6rUh.s:994    .text.__vector_23:0000000000000000 __vector_23
-/tmp/user/1000/ccPK6rUh.s:1406   .bss:0000000000000001 parserCount
-/tmp/user/1000/ccPK6rUh.s:1410   .bss:0000000000000003 parserHead
-/tmp/user/1000/ccPK6rUh.s:1412   .bss:0000000000000004 parserBuffer
-/tmp/user/1000/ccPK6rUh.s:1408   .bss:0000000000000002 parserTail
+/tmp/user/1000/ccJdDDyS.s:2      *ABS*:000000000000003e __SP_H__
+/tmp/user/1000/ccJdDDyS.s:3      *ABS*:000000000000003d __SP_L__
+/tmp/user/1000/ccJdDDyS.s:4      *ABS*:000000000000003f __SREG__
+/tmp/user/1000/ccJdDDyS.s:5      *ABS*:0000000000000000 __tmp_reg__
+/tmp/user/1000/ccJdDDyS.s:6      *ABS*:0000000000000001 __zero_reg__
+/tmp/user/1000/ccJdDDyS.s:12     .text.MediaQueue_Push:0000000000000000 MediaQueue_Push
+/tmp/user/1000/ccJdDDyS.s:1080   .bss:0000000000000052 MediaTail
+/tmp/user/1000/ccJdDDyS.s:1082   .bss:0000000000000053 MediaHead
+/tmp/user/1000/ccJdDDyS.s:1084   .bss:0000000000000054 MediaQueue
+/tmp/user/1000/ccJdDDyS.s:63     .text.ProcessIncomingSerialData:0000000000000000 ProcessIncomingSerialData
+/tmp/user/1000/ccJdDDyS.s:1058   .bss:000000000000000a ActivePacketType
+/tmp/user/1000/ccJdDDyS.s:1056   .bss:0000000000000009 PayloadByteIndex
+/tmp/user/1000/ccJdDDyS.s:1060   .bss:000000000000000b CurrentParserState
+/tmp/user/1000/ccJdDDyS.s:1062   .bss:000000000000000c parserCount
+/tmp/user/1000/ccJdDDyS.s:1064   .bss:000000000000000d parserTail
+/tmp/user/1000/ccJdDDyS.s:1068   .bss:000000000000000f parserBuffer
+                             .bss:0000000000000001 CurrentFrameContext
+/tmp/user/1000/ccJdDDyS.s:1086   .bss:0000000000000074 KeyboardTail
+/tmp/user/1000/ccJdDDyS.s:1088   .bss:0000000000000075 KeyboardHead
+/tmp/user/1000/ccJdDDyS.s:1090   .bss:0000000000000076 KeyboardQueue
+/tmp/user/1000/ccJdDDyS.s:1000   .rodata:0000000000000000 CSWTCH.44
+/tmp/user/1000/ccJdDDyS.s:342    .text.SetupHardware:0000000000000000 SetupHardware
+/tmp/user/1000/ccJdDDyS.s:499    .text.startup.main:0000000000000000 main
+/tmp/user/1000/ccJdDDyS.s:1108   .data:000000000000000d HID_KeyboardInterface
+/tmp/user/1000/ccJdDDyS.s:1097   .data:0000000000000000 HID_MediaInterface
+/tmp/user/1000/ccJdDDyS.s:540    .text.CALLBACK_HID_Device_CreateHIDReport:0000000000000000 CALLBACK_HID_Device_CreateHIDReport
+/tmp/user/1000/ccJdDDyS.s:1078   .bss:0000000000000051 MediaState
+/tmp/user/1000/ccJdDDyS.s:1070   .bss:000000000000004f currentMediaUsage
+/tmp/user/1000/ccJdDDyS.s:759    .text.CALLBACK_HID_Device_ProcessHIDReport:0000000000000000 CALLBACK_HID_Device_ProcessHIDReport
+/tmp/user/1000/ccJdDDyS.s:777    .text.EVENT_USB_Device_ConfigurationChanged:0000000000000000 EVENT_USB_Device_ConfigurationChanged
+/tmp/user/1000/ccJdDDyS.s:815    .text.EVENT_USB_Device_UnhandledControlRequest:0000000000000000 EVENT_USB_Device_UnhandledControlRequest
+/tmp/user/1000/ccJdDDyS.s:839    .text.EVENT_USB_Device_StartOfFrame:0000000000000000 EVENT_USB_Device_StartOfFrame
+/tmp/user/1000/ccJdDDyS.s:888    .text.EVENT_USB_Device_Connect:0000000000000000 EVENT_USB_Device_Connect
+/tmp/user/1000/ccJdDDyS.s:905    .text.EVENT_USB_Device_Disconnect:0000000000000000 EVENT_USB_Device_Disconnect
+/tmp/user/1000/ccJdDDyS.s:920    .text.__vector_23:0000000000000000 __vector_23
+/tmp/user/1000/ccJdDDyS.s:1066   .bss:000000000000000e parserHead
+/tmp/user/1000/ccJdDDyS.s:1075   .bss:0000000000000000 ledReport
                             *COM*:0000000000000002 PrevMediaHIDReportBuffer
                             *COM*:0000000000000008 PrevKeyboardHIDReportBuffer
 

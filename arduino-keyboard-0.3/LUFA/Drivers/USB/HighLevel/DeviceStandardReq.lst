@@ -1801,12 +1801,12 @@
  534               		.file 8 "LUFA/Drivers/USB/HighLevel/Events.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 DeviceStandardReq.c
-/tmp/user/1000/cckoqPRk.s:2      *ABS*:000000000000003e __SP_H__
-/tmp/user/1000/cckoqPRk.s:3      *ABS*:000000000000003d __SP_L__
-/tmp/user/1000/cckoqPRk.s:4      *ABS*:000000000000003f __SREG__
-/tmp/user/1000/cckoqPRk.s:5      *ABS*:0000000000000000 __tmp_reg__
-/tmp/user/1000/cckoqPRk.s:6      *ABS*:0000000000000001 __zero_reg__
-/tmp/user/1000/cckoqPRk.s:13     .text.USB_Device_ProcessControlRequest:0000000000000000 USB_Device_ProcessControlRequest
+/tmp/user/1000/cc2IoxUX.s:2      *ABS*:000000000000003e __SP_H__
+/tmp/user/1000/cc2IoxUX.s:3      *ABS*:000000000000003d __SP_L__
+/tmp/user/1000/cc2IoxUX.s:4      *ABS*:000000000000003f __SREG__
+/tmp/user/1000/cc2IoxUX.s:5      *ABS*:0000000000000000 __tmp_reg__
+/tmp/user/1000/cc2IoxUX.s:6      *ABS*:0000000000000001 __zero_reg__
+/tmp/user/1000/cc2IoxUX.s:13     .text.USB_Device_ProcessControlRequest:0000000000000000 USB_Device_ProcessControlRequest
                             *COM*:0000000000000001 USB_ConfigurationNumber
 
 UNDEFINED SYMBOLS

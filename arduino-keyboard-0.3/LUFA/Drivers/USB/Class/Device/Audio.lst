@@ -1616,13 +1616,13 @@
  182               		.file 7 "LUFA/Drivers/USB/Class/Device/Audio.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 Audio.c
-/tmp/user/1000/ccGlmuEG.s:2      *ABS*:000000000000003e __SP_H__
-/tmp/user/1000/ccGlmuEG.s:3      *ABS*:000000000000003d __SP_L__
-/tmp/user/1000/ccGlmuEG.s:4      *ABS*:000000000000003f __SREG__
-/tmp/user/1000/ccGlmuEG.s:5      *ABS*:0000000000000000 __tmp_reg__
-/tmp/user/1000/ccGlmuEG.s:6      *ABS*:0000000000000001 __zero_reg__
-/tmp/user/1000/ccGlmuEG.s:13     .text.Audio_Device_ProcessControlRequest:0000000000000000 Audio_Device_ProcessControlRequest
-/tmp/user/1000/ccGlmuEG.s:78     .text.Audio_Device_ConfigureEndpoints:0000000000000000 Audio_Device_ConfigureEndpoints
+/tmp/user/1000/ccBhmwrY.s:2      *ABS*:000000000000003e __SP_H__
+/tmp/user/1000/ccBhmwrY.s:3      *ABS*:000000000000003d __SP_L__
+/tmp/user/1000/ccBhmwrY.s:4      *ABS*:000000000000003f __SREG__
+/tmp/user/1000/ccBhmwrY.s:5      *ABS*:0000000000000000 __tmp_reg__
+/tmp/user/1000/ccBhmwrY.s:6      *ABS*:0000000000000001 __zero_reg__
+/tmp/user/1000/ccBhmwrY.s:13     .text.Audio_Device_ProcessControlRequest:0000000000000000 Audio_Device_ProcessControlRequest
+/tmp/user/1000/ccBhmwrY.s:78     .text.Audio_Device_ConfigureEndpoints:0000000000000000 Audio_Device_ConfigureEndpoints
 
 UNDEFINED SYMBOLS
 USB_ControlRequest

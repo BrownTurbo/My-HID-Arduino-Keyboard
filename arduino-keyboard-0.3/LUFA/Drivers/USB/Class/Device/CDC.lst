@@ -2921,29 +2921,29 @@
  1197               		.file 9 "LUFA/Drivers/USB/Class/Device/CDC.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 CDC.c
-/tmp/user/1000/ccoJLB4l.s:2      *ABS*:000000000000003e __SP_H__
-/tmp/user/1000/ccoJLB4l.s:3      *ABS*:000000000000003d __SP_L__
-/tmp/user/1000/ccoJLB4l.s:4      *ABS*:000000000000003f __SREG__
-/tmp/user/1000/ccoJLB4l.s:5      *ABS*:0000000000000000 __tmp_reg__
-/tmp/user/1000/ccoJLB4l.s:6      *ABS*:0000000000000001 __zero_reg__
-/tmp/user/1000/ccoJLB4l.s:13     .text.CDC_Device_Event_Stub:0000000000000000 CDC_Device_Event_Stub
-/tmp/user/1000/ccoJLB4l.s:13     .text.CDC_Device_Event_Stub:0000000000000000 EVENT_CDC_Device_BreakSent
-/tmp/user/1000/ccoJLB4l.s:13     .text.CDC_Device_Event_Stub:0000000000000000 EVENT_CDC_Device_ControLineStateChanged
-/tmp/user/1000/ccoJLB4l.s:13     .text.CDC_Device_Event_Stub:0000000000000000 EVENT_CDC_Device_LineEncodingChanged
-/tmp/user/1000/ccoJLB4l.s:37     .text.CDC_Device_ProcessControlRequest:0000000000000000 CDC_Device_ProcessControlRequest
-/tmp/user/1000/ccoJLB4l.s:216    .text.CDC_Device_ConfigureEndpoints:0000000000000000 CDC_Device_ConfigureEndpoints
-/tmp/user/1000/ccoJLB4l.s:365    .text.CDC_Device_SendString:0000000000000000 CDC_Device_SendString
-/tmp/user/1000/ccoJLB4l.s:435    .text.CDC_Device_SendByte:0000000000000000 CDC_Device_SendByte
-/tmp/user/1000/ccoJLB4l.s:538    .text.CDC_Device_putchar:0000000000000000 CDC_Device_putchar
-/tmp/user/1000/ccoJLB4l.s:576    .text.CDC_Device_Flush:0000000000000000 CDC_Device_Flush
-/tmp/user/1000/ccoJLB4l.s:670    .text.CDC_Device_USBTask:0000000000000000 CDC_Device_USBTask
-/tmp/user/1000/ccoJLB4l.s:706    .text.CDC_Device_BytesReceived:0000000000000000 CDC_Device_BytesReceived
-/tmp/user/1000/ccoJLB4l.s:791    .text.CDC_Device_ReceiveByte:0000000000000000 CDC_Device_ReceiveByte
-/tmp/user/1000/ccoJLB4l.s:893    .text.CDC_Device_getchar:0000000000000000 CDC_Device_getchar
-/tmp/user/1000/ccoJLB4l.s:925    .text.CDC_Device_getchar_Blocking:0000000000000000 CDC_Device_getchar_Blocking
-/tmp/user/1000/ccoJLB4l.s:994    .text.CDC_Device_SendControlLineStateChange:0000000000000000 CDC_Device_SendControlLineStateChange
-/tmp/user/1000/ccoJLB4l.s:1114   .text.CDC_Device_CreateStream:0000000000000000 CDC_Device_CreateStream
-/tmp/user/1000/ccoJLB4l.s:1153   .text.CDC_Device_CreateBlockingStream:0000000000000000 CDC_Device_CreateBlockingStream
+/tmp/user/1000/cc5DLiS5.s:2      *ABS*:000000000000003e __SP_H__
+/tmp/user/1000/cc5DLiS5.s:3      *ABS*:000000000000003d __SP_L__
+/tmp/user/1000/cc5DLiS5.s:4      *ABS*:000000000000003f __SREG__
+/tmp/user/1000/cc5DLiS5.s:5      *ABS*:0000000000000000 __tmp_reg__
+/tmp/user/1000/cc5DLiS5.s:6      *ABS*:0000000000000001 __zero_reg__
+/tmp/user/1000/cc5DLiS5.s:13     .text.CDC_Device_Event_Stub:0000000000000000 CDC_Device_Event_Stub
+/tmp/user/1000/cc5DLiS5.s:13     .text.CDC_Device_Event_Stub:0000000000000000 EVENT_CDC_Device_BreakSent
+/tmp/user/1000/cc5DLiS5.s:13     .text.CDC_Device_Event_Stub:0000000000000000 EVENT_CDC_Device_ControLineStateChanged
+/tmp/user/1000/cc5DLiS5.s:13     .text.CDC_Device_Event_Stub:0000000000000000 EVENT_CDC_Device_LineEncodingChanged
+/tmp/user/1000/cc5DLiS5.s:37     .text.CDC_Device_ProcessControlRequest:0000000000000000 CDC_Device_ProcessControlRequest
+/tmp/user/1000/cc5DLiS5.s:216    .text.CDC_Device_ConfigureEndpoints:0000000000000000 CDC_Device_ConfigureEndpoints
+/tmp/user/1000/cc5DLiS5.s:365    .text.CDC_Device_SendString:0000000000000000 CDC_Device_SendString
+/tmp/user/1000/cc5DLiS5.s:435    .text.CDC_Device_SendByte:0000000000000000 CDC_Device_SendByte
+/tmp/user/1000/cc5DLiS5.s:538    .text.CDC_Device_putchar:0000000000000000 CDC_Device_putchar
+/tmp/user/1000/cc5DLiS5.s:576    .text.CDC_Device_Flush:0000000000000000 CDC_Device_Flush
+/tmp/user/1000/cc5DLiS5.s:670    .text.CDC_Device_USBTask:0000000000000000 CDC_Device_USBTask
+/tmp/user/1000/cc5DLiS5.s:706    .text.CDC_Device_BytesReceived:0000000000000000 CDC_Device_BytesReceived
+/tmp/user/1000/cc5DLiS5.s:791    .text.CDC_Device_ReceiveByte:0000000000000000 CDC_Device_ReceiveByte
+/tmp/user/1000/cc5DLiS5.s:893    .text.CDC_Device_getchar:0000000000000000 CDC_Device_getchar
+/tmp/user/1000/cc5DLiS5.s:925    .text.CDC_Device_getchar_Blocking:0000000000000000 CDC_Device_getchar_Blocking
+/tmp/user/1000/cc5DLiS5.s:994    .text.CDC_Device_SendControlLineStateChange:0000000000000000 CDC_Device_SendControlLineStateChange
+/tmp/user/1000/cc5DLiS5.s:1114   .text.CDC_Device_CreateStream:0000000000000000 CDC_Device_CreateStream
+/tmp/user/1000/cc5DLiS5.s:1153   .text.CDC_Device_CreateBlockingStream:0000000000000000 CDC_Device_CreateBlockingStream
 
 UNDEFINED SYMBOLS
 USB_ControlRequest
