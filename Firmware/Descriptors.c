@@ -80,12 +80,12 @@ const USB_Descriptor_HIDReport_Datatype_t PROGMEM KeyboardReport[] =
     
     /* Keycode Array (6 bytes) */
     0x15, 0x00,          /* Logical Minimum (0) */
-    0x25, 0xFF,          /* Logical Maximum (255) */
+    0x26, 231, 0x00,  /* Logical Maximum (231) - Required 16-bit assignment */
     0x05, 0x07,          /* Usage Page (Key Codes) */
     0x19, 0x00,          /* Usage Minimum (0) */
-    0x29, 0xFF,          /* Usage Maximum (255) */
-    0x95, 0x06,          /* Report Count (6 fields) */
-    0x75, 0x08,          /* Report Size (8 bits) */
+    0x29, 231,           /* Usage Maximum (231) */
+    0x95, 0x06,          /* Report Count (6 fields / keys concurrent) */
+    0x75, 0x08,          /* Report Size (8 bits per key slot) */
     0x81, 0x00,          /* Input (Data, Array, Absolute) */
     
     0xC0                 /* End Collection */
