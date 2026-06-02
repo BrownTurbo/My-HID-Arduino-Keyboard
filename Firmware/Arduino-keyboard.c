@@ -470,7 +470,7 @@ ISR(USART1_RX_vect, ISR_BLOCK)
      // ALWAYS read first to clear the flag and prevent hardware lockups
      uint8_t ReceivedByte = UDR1;
 
-    i	f (USB_DeviceState != DEVICE_STATE_Configured)
+    if (USB_DeviceState != DEVICE_STATE_Configured)
          return;
 
      // Append standard byte array values into the local circular parser ring allocation structure
