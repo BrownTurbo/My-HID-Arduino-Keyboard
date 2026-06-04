@@ -315,8 +315,6 @@ void ProcessIncomingSerialData(void) {
                         uint8_t mediaRaw = CurrentFrameContext.RawBytes[0];
                         if (IsMediaUsage(mediaRaw)) {
                             MediaQueue_Push(MapMediaUsage(mediaRaw));
-                        } else if (mediaRaw == 0x00) { // Catch empty release frames
-                             MediaQueue_Push(0x0000); 
                         }
                     }
                     // Terminate layout parsing, prepare for next dynamic packet

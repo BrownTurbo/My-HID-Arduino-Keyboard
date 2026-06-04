@@ -9,6 +9,7 @@ SoftwareSerial BTSerial(10, 11); // RX, TX
 #define KEY_RCTRL       0x10
 #define KEY_RSHIFT      0x20
 #define KEY_RALT        0x40
+#define KEY_TAB         0x2B
 
 #define KEY_ENTER  0x28
 #define KEY_ESC    0x29
@@ -34,6 +35,9 @@ SoftwareSerial BTSerial(10, 11); // RX, TX
 #define KEY_NEXT_TRACK  0xB5
 #define KEY_PREV_TRACK  0xB6
 #define KEY_STOP        0xB7
+
+#define KEY_LGUI        0x08
+#define KEY_RGUI        0x80
 
 uint8_t activeGlobalModifiers = KEY_NONE;
 
@@ -63,10 +67,19 @@ void loop()
           
           // Pattern: \+ to persistently HOLD down modifiers (e.g. \+c holds Left Ctrl)
           if (macroType == '+' && i + 2 < inputString.length()) {
-            char modChar = inputString.charAt(i + 2);
-            enableStickyModifier(modChar);
-            i += 3;
-
+            unsigned int parseIndex = i + 2;
+            uint8_t parsedMod = KEY_NONE;
+            if (parseBracketedModifier(inputString, parseIndex, parsedMod)) {
+              activeGlobalModifiers |= parsedMod;
+              i = parseIndex;
+            }
+            else
+            {
+                char modChar = inputString.charAt(parseIndex);
+                enableStickyModifier(modChar);
+                i += 3;
+            }
+            executeReport(activeGlobalModifiers, KEY_NONE);
             delay(50);
             continue;
           }
@@ -74,6 +87,7 @@ void loop()
           // Pattern: \- to CLEAR all held modifiers
           if (macroType == '-') {
             activeGlobalModifiers = KEY_NONE;
+            executeReport(activeGlobalModifiers, KEY_NONE);
             i += 2;
 
             delay(50);
@@ -111,64 +125,96 @@ void loop()
             uint8_t comboKey = KEY_NONE;
             bool executionTriggered = false;
 
+            if (activeGlobalModifiers & KEY_LALT) {
+                delay(23);
+            }
+
             // Parse characters until we find a target primary key or run out of string
             while (j < inputString.length()) {
               char target = inputString.charAt(j);
-            
-              // Check if the current character is a modifier flag
-              if (target == 'l')      { comboMods |= KEY_LSHIFT; j++; }
-              else if (target == 'r') { comboMods |= KEY_RSHIFT; j++; }
-              else if (target == 'c') { comboMods |= KEY_LCTRL;  j++; }
-              else if (target == 'q') { comboMods |= KEY_RCTRL;  j++; }
-              else if (target == 'a') { comboMods |= KEY_LALT;   j++; }
-              else if (target == 'm') { comboMods |= KEY_RALT;   j++; }
-              else {
-                // Not a modifier! Treat this character as the core keycap target
-                // First, check if it's an escaped navigation shortcut (like U, D, L, R, E, S, K, B, T)
-                char upperTarget = target;
-                if (upperTarget >= 'a' && upperTarget <= 'z') upperTarget -= 32;
-
-                switch (upperTarget) {
-                  case 'U': comboKey = KEY_UP;          break;
-                  case 'D': comboKey = KEY_DOWN;        break;
-                  case 'L': comboKey = KEY_LEFT;        break;
-                  case 'R': comboKey = KEY_RIGHT;       break;
-                  case 'E': comboKey = KEY_ENTER;       break;
-                  case 'S': comboKey = KEY_ESC;         break;
-                  case 'C': comboKey = KEY_CAPS_LOCK;   break;
-                  case 'N': comboKey = KEY_NUM_LOCK;    break;
-                  case 'O': comboKey = KEY_SCROLL_LOCK; break;
-                  case 'K': comboKey = KEY_DELETE;      break;
-                  case 'T': comboKey = 0x2B;            break; // Tab
-                  case 'B': comboKey = KEY_BACKSPACE;   break;
-                  case 'P': comboKey = KEY_SPACE;       break;
-                  default:
-                    // If it's a standard letter/number, let's look up its scan code dynamically
-                    // Temporary registers to avoid disturbing global typing logic
-                    uint8_t tempMod = KEY_NONE; 
-                    uint8_t tempScan = KEY_NONE;
-                  
-                    // Run a quick trace through your alpha-numeric lookup function map
-                    // We bypass executeReport by shifting its logic out if necessary, or running it directly:
-                    if (target >= 'A' && target <= 'Z') { comboMods |= KEY_LSHIFT; comboKey = 0x04 + (target - 'A'); }
-                    else if (target >= 'a' && target <= 'z') { comboKey = 0x04 + (target - 'a'); }
-                    else if (target >= '1' && target <= '9') { comboKey = 0x1E + (target - '1'); }
-                    else if (target == '0') { comboKey = 0x27; }
-                    else if (target == ' ') { comboKey = KEY_SPACE; }
-                    break;
+              if (target == '[') {
+                uint8_t parsedMod = KEY_NONE;
+                uint8_t parsedKey = KEY_NONE;
+                
+                unsigned int saveIndex = j; // Create context snapshot bookmark
+                
+                // 1. Cooperatively check if it's a bracketed modifier
+                if (parseBracketedModifier(inputString, j, parsedMod)) {
+                  comboMods |= parsedMod;
+                  continue; 
                 }
-              
-                // Fire the combination down the wire immediately
-                executeReport(comboMods, comboKey);
-                executionTriggered = true;
-                j++;
-                break; // Combo fully compiled and spent! Exit loop.
+                
+                // 2. Roll back index on fail, check if it's a structural navigational key
+                j = saveIndex;
+                if (parseBracketedKey(inputString, j, parsedKey)) {
+                  executeReport(comboMods, parsedKey);
+                  executionTriggered = true;
+                  break;
+                }
+                
+                // 3. Roll back index on fail, check if it's a multimedia transmission frame
+                j = saveIndex;
+                if (parseBracketedMediaKey(inputString, j, parsedKey)) {
+                  sendMediaKey(parsedKey);
+                  executionTriggered = true;
+                  break;
+                }
+                
+                // Fallback fail-safe: Bracket contents didn't match anything, skip past it safely
+                j++; 
+              } else {
+                // Check if the current character is a modifier flag
+                if (target == 'l')      { comboMods |= KEY_LSHIFT; j++; }
+                else if (target == 'r') { comboMods |= KEY_RSHIFT; j++; }
+                else if (target == 'c') { comboMods |= KEY_LCTRL;  j++; }
+                else if (target == 'q') { comboMods |= KEY_RCTRL;  j++; }
+                else if (target == 'a') { comboMods |= KEY_LALT;   j++; }
+                else if (target == 'm') { comboMods |= KEY_RALT;   j++; }
+                else if (target == 'f') { comboMods |= KEY_LGUI;   j++; }
+                else if (target == 'g') { comboMods |= KEY_RGUI;   j++; }
+                else {
+                  // Not a modifier! Treat this character as the core keycap target
+                  char upperTarget = target;
+                  if (upperTarget >= 'a' && upperTarget <= 'z') upperTarget -= 32;
+  
+                  switch (upperTarget) {
+                    case 'U': comboKey = KEY_UP;          break;
+                    case 'D': comboKey = KEY_DOWN;        break;
+                    case 'L': comboKey = KEY_LEFT;        break;
+                    case 'R': comboKey = KEY_RIGHT;       break;
+                    case 'E': comboKey = KEY_ENTER;       break;
+                    case 'S': comboKey = KEY_ESC;         break;
+                    case 'C': comboKey = KEY_CAPS_LOCK;   break;
+                    case 'N': comboKey = KEY_NUM_LOCK;    break;
+                    case 'O': comboKey = KEY_SCROLL_LOCK; break;
+                    case 'K': comboKey = KEY_DELETE;      break;
+                    case 'T': comboKey = KEY_TAB;         break; 
+                    case 'B': comboKey = KEY_BACKSPACE;   break;
+                    case 'P': comboKey = KEY_SPACE;       break;
+                    default:
+                      if (target >= 'A' && target <= 'Z') { comboMods |= KEY_LSHIFT; comboKey = 0x04 + (target - 'A'); }
+                      else if (target >= 'a' && target <= 'z') { comboKey = 0x04 + (target - 'a'); }
+                      else if (target >= '1' && target <= '9') { comboKey = 0x1E + (target - '1'); }
+                      else if (target == '0') { comboKey = 0x27; }
+                      else if (target == ' ') { comboKey = KEY_SPACE; }
+                      break;
+                  }
+                
+                  executeReport(comboMods, comboKey);
+                  executionTriggered = true;
+                  j++;
+                  break; // Combo fully compiled and spent! Exit loop.
+                }
               }
             }
             if (executionTriggered) {
               i = j;
               continue;
             }
+          }
+          else if (handleSingleMacro(upperType)) {
+            i += 2; // Jump index past backslash and the consumed type token flag
+            continue;
           }
           else if (upperType == 'D' && i + 6 < inputString.length()) {
             String checkDelay = inputString.substring(i + 1, i + 7); // Captures indices i+1 to i+6 ("delay=")
@@ -194,10 +240,24 @@ void loop()
               }
             }
           }
-          bool validMacro = handleSingleMacro(upperType);
-          if (validMacro) {
-            i += 2; 
-            continue; 
+          else if (macroType == '[') {
+            unsigned int parseIndex = i + 1;
+            uint8_t parsedKey = KEY_NONE;
+            
+            // Try matching navigation / layout structural tokens first
+            if (parseBracketedKey(inputString, parseIndex, parsedKey)) {
+              executeReport(activeGlobalModifiers, parsedKey);
+              i = parseIndex;
+              continue;
+            }
+            
+            parseIndex = i + 1; // Reset cursor position evaluation back to opening bracket
+            // Try matching multi-media consumer usage keys next
+            if (parseBracketedMediaKey(inputString, parseIndex, parsedKey)) {
+              sendMediaKey(parsedKey);
+              i = parseIndex;
+              continue;
+            }
           }
         }
       }
@@ -208,6 +268,97 @@ void loop()
       delay(20); // Steady pace delay between typing ordinary letters
     }
   }
+}
+
+bool parseBracketedModifier(String input, unsigned int &index, uint8_t &out) {
+  if (index < input.length() && input.charAt(index) == '[') {
+    unsigned int closeBracket = input.indexOf(']', index);
+    if (closeBracket != -1) {
+      String token = input.substring(index + 1, closeBracket);
+      token.toLowerCase();
+      
+      uint8_t tempOut = KEY_NONE;
+      bool matched = false;
+
+      if (token == "ctrl" || token == "lctrl")        { tempOut = KEY_LCTRL;  matched = true; }
+      else if (token == "shift" || token == "lshift") { tempOut = KEY_LSHIFT; matched = true; }
+      else if (token == "alt" || token == "lalt")     { tempOut = KEY_LALT;   matched = true; }
+      else if (token == "win" || token == "lgui")     { tempOut = KEY_LGUI;   matched = true; }
+      else if (token == "rctrl")                      { tempOut = KEY_RCTRL;  matched = true; }
+      else if (token == "rshift")                     { tempOut = KEY_RSHIFT; matched = true; }
+      else if (token == "ralt")                       { tempOut = KEY_RALT;   matched = true; }
+      else if (token == "rgui" || token == "rwin")    { tempOut = KEY_RGUI;   matched = true; }
+
+      if (matched) {
+        out = tempOut;
+        index = closeBracket + 1; // Explicit index update on confirmed match
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool parseBracketedKey(String input, unsigned int &index, uint8_t &out) {
+  if (index < input.length() && input.charAt(index) == '[') {
+    unsigned int closeBracket = input.indexOf(']', index);
+    if (closeBracket != -1) {
+      String token = input.substring(index + 1, closeBracket);
+      token.toLowerCase();
+      
+      uint8_t tempOut = KEY_NONE;
+      bool matched = false;
+
+      if (token == "up")                            { tempOut = KEY_UP;          matched = true; }
+      else if (token == "down")                     { tempOut = KEY_DOWN;        matched = true; }
+      else if (token == "left")                     { tempOut = KEY_LEFT;        matched = true; }
+      else if (token == "right")                    { tempOut = KEY_RIGHT;       matched = true; }
+      else if (token == "enter")                    { tempOut = KEY_ENTER;       matched = true; }
+      else if (token == "esc")                      { tempOut = KEY_ESC;         matched = true; }
+      else if (token == "caps")                     { tempOut = KEY_CAPS_LOCK;   matched = true; }
+      else if (token == "numlock")                  { tempOut = KEY_NUM_LOCK;    matched = true; }
+      else if (token == "scrolllock")               { tempOut = KEY_SCROLL_LOCK; matched = true; }
+      else if (token == "delete" || token == "del") { tempOut = KEY_DELETE;      matched = true; }
+      else if (token == "tab")                      { tempOut = KEY_TAB;         matched = true; }
+      else if (token == "backspace")                { tempOut = KEY_BACKSPACE;   matched = true; }
+      else if (token == "space")                    { tempOut = KEY_SPACE;       matched = true; }
+
+      if (matched) {
+        out = tempOut;
+        index = closeBracket + 1; // Explicit index update on confirmed match
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool parseBracketedMediaKey(String input, unsigned int &index, uint8_t &out) {
+  if (index < input.length() && input.charAt(index) == '[') {
+    unsigned int closeBracket = input.indexOf(']', index);
+    if (closeBracket != -1) {
+      String token = input.substring(index + 1, closeBracket);  
+      token.toLowerCase();
+      
+      uint8_t tempOut = KEY_NONE;
+      bool matched = false;
+
+      if (token == "volup")            { tempOut = KEY_VOL_UP;     matched = true; }
+      else if (token == "voldown")     { tempOut = KEY_VOL_DOWN;   matched = true; }
+      else if (token == "mute")        { tempOut = KEY_MUTE;       matched = true; }
+      else if (token == "play")        { tempOut = KEY_PLAY_PAUSE; matched = true; }
+      else if (token == "stop")        { tempOut = KEY_STOP;       matched = true; }
+      else if (token == "next")        { tempOut = KEY_NEXT_TRACK; matched = true; }
+      else if (token == "prev")        { tempOut = KEY_PREV_TRACK; matched = true; }
+
+      if (matched) {
+        out = tempOut;
+        index = closeBracket + 1; // Explicit index update on confirmed match
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 void sendAlphaNumericKey(char c) {
@@ -318,6 +469,8 @@ bool handleSingleMacro(char type) {
         case 'q': instantMod |= KEY_RCTRL;  break; 
         case 'a': instantMod |= KEY_LALT;   break; 
         case 'm': instantMod |= KEY_RALT;   break; 
+        case 'f': instantMod |= KEY_LGUI;   break; 
+        case 'g': instantMod |= KEY_RGUI;   break;
         default:  return false; // Not a macro, pass back to normal typing engine
       }
       break;
@@ -350,6 +503,8 @@ void enableStickyModifier(char m) {
     case 'q': activeGlobalModifiers |= KEY_RCTRL;  break;
     case 'a': activeGlobalModifiers |= KEY_LALT;   break;
     case 'm': activeGlobalModifiers |= KEY_RALT;   break;
+    case 'f': activeGlobalModifiers |= KEY_LGUI;   break;
+    case 'g': activeGlobalModifiers |= KEY_RGUI;   break;
   }
 }
 
@@ -391,9 +546,13 @@ void executeReport(uint8_t mod, uint8_t key) {
   KeyboardBuf[3] = key;
   Serial.write(KeyboardBuf, 9);
   
-  delay(15); // Keydown duration hold
+  delay(23); // Keydown duration hold
 
-  KeyboardBuf[1] = activeGlobalModifiers;
+ if (key == KEY_NONE) {
+    KeyboardBuf[1] = activeGlobalModifiers;
+  } else {
+    KeyboardBuf[1] = mod;
+  }
   KeyboardBuf[3] = KEY_NONE;
   Serial.write(KeyboardBuf, 9); // Send clear key release report
   

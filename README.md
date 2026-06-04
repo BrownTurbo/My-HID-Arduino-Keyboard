@@ -21,7 +21,7 @@ The system architecture utilizes a split processing layout on the Arduino Uno R3
          ▼ (SoftwareSerial Line @ 9600 Baud)
 [ATmega328P Core] ───► Parsing Loop Engine
          │
-         ▼ (Raw 8-byte HID Reports @ 9600 Baud via Hardware Serial)
+         ▼ (Raw 9-byte HID Reports @ 9600 Baud via Hardware Serial)
 [ATmega16U2 USB Controller (Flashed with Keyboard HID Firmware)]
          │
          ▼ (Standard USB HID Keyboard Packets)
@@ -29,8 +29,11 @@ The system architecture utilizes a split processing layout on the Arduino Uno R3
 
 ```
 
-When a data packet arrives over the Bluetooth interface, the main parser processes the string token by token. If a macro identifier backslash (`\`) is hit, it extracts the modifier sequence dynamically. Otherwise, it maps the character to its corresponding physical US-layout USB HID scan code and compiles an 8-byte keyboard report frame.
+When a data packet arrives over the Bluetooth interface, the main parser processes the string token by token. If a macro identifier backslash (`\`) is hit, it extracts the modifier sequence dynamically. Otherwise, it maps the character to its corresponding physical US-layout USB HID scan code and compiles an 9-byte keyboard report frame.
 
+Header	Meaning
+0x01	Standard keyboard report (modifiers + 6 keys)
+0x02	Media consumer key report (2‑byte usage code)
 ---
 
 ## Complete Command & Macro Specification
@@ -46,6 +49,9 @@ These commands modify the persistent state variable `activeGlobalModifiers`. Onc
 
 * **Reset Syntax:** `\-` (Instantly releases all active modifiers) 
 
+* **Chaining:** To enable multiple sticky modifiers simultaneously, issue separate `\+` commands sequentially.  
+*  *Example:* `\+c\+a` holds Left Control **and** Left Alt.  
+> Use `\-` to clear **all** active sticky modifiers at once.
 
 
 | Modifier Token 
@@ -91,75 +97,21 @@ These commands modify the persistent state variable `activeGlobalModifiers`. Onc
 
 Sending these tokens triggers an instantaneous key-down and key-up sequence for the specified system key. They can be typed in **either uppercase or lowercase** (e.g., `\e` performs exactly like `\E`).
 
-| Token (Case-Insensitive) | Physical Action Generated | USB HID Usage ID (Hex) 
-
- |
-| --- | --- | --- |
-| <br>`\U` 
-
- | Up Arrow 
-
- | `0x52` |
-| <br>`\D` 
-
- | Down Arrow 
-
- | `0x51` |
-| <br>`\L` 
-
- | Left Arrow 
-
- | `0x50` |
-| <br>`\R` 
-
- | Right Arrow 
-
- | `0x4F` |
-| <br>`\E` 
-
- | Enter / Return 
-
- | `0x28` |
-| <br>`\S` 
-
- | Escape 
-
- | `0x29` |
-| <br>`\T` 
-
- | Tab 
-
- | `0x2B` |
-| <br>`\B` 
-
- | Backspace (Delete Backward) 
-
- | `0x2A` |
-| <br>`\K` 
-
- | Forward Delete (Delete Character Ahead) 
-
- | `0x4C` |
-| <br>`\C` 
-
- | Space
-
- | `0x2C` |
-| <br>`\P` 
-
- | Caps Lock Toggle 
-
- | `0x39` |
-| <br>`\N` 
-
- | Num Lock Toggle 
-
- | `0x53` |
-| <br>`\O` 
-
- | Scroll Lock Toggle 
-
- | `0x47` |
+| Token (Case-Insensitive) | Physical Action Generated | USB HID Usage ID (Hex) |
+|--------------------------|---------------------------|------------------------|
+| `\U` | Up Arrow | `0x52` |
+| `\D` | Down Arrow | `0x51` |
+| `\L` | Left Arrow | `0x50` |
+| `\R` | Right Arrow | `0x4F` |
+| `\E` | Enter / Return | `0x28` |
+| `\S` | Escape | `0x29` |
+| `\T` | Tab | `0x2B` |
+| `\B` | Backspace (Delete Backward) | `0x2A` |
+| `\K` | Forward Delete (Delete Character Ahead) | `0x4C` |
+| `\C` | Space | `0x2C` |
+| `\P` | Caps Lock Toggle | `0x39` |
+| `\N` | Num Lock Toggle | `0x53` |
+| `\O` | Scroll Lock Toggle | `0x47` |
 
 ### 3. Transient Modifier Strikes
 
@@ -171,24 +123,102 @@ If you need a modifier held **only** for a single companion keystroke, use a low
 
 ### 4. Advanced Sequential Function Keys
 
-The firmware parses extended multi-character function operations dynamically up to F24, exceeding standard commercial keyboard limits.
+The firmware parses extended multi‑character function operations dynamically up to F24, exceeding standard commercial keyboard limits.
 
-* **Syntax:** `\F1` through `\F24` 
+* **Syntax:** `\F1` through `\F24`  
 
+| Function Key Range | USB HID Usage ID (Hex) |
+|--------------------|------------------------|
+| F1 – F12 | `0x3A` (F1) to `0x45` (F12) |
+| F13 – F24 | `0x68` (F13) to `0x73` (F24) |
 
+*Example:* `\F10` sends `0x43` (F10)
 
-### 5. Multi-Key Synchronous Combinations
+### 5. Modifier Flags for `\X` Combos
 
-For hotkeys that require absolute simultaneous structural delivery in a single data report packet, use the **eXecute Combo** sequence.
+Inside a `\X` sequence, you can include any number of the following **modifier flags** before the final target key. They are applied simultaneously.
 
-* **Syntax:** `\X[modifiers][primary_key]` 
+| Flag | Modifier | Flag | Modifier |
+|------|----------|------|----------|
+| `l`  | Left Shift | `r`  | Right Shift |
+| `c`  | Left Control | `q`  | Right Control |
+| `a`  | Left Alt | `m`  | Right Alt |
+| `f`  | Left GUI (Windows / Super) | `g`  | Right GUI |
 
+You can also use **bracketed modifiers** (case‑insensitive):
 
+| Bracketed Form | Modifier |
+|----------------|----------|
+| `[ctrl]` / `[lctrl]` | Left Control |
+| `[rctrl]` | Right Control |
+| `[shift]` / `[lshift]` | Left Shift |
+| `[rshift]` | Right Shift |
+| `[alt]` / `[lalt]` | Left Alt |
+| `[ralt]` | Right Alt |
+| `[win]` / `[lgui]` | Left GUI |
+| `[rgui]` / `[rwin]` | Right GUI |
 
-The combination parser scans all incoming bytes immediately following `\X`. It treats all listed modifier tokens (`l`, `r`, `c`, `q`, `a`, `m`) as additive bitmasks, applying them simultaneously until it hits a non-modifier target keycap. Once the target keycap is found, it packages them all into a single unified buffer report, shoots it down the wire, and exits cleanly.
+**Example:**  
+`\X[lctrl][lshift]F` → same as `\XclF` (Ctrl+Shift+F).
 
-### 6. Multimedia & Consumer System Keys (Usage Page 0x0C)
-These macros transmit specialized, native 2-byte reports to manipulate audio output parameters and system media players. 
+### 6. Supported Target Keys in `\X` Combos
+
+After parsing optional modifiers (`l`, `r`, `c`, `q`, `a`, `m`), the `\X` parser expects a **single target key**. The following target keys are recognised:
+
+| Target Character | Resulting Key | USB HID Usage ID (Hex) |
+|------------------|---------------|------------------------|
+| `U` | Up Arrow | `0x52` |
+| `D` | Down Arrow | `0x51` |
+| `L` | Left Arrow | `0x50` |
+| `R` | Right Arrow | `0x4F` |
+| `E` | Enter / Return | `0x28` |
+| `S` | Escape | `0x29` |
+| `C` | Caps Lock | `0x39` |
+| `N` | Num Lock | `0x53` |
+| `O` | Scroll Lock | `0x47` |
+| `K` | Delete (Forward) | `0x4C` |
+| `T` | Tab | `0x2B` |
+| `B` | Backspace | `0x2A` |
+| `P` | Space | `0x2C` |
+| `A` – `Z` | Uppercase letter (auto‑shifts) | `0x04` + (`A` = 0) to `0x1D` (`Z` = 25) |
+| `a` – `z` | Lowercase letter | `0x04` + (`a` = 0) to `0x1D` (`z` = 25) |
+| `0` | Digit 0 | `0x27` |
+| `1` | Digit 1 | `0x1E` |
+| `2` | Digit 2 | `0x1F` |
+| `3` | Digit 3 | `0x20` |
+| `4` | Digit 4 | `0x21` |
+| `5` | Digit 5 | `0x22` |
+| `6` | Digit 6 | `0x23` |
+| `7` | Digit 7 | `0x24` |
+| `8` | Digit 8 | `0x25` |
+| `9` | Digit 9 | `0x26` |
+| Space (literal ` `) | Space | `0x2C` |
+
+**Note:** The parser stops at the first non‑modifier character, so a combo like `\Xac` (with no target key) does nothing – you must always include a target key.
+
+**Examples:**
+- `\XclF` → Ctrl + Shift + F (`0x01` + `0x02` + `0x09` for F) – global search in many IDEs
+- `\XaT` → Alt + Tab (`0x04` + `0x2B`) – Alt stays held for subsequent combos
+- `\Xa1` → Alt + 1 (`0x04` + `0x1E`) – switches to first tab in many browsers
+
+### 7. Delay / Pause
+
+Inserts a raw millisecond pause into the macro execution stream. Useful for waiting for UI elements to appear, dialog boxes to open, or scripts to complete.
+
+* **Syntax:** `\delay=<milliseconds>`  
+* **Example:** `\delay=500` → waits half a second (500 ms)  
+
+| Parameter | Description |
+|-----------|-------------|
+| `<milliseconds>` | Positive integer (1–65535). Values above 5000 ms may cause host USB timeouts. |
+
+**Usage example:**
+```text
+\Xacr\delay=100\cmd\XcaE
+
+### 8. Multimedia & Consumer System Keys (Usage Page 0x0C)
+
+These macros transmit specialized, native 2-byte reports to manipulate audio output parameters and system media players.
 
 | Token (Case-Insensitive) | System Action Triggered | Consumer Usage ID (Hex) |
 | :---: | :--- | :---: |
@@ -196,6 +226,18 @@ These macros transmit specialized, native 2-byte reports to manipulate audio out
 | `\I` | Volume Decrement (Down) | `0x00EA` |
 | `\M` | Audio Output Mute (Toggle) | `0x00E2` |
 | `\Y` | Play / Pause / Continue Media | `0x00CD` |
+| `\J` | Next Track | `0x00B5` |
+| `\W` | Previous Track | `0x00B6` |
+| `\Z` | Stop | `0x00B7` |
+
+### 9. Bracketed Key Macros
+
+You can send any navigation or media key using square brackets without `\X`. This is useful for single keys with sticky modifiers.
+
+* **Syntax:** `\[keyname]`  
+* **Examples:** `\[up]`, `\[volup]`, `\[enter]`, `\[tab]`
+
+Supported key names are the same as in the `\X` target table and the media keys table (lowercase). For modifiers, use `\[ctrl]`, `\[alt]`, etc. – these act as **transient** presses (down and up immediately), not sticky.
 
 ---
 
@@ -228,9 +270,23 @@ echo "HID Automation Completed Safely"\E
 
 * **Dissection:** The embedded alphanumeric parser automatically matches internal newlines (`\n` or `\r`) to physical Enter executions, allowing a single copy-paste procedure to run sequential bash pipeline tasks sequentially down the line.
 
+### 3. Cycling Through Multiple Windows (Linux / Windows Alt+Tab)
 
+On Linux (and Windows), `\XaT` (temporary Alt+Tab) will only switch between the **current and previous** window unless Alt remains held. The firmware now correctly keeps Alt down during consecutive combo calls. To cycle through **all open windows**:
 
-### 3. Deep-Dive IDE Navigation & Refactoring Combo Overrides
+- **Method A (multiple combos):**  
+  `\XaT` (switches to next window, switcher stays open)  
+  `\XaT` (moves highlight to next window)  
+  `\XaT` (and so on)  
+  `\Xa` (release Alt, closes switcher)
+
+- **Method B (sticky modifiers – recommended):**  
+  `\+a\T\T\T\T\T\-`  
+  This locks Alt, sends several Tabs, then releases Alt. The switcher stays open throughout.
+
+Both methods work on GNOME, KDE, Windows Explorer, and most window managers.
+
+### 4. Deep-Dive IDE Navigation & Refactoring Combo Overrides
 
 When auditing code paths inside tools like VS Code or Visual Studio, multi-tier navigation binds can be executed instantly:
 
@@ -262,7 +318,7 @@ To make a standard Arduino Uno R3 register natively as a true hardware plug-and-
    └────┬─────┘
         │
    ┌────┴─────┐
-   │ATmega16U2│ <─── Flashed with "Arduino-keyboard-0.3.hex" (HID Mode)
+   │ATmega16U2│ <─── Flashed with "Arduino-keyboard-Enhanced.hex" (HID Mode)
    └────┬─────┘       or "Arduino-usbserial-atmega16u2-Uno-Rev3.hex" (Serial Programming Mode)
         │
    ┌────┴─────┐
@@ -283,7 +339,7 @@ Download and install `dfu-programmer` via your operating system package manager:
 
 You will also need the compiled stock reference hex images. They are available inside the official Arduino core package directory or via public open-source Git repositories:
 
-1. `Arduino-keyboard-0.3.hex` (The USB HID Keyboard firmware open-source profile)
+1. `Arduino-keyboard-Enhanced.hex` (The USB HID Keyboard firmware open-source profile)
 2. `Arduino-usbserial-atmega16u2-Uno-Rev3.hex` (The original factory USB-Serial diagnostic firmware)
 
 ### Step 1: Placing the ATmega16U2 into DFU Mode
@@ -306,7 +362,7 @@ dfu-programmer atmega16u2 get
 dfu-programmer atmega16u2 erase
 
 # 3. Flash the target open-source USB HID Keyboard layout image
-dfu-programmer atmega16u2 flash Arduino-keyboard-0.3.hex
+dfu-programmer atmega16u2 flash Arduino-keyboard-Enhanced.hex
 
 # 4. Restructure and reset the controller to execute your new configuration safely
 dfu-programmer atmega16u2 reset
@@ -404,7 +460,7 @@ avrdude -c arduino -p m16u2 -P COM3 -b 19200 -e -U flash:w:Arduino-usbserial-atm
 
 * **To Direct-Flash to Native USB HID Keyboard Mode:**
 ```bash
-avrdude -c arduino -p m16u2 -P COM3 -b 19200 -e -U flash:w:Arduino-keyboard-0.3.hex:i
+avrdude -c arduino -p m16u2 -P COM3 -b 19200 -e -U flash:w:Arduino-keyboard-Enhanced.hex:i
 
 ```
 
@@ -439,7 +495,7 @@ When using the **ICSP Fallback Recovery** method with a second Arduino, you must
 
 ### 2. Guard Against Target Board Self-Reset
 
-When the target board's ATmega16U2 chip is successfully flashed with the `Arduino-keyboard-0.3.hex` firmware, its hardware lines alter completely.
+When the target board's ATmega16U2 chip is successfully flashed with the `Arduino-keyboard-Enhanced.hex` firmware, its hardware lines alter completely.
 
 * **The Caution:** If you accidentally short the secondary ICSP header (the one next to the large ATmega328P chip) while the system is powered on, you can cause a rapid electrical brownout on the board. This can permanently corrupt the main runtime flash storage of your `.ino` program code.
 
@@ -482,7 +538,7 @@ void loop() {
 
 ### 1. The Keystroke Dropping Bottleneck
 
-The default execution speed inside `executeReport` uses explicit delay periods (`15ms` hold, `35ms` settling window).
+The default execution speed inside `executeReport` uses explicit delay periods (`15ms` hold, `45ms` settling window).
 
 * **The Danger of Tuning:** If you try to optimize your execution metrics by lowering these values to make the typing "faster," you will outrun the polling rate of the host machine's USB controller bus.
 * **The Consequence:** The target machine will randomly drop modifier states or characters. For instance, a command like `rm -rf /path/to/target` could misfire as `rm -rf /path/ to/target` (notice the accidental space), causing the command to try to erase your root directory instead of the specific subfolder!
@@ -493,3 +549,22 @@ Your Arduino sends raw mathematical HID usage ID matrix positions, **not charact
 
 * **The Caution:** If your Arduino is programmed to type a script expecting a standard **US Keyboard Layout**, but you plug it into a computer configured for a European layout (like **AZERTY** or **QWERTZ**), your commands will map to completely wrong characters.
 * **Example:** A typed `w` might strike as a `z`, transforming benign command paths into completely unpredictable, destructive terminal instructions. Always double-check the host operating system's keyboard language settings before executing automated scripts!
+
+---
+
+## 🔧 Known Issues & Fixes
+
+### Alt+Tab Only Switches Two Windows
+
+**Cause (already fixed in this code):**  
+Older versions released the Alt modifier too early. The current `executeReport()` uses the same modifier byte for press and release, keeping Alt held during multiple combos.
+
+**Solution:** Use sticky modifiers `\+a\T\T...\-` or update to the latest firmware (already included).
+
+### No Keys Appear After Flashing
+
+**Check:**  
+- The ATmega16U2 must be flashed with the **custom** firmware (`Arduino-keyboard-Enhanced.hex`), not the original.  
+- Both the 328P and 16U2 must use **9600 baud**.  
+- The 328P sketch must have `UCSR0B &= ~(1 << RXCIE0);` to disable the serial receive interrupt (already present).
+
